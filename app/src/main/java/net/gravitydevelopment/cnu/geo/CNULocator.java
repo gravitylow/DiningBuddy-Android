@@ -61,7 +61,7 @@ public class CNULocator {
         }).start();
     }
 
-    public void newLocation(final CNULocation location) {
+    public static void newLocation(final CNULocation location) {
         new Thread(new Runnable() {
             public void run() {
                 CNUApi.addLocation(location);
@@ -96,7 +96,7 @@ public class CNULocator {
         return build;
     }
 
-    public void addLocation(CNULocation location) {
+    public static void addLocation(CNULocation location) {
         locations.add(location);
     }
 

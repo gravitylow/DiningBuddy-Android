@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:id="@+id/preference_wifi_only"
+        android:key="preference_wifi_only"
+        android:title="@string/preference_wifi_only_tile"
+        android:summary="@string/preference_wifi_only_summary" />
+
+    <PreferenceScreen
+        android:title="@string/preference_donate_tile"
+        android:summary="@string/preference_donate_summary">
+
+        <intent android:action="android.intent.action.VIEW"
+            android:data="http://www.android.com" />
+    </PreferenceScreen>
+</PreferenceScreen>

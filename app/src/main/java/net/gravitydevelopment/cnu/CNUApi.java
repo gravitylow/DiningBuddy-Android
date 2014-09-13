@@ -1,7 +1,6 @@
 package net.gravitydevelopment.cnu;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;

@@ -2,99 +2,61 @@ package net.gravitydevelopment.cnu;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocator;
+import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public class CNU extends Activity {
 
     public static final String LOG_TAG = "CNU";
-    public static final String PREFS_NAME = "CNUPrefs";
-    public static final String PREFS_KEY_LOCATIONS = "locations";
-    public static final String PREFS_KEY_UNIQUE_ID = "unique-id";
-
-    private LocationManager mLocationManager;
-    private LocationListener mLocationListener;
-
-    private CNUFence mCurrentFence = new CNUFence();
-    private CNUApi mAPI = new CNUApi();
-    private CNULocator mLocator;
-
     private static CNU sContext;
     private static boolean sRunning;
+    private CNUFence fence = new CNUFence();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cnu);
+        setContentView(R.layout.activity_cnudining);
 
-        //setupLocationListener();
-        //setupLocations();
+        ImageView regattas = (ImageView) findViewById(R.id.regattasImage);
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.regattas_full);
+        regattas.setImageBitmap(getRoundedRectBitmap(bm));
 
-        findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCurrentFence.getSize() < 4) {
-                    Location location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    mCurrentFence.addBound(location.getLatitude(), location.getLongitude());
-                    if (mCurrentFence.getSize() <= 4) {
-                        ((Button) findViewById(R.id.add_button)).setText(mCurrentFence.getSize() + "/4");
-                    }
-                }
-            }
-        });
-        findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCurrentFence.getSize() == 4) {
-                    String name = ((EditText)findViewById(R.id.name)).getText().toString();
-                    boolean found = false;
-                    for (CNULocation location : mLocator.getLocations()) {
-                        if (location.getName().equalsIgnoreCase(name)) {
-                            //location.addFence(mCurrentFence);
-                            //found = true;
-                            //Log.d(LOG_TAG, "ADD: " + location.toString());
-                            //TODO
-                        }
-                    }
-                    if (!found) {
-                        List<CNUFence> list = new ArrayList<CNUFence>();
-                        list.add(mCurrentFence);
-                        CNULocation location = new CNULocation(name, list);
-                        mLocator.newLocation(location);
-                        Log.d(LOG_TAG, "ADD: " + location.toString());
-                    }
-                    mCurrentFence = new CNUFence();
-                    ((EditText)findViewById(R.id.name)).setText("Name");
-                    ((Button) findViewById(R.id.add_button)).setText("1/4");
-                } else {
-                    for (CNULocation location : mLocator.getLocations()) {
-                        Log.d(LOG_TAG, "LIST: " + location.toString());
-                    }
-                }
-            }
-        });
-        sContext = this;
-        if (!LocationService.isRunning()) {
-            Log.d(LOG_TAG, "Started location service");
-            Intent startServiceIntent = new Intent(this, LocationService.class);
+        ImageView commons = (ImageView) findViewById(R.id.commonsImage);
+        bm = BitmapFactory.decodeResource(getResources(), R.drawable.commons_full);
+
+        commons.setImageBitmap(getRoundedRectBitmap(bm));
+
+        if (!BackendService.isRunning()) {
+            Log.d(LOG_TAG, "Started service");
+            Intent startServiceIntent = new Intent(this, BackendService.class);
             startService(startServiceIntent);
         } else if (LocationService.hasLocation()) {
             updateLocation(
@@ -103,6 +65,20 @@ public class CNU extends Activity {
                     LocationService.getLastLocation()
             );
         }
+        sContext = this;
+
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fence.getSize() == 4) {
+                    List<CNUFence> list = new ArrayList<CNUFence>();
+                    list.add(fence);
+                    CNULocator.addLocation(new CNULocation("Regattas", list));
+                } else {
+                    fence.addBound(BackendService.getLocationService().getLastLatitude(), BackendService.getLocationService().getLastLongitude());
+                }
+            }
+        });
     }
 
     @Override
@@ -119,10 +95,36 @@ public class CNU extends Activity {
         sRunning = false;
     }
 
-    private void setupLocationListener() {
-        //mLocationManager = (LocationManager) this.getSystemService(sContext.LOCATION_SERVICE);
-        //mLocationListener = new CNULocationListener(this);
-        //mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+    private Bitmap getRoundedRectBitmap(Bitmap bitmap) {
+        int width = 800;
+        int height = 300;
+        int colorExtra = 4;
+        bitmap = Bitmap.createScaledBitmap(bitmap, width + colorExtra, height + colorExtra, true);
+        Bitmap result = null;
+        try {
+            result = Bitmap.createBitmap(width + colorExtra, height + colorExtra, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+
+            BitmapShader shader;
+            shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+
+            Paint color = new Paint();
+            color.setColor(Color.GREEN);
+
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setShader(shader);
+
+            RectF rectColor = new RectF(0.0f, 0.0f, width + colorExtra, height + colorExtra);
+            RectF rectImage = new RectF(colorExtra, colorExtra, width, height);
+
+            canvas.drawRoundRect(rectColor, 50, 50, color);
+            canvas.drawRoundRect(rectImage, 50, 50, paint);
+
+        } catch (NullPointerException e) {
+        } catch (OutOfMemoryError o) {
+        }
+        return result;
     }
 
     @Override
@@ -135,6 +137,8 @@ public class CNU extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent startActivityIntent = new Intent(this, CNUSettings.class);
+            startActivity(startActivityIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -151,14 +155,18 @@ public class CNU extends Activity {
     }
 
     public void updatePeople(Map<CNULocation, Integer> map) {
-        StringBuilder builder = new StringBuilder("Locations:\n");
+        Log.d(LOG_TAG, "Updated people: " + map.size());
+        int regattas = 0;
+        int commons = 0;
         for (CNULocation location : map.keySet()) {
-            builder.append(location.getName());
-            builder.append(":");
-            builder.append(map.get(location));
-            builder.append("\n");
+            if (location.getName().equals("Regattas")) {
+                regattas = map.get(location);
+            } else if (location.getName().equals("Commons")) {
+                commons = map.get(location);
+            }
         }
-        ((TextView) findViewById(R.id.locations)).setText(builder.toString());
+        ((TextView) findViewById(R.id.regattasInfo)).setText("Currently: " + regattas + " people.");
+        ((TextView) findViewById(R.id.commonsInfo)).setText("Currently: " + commons + " people.");
     }
 
     public static CNU getContext() {
