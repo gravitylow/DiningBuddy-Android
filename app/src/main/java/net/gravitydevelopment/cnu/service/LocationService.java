@@ -6,10 +6,12 @@ import android.util.Log;
 
 import net.gravitydevelopment.cnu.CNU;
 import net.gravitydevelopment.cnu.CNUApi;
+import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.listener.CNULocationListener;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocator;
 
+import java.util.List;
 import java.util.Map;
 
 public class LocationService {
@@ -52,7 +54,7 @@ public class LocationService {
                 while (true) {
                     Log.d(CNU.LOG_TAG, "Should connect: " + mSettings.getShouldConnect());
                     if (mSettings.getShouldConnect()) {
-                        updatePeople();
+                        updateInfo();
                     }
                     try {
                         Thread.sleep(PEOPLE_UPDATE);
@@ -93,17 +95,17 @@ public class LocationService {
         }.start();
     }
 
-    public void updatePeople() {
+    public void updateInfo() {
         if (!CNULocator.isSetup()) {
             return;
         }
 
         if (CNU.isRunning()) {
-            final Map<CNULocation, Integer> map = CNUApi.getPeople();
+            final List<CNULocationInfo> info = CNUApi.getInfo();
             CNU.getContext().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    CNU.getContext().updatePeople(map);
+                    CNU.getContext().updateInfo(info);
                 }
             });
         }

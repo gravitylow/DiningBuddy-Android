@@ -4,6 +4,7 @@ import android.util.Log;
 
 import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;
+import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.geo.CNULocator;
 
 import org.json.JSONArray;
@@ -56,28 +57,33 @@ public class CNUApi {
         }
     }
 
-    public static Map<CNULocation, Integer> getPeople() {
+    public static List<CNULocationInfo> getInfo() {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "people");
+            URL url = new URL(API_HOST + API_QUERY + "info");
             String response = read(url);
 
-            Map<CNULocation, Integer> map = new HashMap<CNULocation, Integer>();
-            JSONObject object = new JSONObject(response);
-            Iterator<String> i = object.keys();
-            while (i.hasNext()) {
-                String string = i.next();
-                for (CNULocation location : CNULocator.getAllLocations()) {
-                    if (location.getName().equals(string)) {
-                        map.put(location, object.getInt(string));
-                        break;
-                    }
-                }
-            }
-            Log.d(CNU.LOG_TAG, "Map size: " + map.size());
-            return map;
+            JSONArray array = new JSONArray(response);
+            return infoFromArray(array);
         } catch (Exception e) {
             e.printStackTrace();
-            return new HashMap<CNULocation, Integer>();
+            return new ArrayList<CNULocationInfo>();
+        }
+    }
+
+    public static List<CNULocationInfo> infoFromArray(JSONArray info) {
+        List<CNULocationInfo> list = new ArrayList<CNULocationInfo>();
+        try {
+            for (int i = 0; i < info.length(); i++) {
+                JSONObject location = info.getJSONObject(i);
+                String name = location.getString("location");
+                int people = location.getInt("people");
+                CNULocationInfo newInfo = new CNULocationInfo(name, people);
+                list.add(newInfo);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<CNULocationInfo>();
         }
     }
 

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;
+import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.geo.CNULocator;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
@@ -154,15 +155,15 @@ public class CNU extends Activity {
         }
     }
 
-    public void updatePeople(Map<CNULocation, Integer> map) {
-        Log.d(LOG_TAG, "Updated people: " + map.size());
+    public void updateInfo(List<CNULocationInfo> info) {
+        Log.d(LOG_TAG, "Updated info: " + info.size());
         int regattas = 0;
         int commons = 0;
-        for (CNULocation location : map.keySet()) {
-            if (location.getName().equals("Regattas")) {
-                regattas = map.get(location);
-            } else if (location.getName().equals("Commons")) {
-                commons = map.get(location);
+        for (CNULocationInfo location : info) {
+            if (location.getLocation().equals("Regattas")) {
+                regattas = location.getPeople();
+            } else if (location.getLocation().equals("Commons")) {
+                commons = location.getPeople();
             }
         }
         ((TextView) findViewById(R.id.regattasInfo)).setText("Currently: " + regattas + " people.");
