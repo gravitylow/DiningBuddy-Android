@@ -77,7 +77,8 @@ public class CNUApi {
                 JSONObject location = info.getJSONObject(i);
                 String name = location.getString("location");
                 int people = location.getInt("people");
-                CNULocationInfo newInfo = new CNULocationInfo(name, people);
+                int crowded = location.getInt("crowded");
+                CNULocationInfo newInfo = new CNULocationInfo(name, people, crowded);
                 list.add(newInfo);
             }
             return list;

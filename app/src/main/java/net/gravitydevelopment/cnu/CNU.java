@@ -46,14 +46,7 @@ public class CNU extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cnudining);
 
-        ImageView regattas = (ImageView) findViewById(R.id.regattasImage);
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.regattas_full);
-        regattas.setImageBitmap(getRoundedRectBitmap(bm));
-
-        ImageView commons = (ImageView) findViewById(R.id.commonsImage);
-        bm = BitmapFactory.decodeResource(getResources(), R.drawable.commons_full);
-
-        commons.setImageBitmap(getRoundedRectBitmap(bm));
+        drawPictures(Color.GRAY, Color.GRAY);
 
         if (!BackendService.isRunning()) {
             Log.d(LOG_TAG, "Started service");
@@ -72,9 +65,7 @@ public class CNU extends Activity {
             @Override
             public void onClick(View v) {
                 if (fence.getSize() == 4) {
-                    List<CNUFence> list = new ArrayList<CNUFence>();
-                    list.add(fence);
-                    CNULocator.addLocation(new CNULocation("Regattas", list));
+                    ((TextView)findViewById(R.id.fence)).setText(fence.jsonValue());
                 } else {
                     fence.addBound(BackendService.getLocationService().getLastLatitude(), BackendService.getLocationService().getLastLongitude());
                 }
@@ -96,10 +87,44 @@ public class CNU extends Activity {
         sRunning = false;
     }
 
-    private Bitmap getRoundedRectBitmap(Bitmap bitmap) {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState.putParcelable("obj", myClass);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (LocationService.hasLocation()) {
+            updateLocation(LocationService.getLastLatitude(), LocationService.getLastLongitude(), LocationService.getLastLocation());
+            updateInfo(LocationService.getsLastLocationInfo());
+        }
+    }
+
+    private void drawPictures(int regattasColor, int commonsColor) {
+        ImageView regattas = (ImageView) findViewById(R.id.regattasImage);
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.regattas_full);
+        regattas.setImageBitmap(getRoundedRectBitmap(bm, regattasColor));
+
+        ImageView commons = (ImageView) findViewById(R.id.commonsImage);
+        bm = BitmapFactory.decodeResource(getResources(), R.drawable.commons_full);
+
+        commons.setImageBitmap(getRoundedRectBitmap(bm, commonsColor));
+    }
+
+    private void setupQuestionnaire() {
+        findViewById(R.id.regattasImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private Bitmap getRoundedRectBitmap(Bitmap bitmap, int crowdedColor) {
         int width = 800;
         int height = 300;
-        int colorExtra = 4;
+        int colorExtra = 5;
         bitmap = Bitmap.createScaledBitmap(bitmap, width + colorExtra, height + colorExtra, true);
         Bitmap result = null;
         try {
@@ -110,7 +135,7 @@ public class CNU extends Activity {
             shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
 
             Paint color = new Paint();
-            color.setColor(Color.GREEN);
+            color.setColor(crowdedColor);
 
             Paint paint = new Paint();
             paint.setAntiAlias(true);
@@ -126,6 +151,16 @@ public class CNU extends Activity {
         } catch (OutOfMemoryError o) {
         }
         return result;
+    }
+
+    private int getColorForCrowdedRating(CNULocationInfo.CrowdedRating rating) {
+        if (rating == CNULocationInfo.CrowdedRating.SOMEWHAT_CROWDED) {
+            return Color.YELLOW;
+        } else if (rating == CNULocationInfo.CrowdedRating.CROWDED) {
+            return Color.RED;
+        } else {
+            return Color.GREEN;
+        }
     }
 
     @Override
@@ -151,7 +186,7 @@ public class CNU extends Activity {
         if (location != null) {
             ((TextView) findViewById(R.id.location)).setText("Location: " + location.getName());
         } else {
-            ((TextView) findViewById(R.id.location)).setText("Location: unknown");
+            ((TextView) findViewById(R.id.location)).setText("Location: Off Campus");
         }
     }
 
@@ -159,13 +194,18 @@ public class CNU extends Activity {
         Log.d(LOG_TAG, "Updated info: " + info.size());
         int regattas = 0;
         int commons = 0;
+        CNULocationInfo.CrowdedRating regattasCrowdedRating = CNULocationInfo.CrowdedRating.NOT_CROWDED;
+        CNULocationInfo.CrowdedRating commonsCrowdedRating = CNULocationInfo.CrowdedRating.NOT_CROWDED;
         for (CNULocationInfo location : info) {
             if (location.getLocation().equals("Regattas")) {
                 regattas = location.getPeople();
+                regattasCrowdedRating = location.getCrowdedRating();
             } else if (location.getLocation().equals("Commons")) {
                 commons = location.getPeople();
+                commonsCrowdedRating = location.getCrowdedRating();
             }
         }
+        drawPictures(getColorForCrowdedRating(regattasCrowdedRating), getColorForCrowdedRating(commonsCrowdedRating));
         ((TextView) findViewById(R.id.regattasInfo)).setText("Currently: " + regattas + " people.");
         ((TextView) findViewById(R.id.commonsInfo)).setText("Currently: " + commons + " people.");
     }

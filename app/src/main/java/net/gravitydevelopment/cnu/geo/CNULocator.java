@@ -44,7 +44,7 @@ public class CNULocator {
                 return sub;
             }
         }
-        return null;
+        return base.isInsideLocation(latitude, longitude) ? base : null;
     }
 
     private void updateLocations(List<CNULocation> l) {

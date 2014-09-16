@@ -24,6 +24,7 @@ public class LocationService {
     private static double sLastLongitude;
     private static double sLastLatitude;
     private static CNULocation sLastLocation;
+    private static List<CNULocationInfo> sLastLocationInfo;
     private static long sLastUpdate;
     private static long sLastPublishedUpdate;
 
@@ -101,11 +102,11 @@ public class LocationService {
         }
 
         if (CNU.isRunning()) {
-            final List<CNULocationInfo> info = CNUApi.getInfo();
+            sLastLocationInfo = CNUApi.getInfo();
             CNU.getContext().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    CNU.getContext().updateInfo(info);
+                    CNU.getContext().updateInfo(sLastLocationInfo);
                 }
             });
         }
@@ -121,6 +122,10 @@ public class LocationService {
 
     public static CNULocation getLastLocation() {
         return sLastLocation;
+    }
+
+    public static List<CNULocationInfo> getsLastLocationInfo() {
+        return sLastLocationInfo;
     }
 
     public static boolean hasLocation() {
