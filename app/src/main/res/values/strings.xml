@@ -10,9 +10,10 @@
     <string name="preference_donate_summary">Support my work!</string>
     <string name="title_activity_cnudining">CNU Dining</string>
     <string name="hello_world">Hello world!</string>
-
     <string name="regattas_title">Regattas</string>
     <string name="regattas_info">Loading...</string>
     <string name="commons_title">The Commons</string>
     <string name="commons_info">Loading...</string>
+    <string name="title_activity_cnuview_location">Location</string>
+
 </resources>

@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.gravitydevelopment.cnu.fragment.LocationViewFragment;
 import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
@@ -40,13 +41,24 @@ public class CNU extends Activity {
     private static CNU sContext;
     private static boolean sRunning;
     private CNUFence fence = new CNUFence();
+    private LocationViewFragment regattasFrag;
+    private LocationViewFragment commonsFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cnudining);
 
-        drawPictures(Color.GRAY, Color.GRAY);
+        if (savedInstanceState == null) {
+            regattasFrag = LocationViewFragment.newInstance("Regattas", R.drawable.regattas_full, Color.GRAY, true);
+            commonsFrag = LocationViewFragment.newInstance("The Commons", R.drawable.commons_full, Color.GRAY, true);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.regattas_container, regattasFrag)
+                    .commit();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.commons_container, commonsFrag)
+                    .commit();
+        }
 
         if (!BackendService.isRunning()) {
             Log.d(LOG_TAG, "Started service");
@@ -88,78 +100,10 @@ public class CNU extends Activity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //outState.putParcelable("obj", myClass);
-    }
-
-    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if (LocationService.hasLocation()) {
             updateLocation(LocationService.getLastLatitude(), LocationService.getLastLongitude(), LocationService.getLastLocation());
-            updateInfo(LocationService.getsLastLocationInfo());
-        }
-    }
-
-    private void drawPictures(int regattasColor, int commonsColor) {
-        ImageView regattas = (ImageView) findViewById(R.id.regattasImage);
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.regattas_full);
-        regattas.setImageBitmap(getRoundedRectBitmap(bm, regattasColor));
-
-        ImageView commons = (ImageView) findViewById(R.id.commonsImage);
-        bm = BitmapFactory.decodeResource(getResources(), R.drawable.commons_full);
-
-        commons.setImageBitmap(getRoundedRectBitmap(bm, commonsColor));
-    }
-
-    private void setupQuestionnaire() {
-        findViewById(R.id.regattasImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-    }
-
-    private Bitmap getRoundedRectBitmap(Bitmap bitmap, int crowdedColor) {
-        int width = 800;
-        int height = 300;
-        int colorExtra = 5;
-        bitmap = Bitmap.createScaledBitmap(bitmap, width + colorExtra, height + colorExtra, true);
-        Bitmap result = null;
-        try {
-            result = Bitmap.createBitmap(width + colorExtra, height + colorExtra, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(result);
-
-            BitmapShader shader;
-            shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-
-            Paint color = new Paint();
-            color.setColor(crowdedColor);
-
-            Paint paint = new Paint();
-            paint.setAntiAlias(true);
-            paint.setShader(shader);
-
-            RectF rectColor = new RectF(0.0f, 0.0f, width + colorExtra, height + colorExtra);
-            RectF rectImage = new RectF(colorExtra, colorExtra, width, height);
-
-            canvas.drawRoundRect(rectColor, 50, 50, color);
-            canvas.drawRoundRect(rectImage, 50, 50, paint);
-
-        } catch (NullPointerException e) {
-        } catch (OutOfMemoryError o) {
-        }
-        return result;
-    }
-
-    private int getColorForCrowdedRating(CNULocationInfo.CrowdedRating rating) {
-        if (rating == CNULocationInfo.CrowdedRating.SOMEWHAT_CROWDED) {
-            return Color.YELLOW;
-        } else if (rating == CNULocationInfo.CrowdedRating.CROWDED) {
-            return Color.RED;
-        } else {
-            return Color.GREEN;
+            updateInfo(LocationService.getLastLocationInfo());
         }
     }
 
@@ -191,23 +135,23 @@ public class CNU extends Activity {
     }
 
     public void updateInfo(List<CNULocationInfo> info) {
-        Log.d(LOG_TAG, "Updated info: " + info.size());
-        int regattas = 0;
-        int commons = 0;
-        CNULocationInfo.CrowdedRating regattasCrowdedRating = CNULocationInfo.CrowdedRating.NOT_CROWDED;
-        CNULocationInfo.CrowdedRating commonsCrowdedRating = CNULocationInfo.CrowdedRating.NOT_CROWDED;
+        CNULocationInfo regattasInfo = null;
+        CNULocationInfo commonsInfo = null;
         for (CNULocationInfo location : info) {
             if (location.getLocation().equals("Regattas")) {
-                regattas = location.getPeople();
-                regattasCrowdedRating = location.getCrowdedRating();
+                regattasInfo = location;
             } else if (location.getLocation().equals("Commons")) {
-                commons = location.getPeople();
-                commonsCrowdedRating = location.getCrowdedRating();
+                commonsInfo = location;
             }
         }
-        drawPictures(getColorForCrowdedRating(regattasCrowdedRating), getColorForCrowdedRating(commonsCrowdedRating));
-        ((TextView) findViewById(R.id.regattasInfo)).setText("Currently: " + regattas + " people.");
-        ((TextView) findViewById(R.id.commonsInfo)).setText("Currently: " + commons + " people.");
+        if (regattasInfo == null) {
+            regattasInfo = new CNULocationInfo("Regattas");
+        }
+        if (commonsInfo == null) {
+            commonsInfo = new CNULocationInfo("Commons");
+        }
+        regattasFrag.updateInfo(regattasInfo);
+        commonsFrag.updateInfo(commonsInfo);
     }
 
     public static CNU getContext() {

@@ -15,7 +15,6 @@ public class CNULocationListener implements LocationListener {
     }
 
     public void onLocationChanged(Location location) {
-        //Log.d(CNU.LOG_TAG, "Location updated: " + location.getLongitude() + ", " + location.getLatitude());
         locationService.updateLocation(location.getLatitude(), location.getLongitude());
     }
 

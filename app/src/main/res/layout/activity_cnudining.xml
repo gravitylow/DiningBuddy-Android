@@ -7,55 +7,23 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="net.gravitydevelopment.cnu.CNU">
+    tools:context="net.gravitydevelopment.cnu.CNU" >
 
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/regattasImage"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/regattas_title"
-        android:id="@+id/regattasTitle"
-        android:layout_gravity="center_horizontal" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/regattas_info"
-        android:id="@+id/regattasInfo"
-        android:layout_gravity="center_horizontal" />
-
+    <FrameLayout
+        android:id="@+id/regattas_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </FrameLayout>
     <Space
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal" />
+    <FrameLayout
+        android:id="@+id/commons_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </FrameLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/commonsImage"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:layout_alignParentBottom="true" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/commons_title"
-        android:id="@+id/commonsTitle"
-        android:layout_gravity="center_horizontal" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/commons_info"
-        android:id="@+id/commonsInfo"
-        android:layout_gravity="center_horizontal" />
     <TextView
         android:id="@+id/latitude"
         android:text="Latitude"

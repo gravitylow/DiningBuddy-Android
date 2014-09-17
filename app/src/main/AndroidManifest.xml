@@ -14,13 +14,19 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".CNUOld"
-            android:label="@string/app_name" >
+            android:name=".CNU"
+            android:label="@string/title_activity_cnudining"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".CNUSettings"
             android:label="@string/settings_name"
-            android:parentActivityName=".CNUOld" >
+            android:parentActivityName=".CNU" >
         </activity>
 
         <receiver android:name=".receiver.BootReceiver" >
@@ -32,13 +38,12 @@
         <service android:name=".service.BackendService" />
 
         <activity
-            android:name=".CNU"
-            android:label="@string/title_activity_cnudining" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name=".CNUViewLocation"
+            android:label="@string/title_activity_cnuview_location"
+            android:parentActivityName=".CNU" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.gravitydevelopment.cnu.CNU" />
         </activity>
     </application>
 

@@ -1,6 +1,8 @@
 package net.gravitydevelopment.cnu.geo;
 
-public class CNULocationInfo {
+import java.io.Serializable;
+
+public class CNULocationInfo implements Serializable {
 
     public enum CrowdedRating {
         NOT_CROWDED,
@@ -11,6 +13,10 @@ public class CNULocationInfo {
     private final String location;
     private final int people;
     private CrowdedRating crowdedRating;
+
+    public CNULocationInfo(String location) {
+        this(location, 0, 0);
+    }
 
     public CNULocationInfo(String location, int people, int crowded) {
         this.location = location;
@@ -28,5 +34,10 @@ public class CNULocationInfo {
 
     public CrowdedRating getCrowdedRating() {
         return crowdedRating;
+    }
+
+    @Override
+    public String toString() {
+        return "CNULocationInfo{location=" + location + ", people=" + people + ", crowdedRating = " + crowdedRating + "}";
     }
 }

@@ -124,7 +124,7 @@ public class LocationService {
         return sLastLocation;
     }
 
-    public static List<CNULocationInfo> getsLastLocationInfo() {
+    public static List<CNULocationInfo> getLastLocationInfo() {
         return sLastLocationInfo;
     }
 
