@@ -15,5 +15,6 @@
     <string name="commons_title">The Commons</string>
     <string name="commons_info">Loading...</string>
     <string name="title_activity_cnuview_location">Location</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

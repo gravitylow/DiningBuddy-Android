@@ -185,5 +185,9 @@ public class CNUApi {
             return -1;
         }
     }
+
+    public static String getApiUrl() {
+        return API_HOST + API_QUERY;
+    }
 }
 

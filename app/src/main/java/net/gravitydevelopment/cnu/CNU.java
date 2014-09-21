@@ -49,9 +49,11 @@ public class CNU extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cnudining);
 
+        Log.d(LOG_TAG, "onCreate " + savedInstanceState);
+
         if (savedInstanceState == null) {
-            regattasFrag = LocationViewFragment.newInstance("Regattas", R.drawable.regattas_full, Color.GRAY, true);
-            commonsFrag = LocationViewFragment.newInstance("The Commons", R.drawable.commons_full, Color.GRAY, true);
+            regattasFrag = LocationViewFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
+            commonsFrag = LocationViewFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
             getFragmentManager().beginTransaction()
                     .replace(R.id.regattas_container, regattasFrag)
                     .commit();
@@ -97,6 +99,16 @@ public class CNU extends Activity {
         super.onStop();
 
         sRunning = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
