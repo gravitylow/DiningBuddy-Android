@@ -22,10 +22,7 @@ public class SettingsService {
     private static NetworkInfo sWifiInfo;
     private static boolean sPrefWifiOnly;
 
-    private BackendService mBackend;
-
     public SettingsService(BackendService backend) {
-        mBackend = backend;
         sSettings = backend.getSharedPreferences(PREFS_NAME, 0);
         sWifiInfo = ((ConnectivityManager) backend.getSystemService(Context.CONNECTIVITY_SERVICE))
                 .getNetworkInfo(ConnectivityManager.TYPE_WIFI);

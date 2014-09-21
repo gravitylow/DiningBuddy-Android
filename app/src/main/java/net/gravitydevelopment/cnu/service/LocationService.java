@@ -27,16 +27,20 @@ public class LocationService {
     private static List<CNULocationInfo> sLastLocationInfo;
     private static long sLastUpdate;
     private static long sLastPublishedUpdate;
+    private static CNULocationListener sListener;
 
     private static boolean sHasLocation;
+    private static boolean sDie;
 
     private SettingsService mSettings;
 
-    public LocationService(BackendService backend) {
+    public LocationService(final BackendService backend) {
         mSettings = BackendService.getSettingsService();
 
+        sListener = new CNULocationListener(this);
+
         ((LocationManager) backend.getSystemService(Context.LOCATION_SERVICE))
-                .requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new CNULocationListener(this));
+                .requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, sListener);
 
         String cache = mSettings.getCachedLocations();
         if (cache != null) {
@@ -53,6 +57,10 @@ public class LocationService {
         new Thread() {
             public void run() {
                 while (true) {
+                    Log.d(CNU.LOG_TAG, "DIE: " + sDie);
+                    if (sDie) {
+                        break;
+                    }
                     Log.d(CNU.LOG_TAG, "Should connect: " + mSettings.getShouldConnect());
                     if (mSettings.getShouldConnect()) {
                         updateInfo();
@@ -130,5 +138,10 @@ public class LocationService {
 
     public static boolean hasLocation() {
         return sHasLocation;
+    }
+
+    public static void die(Context context) {
+        sDie = true;
+        ((LocationManager) context.getSystemService(Context.LOCATION_SERVICE)).removeUpdates(sListener);
     }
 }

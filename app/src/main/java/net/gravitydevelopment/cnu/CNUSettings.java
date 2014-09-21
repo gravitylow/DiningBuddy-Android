@@ -15,8 +15,6 @@ public class CNUSettings extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(CNU.LOG_TAG, "Created sett");
-
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new PrefsFragment())
                 .commit();

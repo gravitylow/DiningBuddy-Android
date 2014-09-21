@@ -1,5 +1,8 @@
 package net.gravitydevelopment.cnu;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -7,8 +10,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
+import net.gravitydevelopment.cnu.service.BackendService;
+import net.gravitydevelopment.cnu.service.SettingsService;
 
 public class Util {
 
@@ -52,5 +60,34 @@ public class Util {
         } else {
             return Color.GREEN;
         }
+    }
+
+    public static boolean externalShouldConnect(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(SettingsService.PREFS_NAME, 0);
+        boolean wifiOnly = prefs.getBoolean(SettingsService.PREFS_KEY_WIFI_ONLY, false);
+
+        if (wifiOnly) {
+            NetworkInfo info = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE))
+                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            if (info.isConnectedOrConnecting() && !BackendService.isRunning()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public static void startBackend(Context context) {
+        Log.d(CNU.LOG_TAG, "Starting service...");
+        Intent startServiceIntent = new Intent(context, BackendService.class);
+        context.startService(startServiceIntent);
+    }
+
+    public static void stopBackend(Context context) {
+        Log.d(CNU.LOG_TAG, "Stopping service...");
+        context.stopService(new Intent(context, BackendService.class));
     }
 }

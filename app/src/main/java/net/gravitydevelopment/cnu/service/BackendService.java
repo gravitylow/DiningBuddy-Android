@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 public class BackendService extends Service {
 
+    private static BackendService sBackendService;
     private static LocationService sLocationService;
     private static SettingsService sSettingsService;
     private static boolean sRunning;
@@ -15,6 +16,7 @@ public class BackendService extends Service {
     public void onCreate() {
         sSettingsService = new SettingsService(this);
         sLocationService = new LocationService(this);
+        sBackendService = this;
     }
 
     @Override
@@ -26,6 +28,7 @@ public class BackendService extends Service {
 
     @Override
     public void onDestroy() {
+        LocationService.die(this);
         Toast.makeText(this, "Service Done", Toast.LENGTH_SHORT).show();
         sRunning = false;
     }
@@ -33,6 +36,10 @@ public class BackendService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public static BackendService getBackendService() {
+        return sBackendService;
     }
 
     public static LocationService getLocationService() {

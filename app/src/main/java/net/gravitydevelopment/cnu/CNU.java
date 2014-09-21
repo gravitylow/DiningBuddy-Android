@@ -62,10 +62,8 @@ public class CNU extends Activity {
                     .commit();
         }
 
-        if (!BackendService.isRunning()) {
-            Log.d(LOG_TAG, "Started service");
-            Intent startServiceIntent = new Intent(this, BackendService.class);
-            startService(startServiceIntent);
+        if (!BackendService.isRunning() && Util.externalShouldConnect(this)) {
+            Util.startBackend(this);
         } else if (LocationService.hasLocation()) {
             updateLocation(
                     LocationService.getLastLatitude(),
