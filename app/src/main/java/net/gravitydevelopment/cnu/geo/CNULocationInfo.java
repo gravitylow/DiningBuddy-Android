@@ -1,13 +1,25 @@
 package net.gravitydevelopment.cnu.geo;
 
+import android.graphics.Color;
+
 import java.io.Serializable;
 
 public class CNULocationInfo implements Serializable {
 
     public enum CrowdedRating {
-        NOT_CROWDED,
-        SOMEWHAT_CROWDED,
-        CROWDED;
+        NOT_CROWDED("#2ab081"),
+        SOMEWHAT_CROWDED("#f39c12"),
+        CROWDED("#d94130");
+
+        private int color;
+
+        private CrowdedRating(String hex) {
+            color = Color.parseColor(hex);
+        }
+
+        public int getColor() {
+            return color;
+        }
     }
 
     private final String location;

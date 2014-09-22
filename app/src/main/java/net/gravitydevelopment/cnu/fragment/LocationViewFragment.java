@@ -82,12 +82,19 @@ public class LocationViewFragment extends Fragment {
     }
 
     public void updateInfo(View view, int people, CNULocationInfo.CrowdedRating crowdedRating) {
-        drawPicture(view, Util.getColorForCrowdedRating(crowdedRating));
+        drawPicture(view, crowdedRating.getColor());
+        setTitleColor(view, crowdedRating.getColor());
         drawInfo(view, people);
     }
 
     private void drawTitle(View view, String title) {
-        ((TextView) view.findViewById(R.id.title)).setText(title);
+        TextView textView = ((TextView) view.findViewById(R.id.title));
+        textView.setText(title);
+    }
+
+    public void setTitleColor(View view, int color) {
+        TextView textView = ((TextView) view.findViewById(R.id.title));
+        textView.setTextColor(color);
     }
 
     private void drawPicture(View view, int color) {

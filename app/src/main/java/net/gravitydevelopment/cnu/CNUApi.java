@@ -174,7 +174,6 @@ public class CNUApi {
             conn.setRequestProperty("User-Agent", API_USER_AGENT);
             conn.setRequestMethod("POST");
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-            Log.d(CNU.LOG_TAG, "Post " + object);
             writer.write(object.toString());
             writer.flush();
 

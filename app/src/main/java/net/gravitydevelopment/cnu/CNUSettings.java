@@ -7,6 +7,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.util.Log;
 
+import com.cengalabs.flatui.FlatUI;
+
 import net.gravitydevelopment.cnu.service.BackendService;
 
 public class CNUSettings extends PreferenceActivity {
@@ -14,6 +16,10 @@ public class CNUSettings extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FlatUI.initDefaultValues(this);
+        FlatUI.setDefaultTheme(FlatUI.GRASS);
+        getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
 
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new PrefsFragment())

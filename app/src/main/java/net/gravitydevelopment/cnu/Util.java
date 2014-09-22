@@ -23,7 +23,7 @@ public class Util {
     public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int crowdedColor) {
         int width = 800;
         int height = 300;
-        int colorExtra = 5;
+        int colorExtra = 2;
         bitmap = Bitmap.createScaledBitmap(bitmap, width + colorExtra, height + colorExtra, true);
         Bitmap result = null;
         try {
@@ -35,6 +35,7 @@ public class Util {
 
             Paint color = new Paint();
             color.setColor(crowdedColor);
+            color.setAntiAlias(true);
 
             Paint paint = new Paint();
             paint.setAntiAlias(true);
@@ -50,16 +51,6 @@ public class Util {
         } catch (OutOfMemoryError o) {
         }
         return result;
-    }
-
-    public static int getColorForCrowdedRating(CNULocationInfo.CrowdedRating rating) {
-        if (rating == CNULocationInfo.CrowdedRating.SOMEWHAT_CROWDED) {
-            return Color.YELLOW;
-        } else if (rating == CNULocationInfo.CrowdedRating.CROWDED) {
-            return Color.RED;
-        } else {
-            return Color.GREEN;
-        }
     }
 
     public static boolean externalShouldConnect(Context context) {

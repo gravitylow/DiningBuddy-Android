@@ -13,6 +13,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +23,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.cengalabs.flatui.FlatUI;
 
 import net.gravitydevelopment.cnu.fragment.LocationViewFragment;
 import net.gravitydevelopment.cnu.geo.CNUFence;
@@ -47,6 +51,9 @@ public class CNU extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FlatUI.initDefaultValues(this);
+        FlatUI.setDefaultTheme(FlatUI.GRASS);
+        getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
         setContentView(R.layout.activity_cnudining);
 
         Log.d(LOG_TAG, "onCreate " + savedInstanceState);
@@ -107,6 +114,7 @@ public class CNU extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        LocationService.requestImmediateUpdate();
     }
 
     @Override

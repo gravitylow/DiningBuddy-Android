@@ -57,14 +57,10 @@ public class LocationService {
         new Thread() {
             public void run() {
                 while (true) {
-                    Log.d(CNU.LOG_TAG, "DIE: " + sDie);
                     if (sDie) {
                         break;
                     }
-                    Log.d(CNU.LOG_TAG, "Should connect: " + mSettings.getShouldConnect());
-                    if (mSettings.getShouldConnect()) {
-                        updateInfo();
-                    }
+                    updateInfo();
                     try {
                         Thread.sleep(PEOPLE_UPDATE);
                     } catch (InterruptedException e) {
@@ -104,7 +100,7 @@ public class LocationService {
         }.start();
     }
 
-    public void updateInfo() {
+    public static void updateInfo() {
         if (!CNULocator.isSetup()) {
             return;
         }
@@ -143,5 +139,15 @@ public class LocationService {
     public static void die(Context context) {
         sDie = true;
         ((LocationManager) context.getSystemService(Context.LOCATION_SERVICE)).removeUpdates(sListener);
+    }
+
+    public static void requestImmediateUpdate() {
+        if (!sDie) {
+            new Thread() {
+                public void run() {
+                    updateInfo();
+                }
+            }.start();
+        }
     }
 }

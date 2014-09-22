@@ -1,10 +1,12 @@
 package net.gravitydevelopment.cnu;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.cengalabs.flatui.FlatUI;
+
 import net.gravitydevelopment.cnu.fragment.LocationGraphFragment;
 import net.gravitydevelopment.cnu.fragment.LocationViewFragment;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
@@ -24,6 +26,9 @@ public class CNUViewLocation extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FlatUI.initDefaultValues(this);
+        FlatUI.setDefaultTheme(FlatUI.GRASS);
+        getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
         setContentView(R.layout.activity_cnuview_location);
         if (savedInstanceState == null) {
             Bundle b = getIntent().getExtras();
@@ -33,9 +38,9 @@ public class CNUViewLocation extends Activity {
             Serializable obj = b.getSerializable(ARG_INFO);
             LocationViewFragment viewFragment;
             if (obj != null) {
-                viewFragment = LocationViewFragment.newInstance(title, name, drawable, Color.GREEN, false, (CNULocationInfo)obj);
+                viewFragment = LocationViewFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo)obj);
             } else {
-                viewFragment = LocationViewFragment.newInstance(title, name, drawable, Color.GREEN, false);
+                viewFragment = LocationViewFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
             }
 
             LocationGraphFragment graphFragment = LocationGraphFragment.newInstance(name);

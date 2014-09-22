@@ -1,8 +1,10 @@
 package net.gravitydevelopment.cnu.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -34,6 +36,14 @@ public class LocationGraphFragment extends Fragment {
         WebView webView = (WebView) rootView.findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(CNUApi.getApiUrl() + "graphs/" + mLocationName);
+        webView.setScrollContainer(false);
+        webView.setVerticalScrollBarEnabled(false);
+        webView.setBackgroundColor(Color.parseColor("#DFDFD7"));
+        webView.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                return (event.getAction() == MotionEvent.ACTION_MOVE);
+            }
+        });
 
         return rootView;
     }
