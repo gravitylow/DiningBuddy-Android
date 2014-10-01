@@ -2,26 +2,13 @@ package net.gravitydevelopment.cnu;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.Typeface;
-import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cengalabs.flatui.FlatUI;
@@ -30,20 +17,18 @@ import net.gravitydevelopment.cnu.fragment.LocationViewFragment;
 import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
-import net.gravitydevelopment.cnu.geo.CNULocator;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
-public class CNU extends Activity {
+public class CNU extends FragmentActivity {
 
     public static final String LOG_TAG = "CNU";
     private static CNU sContext;
     private static boolean sRunning;
+    private static CNULocationView currentLocationView;
     private CNUFence fence = new CNUFence();
     private LocationViewFragment regattasFrag;
     private LocationViewFragment commonsFrag;
@@ -61,10 +46,10 @@ public class CNU extends Activity {
         if (savedInstanceState == null) {
             regattasFrag = LocationViewFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
             commonsFrag = LocationViewFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.regattas_container, regattasFrag)
                     .commit();
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.commons_container, commonsFrag)
                     .commit();
         }
@@ -143,6 +128,7 @@ public class CNU extends Activity {
     }
 
     public void updateLocation(double latitude, double longitude, CNULocation location) {
+        Log.d(LOG_TAG, "CNU-updateLocation");
         ((TextView) findViewById(R.id.longitude)).setText("Longitude: " + longitude);
         ((TextView) findViewById(R.id.latitude)).setText("Latitude: " + latitude);
         if (location != null) {
@@ -150,9 +136,11 @@ public class CNU extends Activity {
         } else {
             ((TextView) findViewById(R.id.location)).setText("Location: Off Campus");
         }
+        Log.d(LOG_TAG, "Updated location, " + (currentLocationView != null));
     }
 
     public void updateInfo(List<CNULocationInfo> info) {
+        Log.d(LOG_TAG, "CNU-updateInfo");
         CNULocationInfo regattasInfo = null;
         CNULocationInfo commonsInfo = null;
         for (CNULocationInfo location : info) {
@@ -168,8 +156,13 @@ public class CNU extends Activity {
         if (commonsInfo == null) {
             commonsInfo = new CNULocationInfo("Commons");
         }
-        regattasFrag.updateInfo(regattasInfo);
-        commonsFrag.updateInfo(commonsInfo);
+        if (regattasFrag != null && commonsFrag != null) {
+            regattasFrag.updateInfo(regattasInfo);
+            commonsFrag.updateInfo(commonsInfo);
+        }
+        if (currentLocationView != null) {
+            currentLocationView.updateInfo(regattasInfo, commonsInfo);
+        }
     }
 
     public static CNU getContext() {
@@ -178,5 +171,41 @@ public class CNU extends Activity {
 
     public static boolean isRunning() {
         return sRunning;
+    }
+
+    public static void setCurrentLocationView(CNULocationView view) {
+        currentLocationView = view;
+    }
+
+    public static CNULocationView getCurrentLocationView() {
+        return currentLocationView;
+    }
+
+    public static void updateLocationView(CNULocation location) {
+        Log.d(LOG_TAG, "CNU-updateLocationView");
+        if (currentLocationView != null) {
+            currentLocationView.updateLocation(location);
+        }
+    }
+
+    public static void updateLocationViewInfo(List<CNULocationInfo> info) {
+        CNULocationInfo regattasInfo = null;
+        CNULocationInfo commonsInfo = null;
+        for (CNULocationInfo location : info) {
+            if (location.getLocation().equals("Regattas")) {
+                regattasInfo = location;
+            } else if (location.getLocation().equals("Commons")) {
+                commonsInfo = location;
+            }
+        }
+        if (regattasInfo == null) {
+            regattasInfo = new CNULocationInfo("Regattas");
+        }
+        if (commonsInfo == null) {
+            commonsInfo = new CNULocationInfo("Commons");
+        }
+        if (currentLocationView != null) {
+            currentLocationView.updateInfo(regattasInfo, commonsInfo);
+        }
     }
 }

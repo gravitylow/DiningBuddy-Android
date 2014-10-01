@@ -16,11 +16,15 @@ public class SettingsService {
     public static final String PREFS_KEY_WIFI_ONLY = "pref_wifi_only";
     public static final String PREFS_KEY_LOCATIONS = "pref_locations";
     public static final String PREFS_KEY_UNIQUE_ID = "pref_unique_id";
+    public static final String PREFS_KEY_LAST_FEEDBACK_REGATTAS = "pref_last_feedback_regattas";
+    public static final String PREFS_KEY_LAST_FEEDBACK_COMMONS = "pref_last_feedback_commons";
 
     private static SharedPreferences sSettings;
     private static UUID sUUID;
     private static NetworkInfo sWifiInfo;
     private static boolean sPrefWifiOnly;
+    private static long sLastFeedbackRegattas;
+    private static long sLastFeedbackCommons;
 
     public SettingsService(BackendService backend) {
         sSettings = backend.getSharedPreferences(PREFS_NAME, 0);
@@ -29,7 +33,8 @@ public class SettingsService {
 
         // Load prefs
         sUUID = getOrCreateUniqueId();
-        sPrefWifiOnly = sSettings.getBoolean(PREFS_KEY_WIFI_ONLY, false);
+        sLastFeedbackRegattas = sSettings.getLong(PREFS_KEY_LAST_FEEDBACK_REGATTAS, -1);
+        sLastFeedbackCommons = sSettings.getLong(PREFS_KEY_LAST_FEEDBACK_COMMONS, -1);
     }
 
     private UUID getOrCreateUniqueId() {
@@ -90,5 +95,29 @@ public class SettingsService {
         } else {
             return true;
         }
+    }
+
+    public long getLastFeedbackRegattas() {
+        return sLastFeedbackRegattas;
+    }
+
+    public long getsLastFeedbackCommons() {
+        return sLastFeedbackCommons;
+    }
+
+    public void setPrefsKeyLastFeedbackRegattas(long l) {
+        sLastFeedbackRegattas = l;
+
+        SharedPreferences.Editor editor = sSettings.edit();
+        editor.putLong(PREFS_KEY_LAST_FEEDBACK_REGATTAS, l);
+        editor.apply();
+    }
+
+    public void setPrefsKeyLastFeedbackCommons(long l) {
+        sLastFeedbackCommons = l;
+
+        SharedPreferences.Editor editor = sSettings.edit();
+        editor.putLong(PREFS_KEY_LAST_FEEDBACK_COMMONS, l);
+        editor.apply();
     }
 }

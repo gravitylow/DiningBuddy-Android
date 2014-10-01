@@ -18,7 +18,17 @@ import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.SettingsService;
 
+import java.util.ArrayList;
+
 public class Util {
+
+    public static final String GOOGLE_CALENDAR_ID_COMMONS = "cnu.edu_tjpup58u1v03ijvc91uof8qmq0%40group.calendar.google.com";
+    public static final String GOOGLE_CALENDAR_ID_REGATTAS = "dining%40cnu.edu";
+
+    public static final String REGATTAS_NAME = "Regattas";
+    public static final String COMMONS_NAME = "Commons";
+
+    public static final long MIN_FEEDBACK_INTERVAL = 30 * 60 * 1000;
 
     public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int crowdedColor) {
         int width = 800;

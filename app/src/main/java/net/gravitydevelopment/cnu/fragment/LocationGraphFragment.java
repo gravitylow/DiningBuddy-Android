@@ -2,7 +2,7 @@ package net.gravitydevelopment.cnu.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,7 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import net.gravitydevelopment.cnu.CNUApi;
-import net.gravitydevelopment.cnu.CNUViewLocation;
+import net.gravitydevelopment.cnu.CNULocationView;
 import net.gravitydevelopment.cnu.R;
 
 public class LocationGraphFragment extends Fragment {
@@ -26,7 +26,7 @@ public class LocationGraphFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mLocationName = getArguments().getString(CNUViewLocation.ARG_NAME);
+            mLocationName = getArguments().getString(CNULocationView.ARG_NAME);
         }
     }
 
@@ -51,7 +51,7 @@ public class LocationGraphFragment extends Fragment {
     public static LocationGraphFragment newInstance(String locationName) {
         LocationGraphFragment fragment = new LocationGraphFragment();
         Bundle args = new Bundle();
-        args.putString(CNUViewLocation.ARG_NAME, locationName);
+        args.putString(CNULocationView.ARG_NAME, locationName);
         fragment.setArguments(args);
         return fragment;
     }

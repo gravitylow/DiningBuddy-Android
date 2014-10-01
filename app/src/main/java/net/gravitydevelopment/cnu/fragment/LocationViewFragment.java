@@ -1,10 +1,10 @@
 package net.gravitydevelopment.cnu.fragment;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.CNU;
-import net.gravitydevelopment.cnu.CNUViewLocation;
+import net.gravitydevelopment.cnu.CNULocationView;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
@@ -33,11 +33,11 @@ public class LocationViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mTitle = getArguments().getString(CNUViewLocation.ARG_TITLE);
-            mName = getArguments().getString(CNUViewLocation.ARG_NAME);
-            mDrawable = getArguments().getInt(CNUViewLocation.ARG_DRAWABLE);
-            mInitialColor = getArguments().getInt(CNUViewLocation.ARG_INITIAL_COLOR);
-            mShouldOpenInfo = getArguments().getBoolean(CNUViewLocation.ARG_SHOULD_OPEN_INFO);
+            mTitle = getArguments().getString(CNULocationView.ARG_TITLE);
+            mName = getArguments().getString(CNULocationView.ARG_NAME);
+            mDrawable = getArguments().getInt(CNULocationView.ARG_DRAWABLE);
+            mInitialColor = getArguments().getInt(CNULocationView.ARG_INITIAL_COLOR);
+            mShouldOpenInfo = getArguments().getBoolean(CNULocationView.ARG_SHOULD_OPEN_INFO);
         }
     }
 
@@ -47,7 +47,7 @@ public class LocationViewFragment extends Fragment {
         drawTitle(rootView, mTitle);
         drawPicture(rootView, mInitialColor);
         drawInfo(rootView, -1);
-        Serializable obj = getArguments().getSerializable(CNUViewLocation.ARG_INFO);
+        Serializable obj = getArguments().getSerializable(CNULocationView.ARG_INFO);
         if (obj != null) {
             updateInfo(rootView, (CNULocationInfo) obj);
         }
@@ -55,13 +55,13 @@ public class LocationViewFragment extends Fragment {
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), CNUViewLocation.class);
+                    Intent intent = new Intent(getActivity(), CNULocationView.class);
                     Bundle b = new Bundle();
-                    b.putString(CNUViewLocation.ARG_TITLE, mTitle);
-                    b.putString(CNUViewLocation.ARG_NAME, mName);
-                    b.putInt(CNUViewLocation.ARG_DRAWABLE, mDrawable);
+                    b.putString(CNULocationView.ARG_TITLE, mTitle);
+                    b.putString(CNULocationView.ARG_NAME, mName);
+                    b.putInt(CNULocationView.ARG_DRAWABLE, mDrawable);
                     if (mInfo != null) {
-                        b.putSerializable(CNUViewLocation.ARG_INFO, mInfo);
+                        b.putSerializable(CNULocationView.ARG_INFO, mInfo);
                     }
                     intent.putExtras(b);
                     startActivity(intent);
@@ -116,14 +116,14 @@ public class LocationViewFragment extends Fragment {
         LocationViewFragment fragment = new LocationViewFragment();
 
         Bundle args = new Bundle();
-        args.putString(CNUViewLocation.ARG_TITLE, title);
-        args.putString(CNUViewLocation.ARG_NAME, name);
-        args.putInt(CNUViewLocation.ARG_DRAWABLE, drawable);
-        args.putInt(CNUViewLocation.ARG_INITIAL_COLOR, initialColor);
-        args.putBoolean(CNUViewLocation.ARG_SHOULD_OPEN_INFO, shouldOpenInfo);
+        args.putString(CNULocationView.ARG_TITLE, title);
+        args.putString(CNULocationView.ARG_NAME, name);
+        args.putInt(CNULocationView.ARG_DRAWABLE, drawable);
+        args.putInt(CNULocationView.ARG_INITIAL_COLOR, initialColor);
+        args.putBoolean(CNULocationView.ARG_SHOULD_OPEN_INFO, shouldOpenInfo);
         if (initialInfo != null) {
             Log.d(CNU.LOG_TAG, "Created new frag: " + initialInfo);
-            args.putSerializable(CNUViewLocation.ARG_INFO, initialInfo);
+            args.putSerializable(CNULocationView.ARG_INFO, initialInfo);
         }
         fragment.setArguments(args);
 

@@ -113,6 +113,34 @@ public class CNUApi {
         }
     }
 
+    public static void sendFeedback(String target, CNULocation location, int crowded, int minutes, String feedback, long time, UUID id) {
+        if (location == null) {
+            return;
+        }
+        feedback = feedback.replaceAll("'", "\\\\'").replaceAll("\"", "\\\\\"");
+        String json = "{"
+                + "\"id\": \"" + id.toString() + "\""
+                + ", \"target\": \"" + target + "\""
+                + ", \"crowded\": " + crowded
+                + ", \"minutes\": " + minutes
+                + ", \"feedback\": \"" + feedback + "\""
+                + ", \"location\": \"" + location.getName() + "\""
+                + ", \"time\": " + time
+                + "}";
+        try {
+            URL url = new URL(API_HOST + API_QUERY + "feedback");
+            JSONObject object = new JSONObject(json);
+
+            int result = write(url, object);
+            if (result != HttpURLConnection.HTTP_CREATED) {
+                Log.e(CNU.LOG_TAG, "Error sending update: " + result);
+            }
+            Log.d(CNU.LOG_TAG, "Posted update: " + result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static List<CNULocation> locationsFromArray(JSONArray locations) {
         List<CNULocation> list = new ArrayList<CNULocation>();
         try {

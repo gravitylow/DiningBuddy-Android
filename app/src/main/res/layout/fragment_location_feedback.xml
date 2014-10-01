@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedbackFragment"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/crowded_text"
+        android:text="@string/feedback_crowded" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crowded_spinner"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/minutes_text"
+        android:text="@string/feedback_minutes" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/minutes_spinner"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedback_text"
+        android:text="@string/feedback_comments" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedback"
+        android:layout_gravity="center_horizontal" />
+
+    <com.cengalabs.flatui.views.FlatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/feedback_button"
+        android:id="@+id/submit"
+        android:layout_gravity="center_horizontal" />
+
+    <com.cengalabs.flatui.views.FlatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedback_response_text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone"
+        android:text="@string/feedback_response" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedback_response_text_detail"
+        android:visibility="gone"
+        android:text="@string/feedback_response_detail" />
+
+</LinearLayout>

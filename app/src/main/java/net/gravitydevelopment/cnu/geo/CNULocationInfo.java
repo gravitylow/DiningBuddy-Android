@@ -3,22 +3,37 @@ package net.gravitydevelopment.cnu.geo;
 import android.graphics.Color;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class CNULocationInfo implements Serializable {
 
     public enum CrowdedRating {
-        NOT_CROWDED("#2ab081"),
-        SOMEWHAT_CROWDED("#f39c12"),
-        CROWDED("#d94130");
+        NOT_CROWDED("Not crowded at all", "#2ab081"),
+        SOMEWHAT_CROWDED("Somewhat crowded", "#f39c12"),
+        CROWDED("Very crowded", "#d94130");
 
+        private String text;
         private int color;
 
-        private CrowdedRating(String hex) {
+        private CrowdedRating(String text, String hex) {
+            this.text = text;
             color = Color.parseColor(hex);
         }
 
         public int getColor() {
             return color;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public static ArrayList<String> getFeedbackList() {
+            ArrayList<String> list = new ArrayList<String>();
+            for (CrowdedRating rating : values()) {
+                list.add(rating.getText());
+            }
+            return list;
         }
     }
 

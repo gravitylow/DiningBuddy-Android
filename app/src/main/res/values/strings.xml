@@ -11,10 +11,14 @@
     <string name="title_activity_cnudining">CNU Dining</string>
     <string name="hello_world">Hello world!</string>
     <string name="regattas_title">Regattas</string>
-    <string name="regattas_info">Loading...</string>
+    <string name="regattas_info">Loading…</string>
     <string name="commons_title">The Commons</string>
-    <string name="commons_info">Loading...</string>
-    <string name="title_activity_cnuview_location">Location</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="commons_info">Loading…</string>
+    <string name="title_activity_cnulocation_view">Location</string>
+    <string name="feedback_crowded">Is this dining hall very crowded?</string>
+    <string name="feedback_minutes">Please estimate waiting time for your food:</string>
+    <string name="feedback_comments">Any additional information?</string>
+    <string name="feedback_button">Submit</string>
+    <string name="feedback_response">Thanks!</string>
+    <string name="feedback_response_detail">Accurate feedback helps improve the data provided to you.</string>
 </resources>

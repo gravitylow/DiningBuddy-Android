@@ -13,6 +13,7 @@ import net.gravitydevelopment.cnu.geo.CNULocator;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class LocationService {
 
@@ -77,9 +78,11 @@ public class LocationService {
         }
 
         CNULocation location = mLocator.getLocation(latitude, longitude);
+        Log.d(CNU.LOG_TAG, "CNU is running: " + CNU.isRunning());
         if (CNU.isRunning()) {
             CNU.getContext().updateLocation(latitude, longitude, location);
         }
+        CNU.updateLocationView(location);
 
         if (sLastPublishedUpdate == 0 || (System.currentTimeMillis() - sLastPublishedUpdate) >= MIN_UPDATE) {
             Log.d(CNU.LOG_TAG, "Posting location " + location);
@@ -113,6 +116,8 @@ public class LocationService {
                     CNU.getContext().updateInfo(sLastLocationInfo);
                 }
             });
+        } else {
+            CNU.getContext().updateLocationViewInfo(sLastLocationInfo);
         }
     }
 
@@ -149,5 +154,13 @@ public class LocationService {
                 }
             }.start();
         }
+    }
+
+    public void postFeedback(final String target, final CNULocation location, final int crowded, final int minutes, final String feedback, final UUID uuid) {
+        new Thread(new Runnable() {
+            public void run() {
+                CNUApi.sendFeedback(target, location, crowded, minutes, feedback, System.currentTimeMillis(), uuid);
+            }
+        }).start();
     }
 }
