@@ -5,7 +5,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 
 import com.cengalabs.flatui.FlatUI;
 

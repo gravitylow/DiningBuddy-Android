@@ -3,10 +3,8 @@ package net.gravitydevelopment.cnu;
 import android.util.Log;
 
 import net.gravitydevelopment.cnu.geo.CNUCoordinatePair;
-import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
-import net.gravitydevelopment.cnu.geo.CNULocator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,10 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class CNUApi {

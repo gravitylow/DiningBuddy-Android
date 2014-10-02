@@ -82,7 +82,7 @@ public class CNULocation {
     }
 
     public double angle2D(double y1, double x1, double y2, double x2) {
-        double dtheta,theta1,theta2;
+        double dtheta, theta1, theta2;
 
         theta1 = Math.atan2(y1,x1);
         theta2 = Math.atan2(y2,x2);
@@ -110,8 +110,8 @@ public class CNULocation {
         StringBuilder builder = new StringBuilder();
         builder.append("[");
         if (coordinatePairs.size() > 0) {
-            for (CNUCoordinatePair fence : coordinatePairs) {
-                builder.append(fence.jsonValue());
+            for (CNUCoordinatePair pair : coordinatePairs) {
+                builder.append(pair.jsonValue());
                 builder.append(",");
             }
             builder.deleteCharAt(builder.length() - 1);

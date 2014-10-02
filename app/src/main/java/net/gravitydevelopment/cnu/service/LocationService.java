@@ -12,7 +12,6 @@ import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocator;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class LocationService {

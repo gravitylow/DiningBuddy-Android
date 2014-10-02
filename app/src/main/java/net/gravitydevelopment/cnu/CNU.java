@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import com.cengalabs.flatui.FlatUI;
 
 import net.gravitydevelopment.cnu.fragment.LocationViewFragment;
-import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.service.BackendService;
@@ -27,7 +25,6 @@ public class CNU extends FragmentActivity {
     private static CNU sContext;
     private static boolean sRunning;
     private static CNULocationView currentLocationView;
-    private CNUFence fence = new CNUFence();
     private static LocationViewFragment regattasFrag;
     private static LocationViewFragment commonsFrag;
     private static LocationViewFragment einsteinsFrag;
@@ -114,7 +111,6 @@ public class CNU extends FragmentActivity {
     }
 
     public void updateLocation(double latitude, double longitude, CNULocation location) {
-        Log.d(LOG_TAG, "CNU-updateLocation");
         ((TextView) findViewById(R.id.longitude)).setText("Longitude: " + longitude);
         ((TextView) findViewById(R.id.latitude)).setText("Latitude: " + latitude);
         if (location != null) {
@@ -122,7 +118,6 @@ public class CNU extends FragmentActivity {
         } else {
             ((TextView) findViewById(R.id.location)).setText("Location: Off Campus");
         }
-        Log.d(LOG_TAG, "Updated location, " + (currentLocationView != null));
     }
 
     public static void updateInfo(List<CNULocationInfo> info) {

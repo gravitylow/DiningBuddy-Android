@@ -2,21 +2,17 @@ package net.gravitydevelopment.cnu;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.cengalabs.flatui.FlatUI;
 
-import net.gravitydevelopment.cnu.fragment.LocationFeedbackFragment;
-import net.gravitydevelopment.cnu.fragment.LocationGraphFragment;
 import net.gravitydevelopment.cnu.fragment.LocationMainFragment;
 import net.gravitydevelopment.cnu.fragment.LocationViewFragment;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 
 import java.io.Serializable;
-
 
 public class CNULocationView extends FragmentActivity {
 

@@ -1,8 +1,5 @@
 package net.gravitydevelopment.cnu.geo;
 
-import android.util.Log;
-
-import net.gravitydevelopment.cnu.CNU;
 import net.gravitydevelopment.cnu.CNUApi;
 
 import java.util.ArrayList;
@@ -44,14 +41,13 @@ public class CNULocator {
         for (CNULocation sub : base.getSubLocations()) {
             CNULocation loc = getApplicableLocation(sub, latitude, longitude);
             if (loc != null) {
-                return sub;
+                return loc;
             }
         }
         return base.isInsideLocation(latitude, longitude) ? base : null;
     }
 
     private void updateLocations(List<CNULocation> l) {
-        Log.d(CNU.LOG_TAG, "Updated locations: " + l);
         locations = new ArrayList<CNULocation>();
         locations.addAll(l);
     }
