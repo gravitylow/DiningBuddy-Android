@@ -153,7 +153,7 @@ public class CNUApi {
                 for (int j = 0; j < fences.length(); j++) {
                     JSONObject fence = fences.getJSONObject(j);
                     double latitude = fence.getDouble("lat");
-                    double longitude = fence.getDouble("long");
+                    double longitude = fence.getDouble("lon");
                     coordinatePairs.add(new CNUCoordinatePair(latitude, longitude));
                 }
                 JSONArray subLocations = location.getJSONArray("subLocations");
