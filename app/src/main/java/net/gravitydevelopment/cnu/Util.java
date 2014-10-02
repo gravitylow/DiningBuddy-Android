@@ -22,9 +22,6 @@ import java.util.ArrayList;
 
 public class Util {
 
-    public static final String GOOGLE_CALENDAR_ID_COMMONS = "cnu.edu_tjpup58u1v03ijvc91uof8qmq0%40group.calendar.google.com";
-    public static final String GOOGLE_CALENDAR_ID_REGATTAS = "dining%40cnu.edu";
-
     public static final String REGATTAS_NAME = "Regattas";
     public static final String COMMONS_NAME = "Commons";
 

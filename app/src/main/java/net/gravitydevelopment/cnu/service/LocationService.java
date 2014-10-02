@@ -121,6 +121,10 @@ public class LocationService {
         }
     }
 
+    public CNULocator getLocator() {
+        return mLocator;
+    }
+
     public static double getLastLatitude() {
         return sLastLatitude;
     }

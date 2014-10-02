@@ -2,6 +2,7 @@ package net.gravitydevelopment.cnu;
 
 import android.util.Log;
 
+import net.gravitydevelopment.cnu.geo.CNUCoordinatePair;
 import net.gravitydevelopment.cnu.geo.CNUFence;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
@@ -147,22 +148,20 @@ public class CNUApi {
             for (int i = 0; i < locations.length(); i++) {
                 JSONObject location = locations.getJSONObject(i);
                 String name = location.getString("name");
-                JSONArray fences = location.getJSONArray("fences");
-                List<CNUFence> fencesList = new ArrayList<CNUFence>();
+                JSONArray fences = location.getJSONArray("coordinatePairs");
+                List<CNUCoordinatePair> coordinatePairs = new ArrayList<CNUCoordinatePair>();
                 for (int j = 0; j < fences.length(); j++) {
                     JSONObject fence = fences.getJSONObject(j);
-                    double minLat = fence.getDouble("minLat");
-                    double maxLat = fence.getDouble("maxLat");
-                    double minLong = fence.getDouble("minLong");
-                    double maxLong = fence.getDouble("maxLong");
-                    fencesList.add(new CNUFence(minLat, maxLat, minLong, maxLong));
+                    double latitude = fence.getDouble("lat");
+                    double longitude = fence.getDouble("long");
+                    coordinatePairs.add(new CNUCoordinatePair(latitude, longitude));
                 }
                 JSONArray subLocations = location.getJSONArray("subLocations");
                 CNULocation newLoc;
                 if (subLocations.length() > 0) {
-                    newLoc = new CNULocation(name, fencesList, locationsFromArray(subLocations));
+                    newLoc = new CNULocation(name, coordinatePairs, locationsFromArray(subLocations));
                 } else {
-                    newLoc = new CNULocation(name, fencesList);
+                    newLoc = new CNULocation(name, coordinatePairs);
                 }
                 list.add(newLoc);
             }

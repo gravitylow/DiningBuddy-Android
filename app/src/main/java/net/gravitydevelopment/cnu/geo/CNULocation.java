@@ -11,23 +11,23 @@ import java.util.List;
 public class CNULocation {
 
     private String name;
-    private List<CNUFence> fences;
+    private List<CNUCoordinatePair> coordinatePairs;
     private List<CNULocation> subLocations;
 
-    public CNULocation(String name, List<CNUFence> fences, List<CNULocation> subLocations) {
+    public CNULocation(String name, List<CNUCoordinatePair> coordinatePairs, List<CNULocation> subLocations) {
         this.name = name;
-        this.fences = fences;
+        this.coordinatePairs = coordinatePairs;
         this.subLocations = subLocations;
     }
 
-    public CNULocation(String name, List<CNUFence> fences) {
+    public CNULocation(String name, List<CNUCoordinatePair> coordinatePairs) {
         this.name = name;
-        this.fences = fences;
+        this.coordinatePairs = coordinatePairs;
         this.subLocations = new ArrayList<CNULocation>();
     }
 
     public CNULocation() {
-        this.fences = new ArrayList<CNUFence>();
+        this.coordinatePairs = new ArrayList<CNUCoordinatePair>();
         this.subLocations = new ArrayList<CNULocation>();
     }
 
@@ -51,33 +51,66 @@ public class CNULocation {
         return subLocations.size() > 0;
     }
 
-    public void addFence(CNUFence fence) {
-        fences.add(fence);
+    public void addCoordinatePair(CNUCoordinatePair coordinatePair) {
+        coordinatePairs.add(coordinatePair);
     }
 
     public boolean isInsideLocation(double latitude, double longitude) {
-        for (CNUFence fence : fences) {
-            if (fence.isInsideFence(latitude, longitude)) {
-                return true;
-            }
+        int i;
+        double angle = 0;
+        double point1lat;
+        double point1long;
+        double point2lat;
+        double point2long;
+        int n = coordinatePairs.size();
+
+        for (i=0;i<n;i++) {
+            CNUCoordinatePair pair1 = coordinatePairs.get(i);
+            CNUCoordinatePair pair2 = coordinatePairs.get((i+1)%n);
+            point1lat = pair1.getLatitude() - latitude;
+            point1long = pair1.getLongitude() - longitude;
+            point2lat = pair2.getLatitude() - latitude;
+            point2long = pair2.getLongitude() - longitude;
+            angle += angle2D(point1lat, point1long, point2lat, point2long);
         }
-        return false;
+
+        if (Math.abs(angle) < Math.PI) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public double angle2D(double y1, double x1, double y2, double x2) {
+        double dtheta,theta1,theta2;
+
+        theta1 = Math.atan2(y1,x1);
+        theta2 = Math.atan2(y2,x2);
+        dtheta = theta2 - theta1;
+        while (dtheta > Math.PI) {
+            dtheta -= Math.PI * 2;
+        }
+        while (dtheta < -Math.PI) {
+            dtheta += Math.PI * 2;
+        }
+
+        return(dtheta);
     }
 
     @Override
     public String toString() {
         return "CNULocation{"
                 + "name = " + name
-                + ", fences = " + fences
+                + ", coordinatePairs = " + coordinatePairs
                 + ", subLocations = " + subLocations
                 + "}";
     }
 
-    private String fencesJsonValue() {
+    private String coordinatePairsJsonValue() {
         StringBuilder builder = new StringBuilder();
         builder.append("[");
-        if (fences.size() > 0) {
-            for (CNUFence fence : fences) {
+        if (coordinatePairs.size() > 0) {
+            for (CNUCoordinatePair fence : coordinatePairs) {
                 builder.append(fence.jsonValue());
                 builder.append(",");
             }
@@ -104,7 +137,7 @@ public class CNULocation {
     public String jsonValue() {
         return "{"
             + "\"name\" : \"" + name + "\""
-            + ", \"fences\" : " + fencesJsonValue()
+            + ", \"coordinatePairs\" : " + coordinatePairsJsonValue()
             + ", \"subLocations\" : " + subLocationsJsonValue()
             + "}";
     }

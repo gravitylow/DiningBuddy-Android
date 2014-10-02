@@ -1,6 +1,5 @@
 package net.gravitydevelopment.cnu;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,8 +39,6 @@ public class CNU extends FragmentActivity {
         FlatUI.setDefaultTheme(FlatUI.GRASS);
         getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
         setContentView(R.layout.activity_cnudining);
-
-        Log.d(LOG_TAG, "onCreate " + savedInstanceState);
 
         if (savedInstanceState == null) {
             regattasFrag = LocationViewFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
