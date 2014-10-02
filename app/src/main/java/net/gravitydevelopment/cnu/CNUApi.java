@@ -96,7 +96,7 @@ public class CNUApi {
         String json = "{"
                 + "\"id\": \"" + id.toString() + "\""
                 + ", \"lat\": " + latitude
-                + ", \"long\": " + longitude
+                + ", \"lon\": " + longitude
                 + ", \"location\": \"" + location.getName() + "\""
                 + ", \"time\": " + time
                 + "}";

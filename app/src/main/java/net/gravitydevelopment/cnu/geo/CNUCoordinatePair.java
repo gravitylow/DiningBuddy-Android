@@ -21,7 +21,7 @@ public class CNUCoordinatePair {
     public String jsonValue() {
         return "{"
                 + "\"lat\" : " + latitude
-                + ", \"long\" : " + longitude
+                + ", \"lon\" : " + longitude
                 + "}";
     }
 }
