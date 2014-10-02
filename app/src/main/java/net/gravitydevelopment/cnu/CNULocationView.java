@@ -84,17 +84,17 @@ public class CNULocationView extends FragmentActivity {
     }
 
     public void updateLocation(CNULocation location) {
-        Log.d(CNU.LOG_TAG, "Updated location");
         mainFragment.updateLocation(location);
     }
 
-    public void updateInfo(CNULocationInfo regattas, CNULocationInfo commons) {
-        Log.d(CNU.LOG_TAG, "Updated info");
+    public void updateInfo(CNULocationInfo regattas, CNULocationInfo commons, CNULocationInfo einsteins) {
         CNULocationInfo info = null;
-        if (name.equals("Regattas")) {
+        if (name.equals(Util.REGATTAS_NAME)) {
             info = regattas;
-        } else if (name.equals("Commons")) {
+        } else if (name.equals(Util.COMMONS_NAME)) {
             info = commons;
+        } else if (name.equals(Util.EINSTEINS_NAME)) {
+            info = einsteins;
         }
         final CNULocationInfo finalInfo = info;
         viewFragment.getActivity().runOnUiThread(new Runnable() {

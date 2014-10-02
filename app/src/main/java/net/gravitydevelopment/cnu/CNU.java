@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.cengalabs.flatui.FlatUI;
@@ -29,8 +28,9 @@ public class CNU extends FragmentActivity {
     private static boolean sRunning;
     private static CNULocationView currentLocationView;
     private CNUFence fence = new CNUFence();
-    private LocationViewFragment regattasFrag;
-    private LocationViewFragment commonsFrag;
+    private static LocationViewFragment regattasFrag;
+    private static LocationViewFragment commonsFrag;
+    private static LocationViewFragment einsteinsFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,11 @@ public class CNU extends FragmentActivity {
         if (savedInstanceState == null) {
             regattasFrag = LocationViewFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
             commonsFrag = LocationViewFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
+            einsteinsFrag = LocationViewFragment.newInstance("Einstein's", "Einsteins", R.drawable.einsteins_full, Color.GRAY, true);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.regattas_container, regattasFrag)
-                    .commit();
-            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.commons_container, commonsFrag)
+                    .replace(R.id.einsteins_container, einsteinsFrag)
                     .commit();
         }
 
@@ -61,17 +61,6 @@ public class CNU extends FragmentActivity {
             );
         }
         sContext = this;
-
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fence.getSize() == 4) {
-                    ((TextView)findViewById(R.id.fence)).setText(fence.jsonValue());
-                } else {
-                    fence.addBound(BackendService.getLocationService().getLastLatitude(), BackendService.getLocationService().getLastLongitude());
-                }
-            }
-        });
     }
 
     @Override
@@ -136,29 +125,41 @@ public class CNU extends FragmentActivity {
         Log.d(LOG_TAG, "Updated location, " + (currentLocationView != null));
     }
 
-    public void updateInfo(List<CNULocationInfo> info) {
-        Log.d(LOG_TAG, "CNU-updateInfo");
+    public static void updateInfo(List<CNULocationInfo> info) {
         CNULocationInfo regattasInfo = null;
         CNULocationInfo commonsInfo = null;
+        CNULocationInfo einsteinsInfo = null;
         for (CNULocationInfo location : info) {
-            if (location.getLocation().equals("Regattas")) {
+            if (location.getLocation().equals(Util.REGATTAS_NAME)) {
                 regattasInfo = location;
-            } else if (location.getLocation().equals("Commons")) {
+            } else if (location.getLocation().equals(Util.COMMONS_NAME)) {
                 commonsInfo = location;
+            } else if (location.getLocation().equals(Util.EINSTEINS_NAME)) {
+                einsteinsInfo = location;
             }
         }
         if (regattasInfo == null) {
-            regattasInfo = new CNULocationInfo("Regattas");
+            regattasInfo = new CNULocationInfo(Util.REGATTAS_NAME);
         }
         if (commonsInfo == null) {
-            commonsInfo = new CNULocationInfo("Commons");
+            commonsInfo = new CNULocationInfo(Util.COMMONS_NAME);
         }
-        if (regattasFrag != null && commonsFrag != null) {
-            regattasFrag.updateInfo(regattasInfo);
-            commonsFrag.updateInfo(commonsInfo);
+        if (einsteinsInfo == null) {
+            einsteinsInfo = new CNULocationInfo(Util.EINSTEINS_NAME);
         }
+        updateLocationViewInfo(regattasInfo, commonsInfo, einsteinsInfo);
+        if (isRunning()) {
+            if (regattasFrag != null && commonsFrag != null && einsteinsFrag != null) {
+                regattasFrag.updateInfo(regattasInfo);
+                commonsFrag.updateInfo(commonsInfo);
+                einsteinsFrag.updateInfo(einsteinsInfo);
+            }
+        }
+    }
+
+    public static void updateLocationViewInfo(CNULocationInfo regattasInfo, CNULocationInfo commonsInfo, CNULocationInfo einsteinsInfo) {
         if (currentLocationView != null) {
-            currentLocationView.updateInfo(regattasInfo, commonsInfo);
+            currentLocationView.updateInfo(regattasInfo, commonsInfo, einsteinsInfo);
         }
     }
 
@@ -179,30 +180,8 @@ public class CNU extends FragmentActivity {
     }
 
     public static void updateLocationView(CNULocation location) {
-        Log.d(LOG_TAG, "CNU-updateLocationView");
         if (currentLocationView != null) {
             currentLocationView.updateLocation(location);
-        }
-    }
-
-    public static void updateLocationViewInfo(List<CNULocationInfo> info) {
-        CNULocationInfo regattasInfo = null;
-        CNULocationInfo commonsInfo = null;
-        for (CNULocationInfo location : info) {
-            if (location.getLocation().equals("Regattas")) {
-                regattasInfo = location;
-            } else if (location.getLocation().equals("Commons")) {
-                commonsInfo = location;
-            }
-        }
-        if (regattasInfo == null) {
-            regattasInfo = new CNULocationInfo("Regattas");
-        }
-        if (commonsInfo == null) {
-            commonsInfo = new CNULocationInfo("Commons");
-        }
-        if (currentLocationView != null) {
-            currentLocationView.updateInfo(regattasInfo, commonsInfo);
         }
     }
 }

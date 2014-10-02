@@ -24,6 +24,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </FrameLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_gravity="center_horizontal" />
+    <FrameLayout
+        android:id="@+id/einsteins_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </FrameLayout>
 
     <TextView
         android:id="@+id/latitude"
@@ -40,18 +49,6 @@
     <TextView
         android:id="@+id/location"
         android:text="Location: unknown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ok"
-        android:id="@+id/button"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:id="@+id/fence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

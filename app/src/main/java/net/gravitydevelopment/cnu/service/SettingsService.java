@@ -18,6 +18,7 @@ public class SettingsService {
     public static final String PREFS_KEY_UNIQUE_ID = "pref_unique_id";
     public static final String PREFS_KEY_LAST_FEEDBACK_REGATTAS = "pref_last_feedback_regattas";
     public static final String PREFS_KEY_LAST_FEEDBACK_COMMONS = "pref_last_feedback_commons";
+    public static final String PREFS_KEY_LAST_FEEDBACK_EINSTEINS = "pref_last_feedback_einsteins";
 
     private static SharedPreferences sSettings;
     private static UUID sUUID;
@@ -25,6 +26,7 @@ public class SettingsService {
     private static boolean sPrefWifiOnly;
     private static long sLastFeedbackRegattas;
     private static long sLastFeedbackCommons;
+    private static long sLastFeedbackEinsteins;
 
     public SettingsService(BackendService backend) {
         sSettings = backend.getSharedPreferences(PREFS_NAME, 0);
@@ -35,6 +37,7 @@ public class SettingsService {
         sUUID = getOrCreateUniqueId();
         sLastFeedbackRegattas = sSettings.getLong(PREFS_KEY_LAST_FEEDBACK_REGATTAS, -1);
         sLastFeedbackCommons = sSettings.getLong(PREFS_KEY_LAST_FEEDBACK_COMMONS, -1);
+        sLastFeedbackEinsteins = sSettings.getLong(PREFS_KEY_LAST_FEEDBACK_EINSTEINS, -1);
     }
 
     private UUID getOrCreateUniqueId() {
@@ -105,6 +108,10 @@ public class SettingsService {
         return sLastFeedbackCommons;
     }
 
+    public long getsLastFeedbackEinsteins() {
+        return sLastFeedbackEinsteins;
+    }
+
     public void setPrefsKeyLastFeedbackRegattas(long l) {
         sLastFeedbackRegattas = l;
 
@@ -118,6 +125,14 @@ public class SettingsService {
 
         SharedPreferences.Editor editor = sSettings.edit();
         editor.putLong(PREFS_KEY_LAST_FEEDBACK_COMMONS, l);
+        editor.apply();
+    }
+
+    public void setPrefsKeyLastFeedbackEinsteins(long l) {
+        sLastFeedbackEinsteins = l;
+
+        SharedPreferences.Editor editor = sSettings.edit();
+        editor.putLong(PREFS_KEY_LAST_FEEDBACK_EINSTEINS, l);
         editor.apply();
     }
 }

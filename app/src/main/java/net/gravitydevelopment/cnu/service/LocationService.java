@@ -108,21 +108,20 @@ public class LocationService {
             return;
         }
 
-        if (CNU.isRunning()) {
-            sLastLocationInfo = CNUApi.getInfo();
+        sLastLocationInfo = CNUApi.getInfo();
+
+        if (sLastLocationInfo == null) {
+            return;
+        }
+
+        if (CNU.getContext() != null) {
             CNU.getContext().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     CNU.getContext().updateInfo(sLastLocationInfo);
                 }
             });
-        } else {
-            CNU.getContext().updateLocationViewInfo(sLastLocationInfo);
         }
-    }
-
-    public CNULocator getLocator() {
-        return mLocator;
     }
 
     public static double getLastLatitude() {

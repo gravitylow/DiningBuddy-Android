@@ -104,7 +104,7 @@ public class LocationViewFragment extends Fragment {
     }
 
     private void drawInfo(View view, int people) {
-        String s = people < 0 ? "Loading..." : "Currently: " + people + " people.";
+        String s = people < 0 ? "Loading…" : "Currently: " + people + " people.";
         ((TextView) view.findViewById(R.id.info)).setText(s);
     }
 
@@ -122,7 +122,6 @@ public class LocationViewFragment extends Fragment {
         args.putInt(CNULocationView.ARG_INITIAL_COLOR, initialColor);
         args.putBoolean(CNULocationView.ARG_SHOULD_OPEN_INFO, shouldOpenInfo);
         if (initialInfo != null) {
-            Log.d(CNU.LOG_TAG, "Created new frag: " + initialInfo);
             args.putSerializable(CNULocationView.ARG_INFO, initialInfo);
         }
         fragment.setArguments(args);

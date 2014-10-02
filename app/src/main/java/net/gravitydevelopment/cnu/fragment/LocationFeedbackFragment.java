@@ -76,6 +76,8 @@ public class LocationFeedbackFragment extends Fragment {
                                 settings.setPrefsKeyLastFeedbackRegattas(System.currentTimeMillis());
                             } else if (name.equals(Util.COMMONS_NAME)) {
                                 settings.setPrefsKeyLastFeedbackCommons(System.currentTimeMillis());
+                            } else if (name.equals(Util.EINSTEINS_NAME)) {
+                                settings.setPrefsKeyLastFeedbackEinsteins(System.currentTimeMillis());
                             }
                         }
                         setSubmitted(rootView);

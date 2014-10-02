@@ -24,6 +24,7 @@ public class Util {
 
     public static final String REGATTAS_NAME = "Regattas";
     public static final String COMMONS_NAME = "Commons";
+    public static final String EINSTEINS_NAME = "Einsteins";
 
     public static final long MIN_FEEDBACK_INTERVAL = 30 * 60 * 1000;
 
