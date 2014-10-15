@@ -3,8 +3,6 @@ package net.gravitydevelopment.cnu;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
-import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -61,6 +59,7 @@ public class CNUSettings extends PreferenceActivity {
         private static Context context;
         private static PreferenceScreen screen;
         private static ClipboardManager clipboard;
+        private static boolean developer = false;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -83,36 +82,39 @@ public class CNUSettings extends PreferenceActivity {
         }
 
         public static void addDeveloperPrefs() {
-            Preference id = new Preference(context);
-            id.setTitle("Unique ID");
-            String uuid = SettingsService.getUUID().toString();
-            id.setSummary(uuid);
-            screen.addPreference(id);
-            final ClipData clip = ClipData.newPlainText("CNU Unique ID", uuid);
-            id.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    clipboard.setPrimaryClip(clip);
-                    Toast.makeText(context, "Copied to the clipboard", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            });
-
-            final Preference loc = new Preference(context);
-            loc.setTitle("Location Data");
-            String name = LocationService.getLastLocation() == null ? "Unknown" : LocationService.getLastLocation().getName();
-            String data = LocationService.getLastLatitude() + "," + LocationService.getLastLongitude() + ": " + name;
-            loc.setSummary(data);
-            screen.addPreference(loc);
-            loc.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    String name = LocationService.getLastLocation() == null ? "Unknown" : LocationService.getLastLocation().getName();
-                    String data = LocationService.getLastLatitude() + "," + LocationService.getLastLongitude() + ": " + name;
-                    loc.setSummary(data);
-                    return false;
-                }
-            });
+            if (!developer) {
+                developer = true;
+                Preference id = new Preference(context);
+                id.setTitle("Unique ID");
+                String uuid = SettingsService.getUUID().toString();
+                id.setSummary(uuid);
+                screen.addPreference(id);
+                final ClipData clip = ClipData.newPlainText("CNU Unique ID", uuid);
+                id.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(context, "Copied to the clipboard", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+                // TODO disable
+                final Preference loc = new Preference(context);
+                loc.setTitle("Location Data");
+                String name = LocationService.getLastLocation() == null ? "Unknown" : LocationService.getLastLocation().getName();
+                String data = LocationService.getLastLatitude() + "," + LocationService.getLastLongitude() + ": " + name;
+                loc.setSummary(data);
+                screen.addPreference(loc);
+                loc.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        String name = LocationService.getLastLocation() == null ? "Unknown" : LocationService.getLastLocation().getName();
+                        String data = LocationService.getLastLatitude() + "," + LocationService.getLastLongitude() + ": " + name;
+                        loc.setSummary(data);
+                        return false;
+                    }
+                });
+            }
         }
     }
 
