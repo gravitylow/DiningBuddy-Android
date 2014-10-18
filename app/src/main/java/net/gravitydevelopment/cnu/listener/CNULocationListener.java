@@ -23,5 +23,4 @@ public class CNULocationListener implements LocationListener {
     public void onProviderEnabled(String provider) {}
 
     public void onProviderDisabled(String provider) {}
-
 }

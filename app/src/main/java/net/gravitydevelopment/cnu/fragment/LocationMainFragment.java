@@ -38,6 +38,11 @@ public class LocationMainFragment extends Fragment {
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("graphfragment").setIndicator("Activity"), LocationGraphFragment.class, args);
+        if (name.equals("Einsteins")) {
+            mTabHost.addTab(mTabHost.newTabSpec("hoursfragment").setIndicator("Hours"), LocationHoursFragment.class, args);
+        } else {
+            mTabHost.addTab(mTabHost.newTabSpec("menufragment").setIndicator("Menu"), LocationMenuFragment.class, args);
+        }
 
         CNULocation location = LocationService.getLastLocation();
         SettingsService settings = BackendService.getSettingsService();
@@ -61,8 +66,8 @@ public class LocationMainFragment extends Fragment {
                 isShowingFeedback = true;
             }
         } else if (isShowingFeedback) {
-            mTabHost.setCurrentTab(0);
-            mTabHost.getTabWidget().removeView(mTabHost.getTabWidget().getChildTabViewAt(1));
+            mTabHost.setCurrentTab(mTabHost.getChildCount() - 1);
+            mTabHost.getTabWidget().removeView(mTabHost.getTabWidget().getChildTabViewAt(mTabHost.getChildCount() - 1));
             isShowingFeedback = false;
         }
     }

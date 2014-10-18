@@ -22,4 +22,6 @@
     <string name="feedback_button">Submit</string>
     <string name="feedback_response">Thanks!</string>
     <string name="feedback_response_detail">Accurate feedback helps improve the data provided to you.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -111,13 +111,6 @@ public class CNU extends FragmentActivity {
     }
 
     public void updateLocation(double latitude, double longitude, CNULocation location) {
-        ((TextView) findViewById(R.id.longitude)).setText("Longitude: " + longitude);
-        ((TextView) findViewById(R.id.latitude)).setText("Latitude: " + latitude);
-        if (location != null) {
-            ((TextView) findViewById(R.id.location)).setText("Location: " + location.getName());
-        } else {
-            ((TextView) findViewById(R.id.location)).setText("Location: Off Campus");
-        }
     }
 
     public static void updateInfo(List<CNULocationInfo> info) {

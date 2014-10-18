@@ -66,6 +66,38 @@ public class CNUApi {
         }
     }
 
+    public static List<CNULocationMenuItem> getMenu(String location) {
+        try {
+            URL url = new URL(API_HOST + API_QUERY + "menus/" + location.toLowerCase());
+            String response = read(url);
+
+            JSONArray array = new JSONArray(response);
+            return menuFromArray(array);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<CNULocationMenuItem>();
+        }
+    }
+
+    public static List<CNULocationMenuItem> menuFromArray(JSONArray info) {
+        List<CNULocationMenuItem> list = new ArrayList<CNULocationMenuItem>();
+        try {
+            for (int i = 0; i < info.length(); i++) {
+                JSONObject location = info.getJSONObject(i);
+                String startTime = location.getString("start");
+                String endTime = location.getString("end");
+                String summary = location.getString("summary");
+                String description = location.getString("description");
+                CNULocationMenuItem item = new CNULocationMenuItem(startTime, endTime, summary, description);
+                list.add(item);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<CNULocationMenuItem>();
+        }
+    }
+
     public static List<CNULocationInfo> infoFromArray(JSONArray info) {
         List<CNULocationInfo> list = new ArrayList<CNULocationInfo>();
         try {
