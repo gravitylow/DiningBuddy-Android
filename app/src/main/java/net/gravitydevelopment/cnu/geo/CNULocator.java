@@ -1,6 +1,7 @@
 package net.gravitydevelopment.cnu.geo;
 
 import net.gravitydevelopment.cnu.CNUApi;
+import net.gravitydevelopment.cnu.service.SettingsService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,11 @@ public class CNULocator {
     private void updateLocations(List<CNULocation> l) {
         locations = new ArrayList<CNULocation>();
         locations.addAll(l);
+        new Thread() {
+            public void run() {
+                SettingsService.cacheLocations(jsonValue());
+            }
+        }.start();
     }
 
     public void updateLocations() {

@@ -7,8 +7,8 @@ import android.view.MenuItem;
 
 import com.cengalabs.flatui.FlatUI;
 
+import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
 import net.gravitydevelopment.cnu.fragment.LocationMainFragment;
-import net.gravitydevelopment.cnu.fragment.LocationViewFragment;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 
@@ -23,7 +23,7 @@ public class CNULocationView extends FragmentActivity {
     public static final String ARG_INITIAL_COLOR = "initialColor";
     public static final String ARG_SHOULD_OPEN_INFO = "shouldOpenInfo";
 
-    private LocationViewFragment viewFragment;
+    private LocationBannerFragment viewFragment;
     private LocationMainFragment mainFragment;
     private String name;
 
@@ -42,9 +42,9 @@ public class CNULocationView extends FragmentActivity {
             Serializable obj = b.getSerializable(ARG_INFO);
 
             if (obj != null) {
-                viewFragment = LocationViewFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo)obj);
+                viewFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo) obj);
             } else {
-                viewFragment = LocationViewFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
+                viewFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
             }
 
             mainFragment = LocationMainFragment.newInstance(name);

@@ -41,11 +41,13 @@ public class LocationMainFragment extends Fragment {
 
         CNULocation location = LocationService.getLastLocation();
         SettingsService settings = BackendService.getSettingsService();
-        long lastUpdate = name.equals(Util.REGATTAS_NAME) ? settings.getLastFeedbackRegattas() : name.equals(Util.COMMONS_NAME) ? settings.getsLastFeedbackCommons() : settings.getsLastFeedbackEinsteins();
-        if (location != null && location.getName().equals(name)) {
-            if ((System.currentTimeMillis() - lastUpdate) > Util.MIN_FEEDBACK_INTERVAL) {
-                mTabHost.addTab(mTabHost.newTabSpec("feedbackfragment").setIndicator("Feedback"), LocationFeedbackFragment.class, args);
-                isShowingFeedback = true;
+        if (settings != null) {
+            long lastUpdate = name.equals(Util.REGATTAS_NAME) ? settings.getLastFeedbackRegattas() : name.equals(Util.COMMONS_NAME) ? settings.getsLastFeedbackCommons() : settings.getsLastFeedbackEinsteins();
+            if (location != null && location.getName().equals(name)) {
+                if ((System.currentTimeMillis() - lastUpdate) > Util.MIN_FEEDBACK_INTERVAL) {
+                    mTabHost.addTab(mTabHost.newTabSpec("feedbackfragment").setIndicator("Feedback"), LocationFeedbackFragment.class, args);
+                    isShowingFeedback = true;
+                }
             }
         }
 

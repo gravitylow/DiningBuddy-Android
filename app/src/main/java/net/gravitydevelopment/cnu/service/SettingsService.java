@@ -70,7 +70,7 @@ public class SettingsService {
         return sUUID;
     }
 
-    public void cacheLocations(String json) {
+    public static void cacheLocations(String json) {
         SharedPreferences.Editor editor = sSettings.edit();
         editor.putString(PREFS_KEY_LOCATIONS, json);
         editor.apply();
@@ -80,7 +80,7 @@ public class SettingsService {
         return sSettings.getString(PREFS_KEY_LOCATIONS, null);
     }
 
-    public boolean getWifiOnly() {
+    public static boolean getWifiOnly() {
         return sPrefWifiOnly;
     }
 
@@ -92,7 +92,7 @@ public class SettingsService {
         editor.apply();
     }
 
-    public boolean getShouldConnect() {
+    public static boolean getShouldConnect() {
         if (getWifiOnly()) {
             return isWifiConnected();
         } else {

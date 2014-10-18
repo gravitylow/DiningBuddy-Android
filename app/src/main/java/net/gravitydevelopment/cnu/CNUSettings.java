@@ -98,7 +98,7 @@ public class CNUSettings extends PreferenceActivity {
                         return false;
                     }
                 });
-                // TODO disable
+                /*
                 final Preference loc = new Preference(context);
                 loc.setTitle("Location Data");
                 String name = LocationService.getLastLocation() == null ? "Unknown" : LocationService.getLastLocation().getName();
@@ -113,7 +113,7 @@ public class CNUSettings extends PreferenceActivity {
                         loc.setSummary(data);
                         return false;
                     }
-                });
+                });*/
             }
         }
     }

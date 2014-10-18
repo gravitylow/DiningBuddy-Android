@@ -51,7 +51,7 @@ public class LocationService {
             Log.d(CNU.LOG_TAG, "No cache; awaiting connection to server");
         }
         if (mSettings.getShouldConnect()) {
-            mLocator.updateLocations(); // TODO not needed?
+            mLocator.updateLocations();
         }
 
         new Thread() {

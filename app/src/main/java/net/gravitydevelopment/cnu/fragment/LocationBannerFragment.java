@@ -18,7 +18,7 @@ import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 
 import java.io.Serializable;
 
-public class LocationViewFragment extends Fragment {
+public class LocationBannerFragment extends Fragment {
 
     private String mTitle;
     private String mName;
@@ -41,7 +41,7 @@ public class LocationViewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_location_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_location_banner, container, false);
         drawTitle(rootView, mTitle);
         drawPicture(rootView, mInitialColor);
         drawInfo(rootView, -1);
@@ -106,12 +106,12 @@ public class LocationViewFragment extends Fragment {
         ((TextView) view.findViewById(R.id.info)).setText(s);
     }
 
-    public static LocationViewFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo) {
+    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo) {
         return newInstance(title, name, drawable, initialColor, shouldOpenInfo, null);
     }
 
-    public static LocationViewFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo, CNULocationInfo initialInfo) {
-        LocationViewFragment fragment = new LocationViewFragment();
+    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo, CNULocationInfo initialInfo) {
+        LocationBannerFragment fragment = new LocationBannerFragment();
 
         Bundle args = new Bundle();
         args.putString(CNULocationView.ARG_TITLE, title);

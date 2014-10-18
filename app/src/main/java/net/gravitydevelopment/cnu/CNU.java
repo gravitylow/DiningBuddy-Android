@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.cengalabs.flatui.FlatUI;
 
-import net.gravitydevelopment.cnu.fragment.LocationViewFragment;
+import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.service.BackendService;
@@ -25,9 +25,9 @@ public class CNU extends FragmentActivity {
     private static CNU sContext;
     private static boolean sRunning;
     private static CNULocationView currentLocationView;
-    private static LocationViewFragment regattasFrag;
-    private static LocationViewFragment commonsFrag;
-    private static LocationViewFragment einsteinsFrag;
+    private static LocationBannerFragment regattasFrag;
+    private static LocationBannerFragment commonsFrag;
+    private static LocationBannerFragment einsteinsFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +38,9 @@ public class CNU extends FragmentActivity {
         setContentView(R.layout.activity_cnudining);
 
         if (savedInstanceState == null) {
-            regattasFrag = LocationViewFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
-            commonsFrag = LocationViewFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
-            einsteinsFrag = LocationViewFragment.newInstance("Einstein's", "Einsteins", R.drawable.einsteins_full, Color.GRAY, true);
+            regattasFrag = LocationBannerFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
+            commonsFrag = LocationBannerFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
+            einsteinsFrag = LocationBannerFragment.newInstance("Einstein's", "Einsteins", R.drawable.einsteins_full, Color.GRAY, true);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.regattas_container, regattasFrag)
                     .replace(R.id.commons_container, commonsFrag)
