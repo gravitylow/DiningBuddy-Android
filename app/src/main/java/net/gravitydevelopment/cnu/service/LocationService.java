@@ -78,9 +78,6 @@ public class LocationService {
 
         CNULocation location = mLocator.getLocation(latitude, longitude);
         Log.d(CNU.LOG_TAG, "CNU is running: " + CNU.isRunning());
-        if (CNU.isRunning()) {
-            CNU.getContext().updateLocation(latitude, longitude, location);
-        }
         CNU.updateLocationView(location);
 
         if (sLastPublishedUpdate == 0 || (System.currentTimeMillis() - sLastPublishedUpdate) >= MIN_UPDATE) {

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import net.gravitydevelopment.cnu.CNULocationView;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
+import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 
 import java.io.Serializable;
@@ -104,6 +105,15 @@ public class LocationBannerFragment extends Fragment {
     private void drawInfo(View view, int people) {
         String s = people < 0 ? "Loading…" : "Currently: " + people + " people.";
         ((TextView) view.findViewById(R.id.info)).setText(s);
+    }
+
+    private void setBadgeHidden(boolean hidden) {
+        int visibility = hidden ? View.INVISIBLE : View.VISIBLE;
+        getView().findViewById(R.id.badge).setVisibility(visibility);
+    }
+
+    public void updateLocation(CNULocation location) {
+        setBadgeHidden(!location.getName().equals(mName));
     }
 
     public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo) {

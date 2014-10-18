@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <ImageView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/image"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/title"
-        android:layout_gravity="center_horizontal" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/info"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/image"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
+            android:src="@drawable/regattas_full" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/badge"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:visibility="invisible"
+            android:layout_alignBottom="@id/image"
+            android:src="@drawable/location_marker" />
+    </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/title"
+            android:layout_gravity="center_horizontal"
+            android:text="Temporary" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/info"
+            android:layout_gravity="center_horizontal"
+            android:text="Temp" />
 
 </LinearLayout>

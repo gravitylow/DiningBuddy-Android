@@ -111,6 +111,9 @@ public class CNU extends FragmentActivity {
     }
 
     public void updateLocation(double latitude, double longitude, CNULocation location) {
+        regattasFrag.updateLocation(location);
+        commonsFrag.updateLocation(location);
+        einsteinsFrag.updateLocation(location);
     }
 
     public static void updateInfo(List<CNULocationInfo> info) {

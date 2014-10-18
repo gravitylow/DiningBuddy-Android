@@ -23,7 +23,7 @@ public class CNULocationView extends FragmentActivity {
     public static final String ARG_INITIAL_COLOR = "initialColor";
     public static final String ARG_SHOULD_OPEN_INFO = "shouldOpenInfo";
 
-    private LocationBannerFragment viewFragment;
+    private LocationBannerFragment bannerFragment;
     private LocationMainFragment mainFragment;
     private String name;
 
@@ -42,14 +42,14 @@ public class CNULocationView extends FragmentActivity {
             Serializable obj = b.getSerializable(ARG_INFO);
 
             if (obj != null) {
-                viewFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo) obj);
+                bannerFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo) obj);
             } else {
-                viewFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
+                bannerFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
             }
 
             mainFragment = LocationMainFragment.newInstance(name);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.location_container, viewFragment)
+                    .add(R.id.location_container, bannerFragment)
                     .add(R.id.tab_container, mainFragment)
                     .commit();
 
@@ -81,6 +81,7 @@ public class CNULocationView extends FragmentActivity {
 
     public void updateLocation(CNULocation location) {
         mainFragment.updateLocation(location);
+        bannerFragment.updateLocation(location);
     }
 
     public void updateInfo(CNULocationInfo regattas, CNULocationInfo commons, CNULocationInfo einsteins) {
@@ -93,10 +94,10 @@ public class CNULocationView extends FragmentActivity {
             info = einsteins;
         }
         final CNULocationInfo finalInfo = info;
-        viewFragment.getActivity().runOnUiThread(new Runnable() {
+        bannerFragment.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                viewFragment.updateInfo(finalInfo);
+                bannerFragment.updateInfo(finalInfo);
             }
         });
     }
