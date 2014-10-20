@@ -85,4 +85,16 @@ public class Util {
         Log.d(CNU.LOG_TAG, "Stopping service...");
         context.stopService(new Intent(context, BackendService.class));
     }
+
+    public static String minutesAgo(long time) {
+        long diff = System.currentTimeMillis() - time;
+        double mins = (diff / 1000) / 60;
+        if (mins < 1) {
+            return "< 1 minute ago";
+        } else if (mins >= 1 && mins < 2) {
+            return "1 minute ago";
+        } else {
+            return ((int)mins) + " minutes ago";
+        }
+    }
 }

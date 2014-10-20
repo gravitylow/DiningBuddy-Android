@@ -80,8 +80,12 @@ public class CNULocationView extends FragmentActivity {
     }
 
     public void updateLocation(CNULocation location) {
-        mainFragment.updateLocation(location);
-        bannerFragment.updateLocation(location);
+        if (mainFragment != null) {
+            mainFragment.updateLocation(location);
+        }
+        if (bannerFragment != null) {
+            bannerFragment.updateLocation(location);
+        }
     }
 
     public void updateInfo(CNULocationInfo regattas, CNULocationInfo commons, CNULocationInfo einsteins) {

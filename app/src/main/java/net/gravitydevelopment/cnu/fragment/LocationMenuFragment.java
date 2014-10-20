@@ -84,17 +84,8 @@ public class LocationMenuFragment extends Fragment {
                             window.dismiss();
                         }
                     });
-                    Log.d(CNU.LOG_TAG, "Added button for " + item.getSummary());
                 }
             }
         });
-    }
-
-    public static LocationGraphFragment newInstance(String locationName) {
-        LocationGraphFragment fragment = new LocationGraphFragment();
-        Bundle args = new Bundle();
-        args.putString(CNULocationView.ARG_NAME, locationName);
-        fragment.setArguments(args);
-        return fragment;
     }
 }

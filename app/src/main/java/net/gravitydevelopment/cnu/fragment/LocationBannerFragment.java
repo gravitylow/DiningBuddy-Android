@@ -109,6 +109,7 @@ public class LocationBannerFragment extends Fragment {
 
     private void setBadgeHidden(boolean hidden) {
         int visibility = hidden ? View.INVISIBLE : View.VISIBLE;
+        if (getView() == null) return;
         getView().findViewById(R.id.badge).setVisibility(visibility);
     }
 

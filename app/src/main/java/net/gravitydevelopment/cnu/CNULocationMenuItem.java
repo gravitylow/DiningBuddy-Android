@@ -1,6 +1,7 @@
 package net.gravitydevelopment.cnu;
 
 public class CNULocationMenuItem {
+
     private String startTime;
     private String endTime;
     private String summary;

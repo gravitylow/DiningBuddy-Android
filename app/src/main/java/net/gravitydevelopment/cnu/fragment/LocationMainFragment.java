@@ -43,6 +43,7 @@ public class LocationMainFragment extends Fragment {
         } else {
             mTabHost.addTab(mTabHost.newTabSpec("menufragment").setIndicator("Menu"), LocationMenuFragment.class, args);
         }
+        mTabHost.addTab(mTabHost.newTabSpec("feedfragment").setIndicator("Feed"), LocationFeedFragment.class, args);
 
         CNULocation location = LocationService.getLastLocation();
         SettingsService settings = BackendService.getSettingsService();

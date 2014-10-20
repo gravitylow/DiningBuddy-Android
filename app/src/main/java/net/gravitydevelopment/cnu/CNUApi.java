@@ -98,6 +98,39 @@ public class CNUApi {
         }
     }
 
+    public static List<CNULocationFeedItem> getFeed(String location) {
+        try {
+            URL url = new URL(API_HOST + API_QUERY + "feed/" + location.toLowerCase());
+            String response = read(url);
+
+            JSONArray array = new JSONArray(response);
+            return feedFromArray(array);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<CNULocationFeedItem>();
+        }
+    }
+
+    public static List<CNULocationFeedItem> feedFromArray(JSONArray info) {
+        List<CNULocationFeedItem> list = new ArrayList<CNULocationFeedItem>();
+        try {
+            for (int i = 0; i < info.length(); i++) {
+                JSONObject update = info.getJSONObject(i);
+                String message = update.getString("feedback");
+                int minutes = update.getInt("minutes");
+                int crowded = update.getInt("crowded");
+                long time = update.getLong("time");
+                boolean pinned = update.has("pinned");
+                CNULocationFeedItem item = new CNULocationFeedItem(message, minutes, crowded, time, pinned);
+                list.add(item);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<CNULocationFeedItem>();
+        }
+    }
+
     public static List<CNULocationInfo> infoFromArray(JSONArray info) {
         List<CNULocationInfo> list = new ArrayList<CNULocationInfo>();
         try {
