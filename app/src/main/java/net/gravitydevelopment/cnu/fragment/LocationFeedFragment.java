@@ -1,15 +1,18 @@
 package net.gravitydevelopment.cnu.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.cengalabs.flatui.views.FlatButton;
@@ -64,17 +67,56 @@ public class LocationFeedFragment extends Fragment {
                     List<Button> list = new ArrayList<Button>();
                     for (CNULocationFeedItem item : items) {
                         Button button = new Button(getActivity());
+                        String message = Util.ellipsize(item.getMessage(), 25);
                         if (item.isPinned()) {
-                            Spanned text = Html.fromHtml(item.getMessage() + "<br><i>" + Util.minutesAgo(item.getTime()) + "</i>");
-                            button.setText(text);
-                            button.setEnabled(false);
-                            list.add(0, button);
-                        } else {
                             button = new FlatButton(getActivity());
-                            Spanned text = Html.fromHtml("<strong>" + item.getMessage() + "</strong><br><i>" + Util.minutesAgo(item.getTime()) + "</i>");
+                            Spanned text = Html.fromHtml("<strong>" + message + "</strong><br><i>" + Util.minutesAgo(item.getTime()) + "</i>");
                             button.setText(text);
-                            button.setEnabled(false);
+                            list.add(0, button);
+
+                            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            LinearLayout viewGroup = (LinearLayout) getActivity().findViewById(R.id.popup_element);
+                            final View layout = inflater.inflate(R.layout.popup_menu, viewGroup);
+                            final PopupWindow window = new PopupWindow(getActivity());
+                            window.setContentView(layout);
+                            window.setWindowLayoutMode(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            ((TextView)layout.findViewById(R.id.menuDescription)).setText(item.getDetail());
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    window.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                                }
+                            });
+                            ((Button)layout.findViewById(R.id.okButton)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    window.dismiss();
+                                }
+                            });
+                        } else {
+                            Spanned text = Html.fromHtml(message + "<br><i>" + Util.minutesAgo(item.getTime()) + "</i>");
+                            button.setText(text);
                             list.add(button);
+
+                            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            LinearLayout viewGroup = (LinearLayout) getActivity().findViewById(R.id.popup_element);
+                            final View layout = inflater.inflate(R.layout.popup_menu, viewGroup);
+                            final PopupWindow window = new PopupWindow(getActivity());
+                            window.setContentView(layout);
+                            window.setWindowLayoutMode(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            ((TextView)layout.findViewById(R.id.menuDescription)).setText(item.getMessage());
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    window.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                                }
+                            });
+                            ((Button)layout.findViewById(R.id.okButton)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    window.dismiss();
+                                }
+                            });
                         }
                     }
                     for (Button button : list) {

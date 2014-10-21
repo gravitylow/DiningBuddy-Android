@@ -68,7 +68,7 @@ public class CNUApi {
 
     public static List<CNULocationMenuItem> getMenu(String location) {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "menus/" + location.toLowerCase());
+            URL url = new URL(API_HOST + API_QUERY + "menus/" + location);
             String response = read(url);
 
             JSONArray array = new JSONArray(response);
@@ -100,7 +100,7 @@ public class CNUApi {
 
     public static List<CNULocationFeedItem> getFeed(String location) {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "feed/" + location.toLowerCase());
+            URL url = new URL(API_HOST + API_QUERY + "feed/" + location);
             String response = read(url);
 
             JSONArray array = new JSONArray(response);
@@ -120,8 +120,9 @@ public class CNUApi {
                 int minutes = update.getInt("minutes");
                 int crowded = update.getInt("crowded");
                 long time = update.getLong("time");
-                boolean pinned = update.has("pinned");
-                CNULocationFeedItem item = new CNULocationFeedItem(message, minutes, crowded, time, pinned);
+                boolean pinned = update.getBoolean("pinned");
+                String detail = update.getString("detail");
+                CNULocationFeedItem item = new CNULocationFeedItem(message, minutes, crowded, time, pinned, detail);
                 list.add(item);
             }
             return list;
@@ -187,6 +188,7 @@ public class CNUApi {
                 + ", \"feedback\": \"" + feedback + "\""
                 + ", \"location\": \"" + location.getName() + "\""
                 + ", \"time\": " + time
+                + ", \"pinned\": " + false
                 + "}";
         try {
             URL url = new URL(API_HOST + API_QUERY + "feedback");
