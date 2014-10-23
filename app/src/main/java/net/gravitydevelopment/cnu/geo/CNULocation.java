@@ -1,5 +1,6 @@
 package net.gravitydevelopment.cnu.geo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * Two locations cannot intersect, but a location can have "sub locations" which are specific
  * areas inside the given location (nested locations) which specify a more accurate place.
  */
-public class CNULocation {
+public class CNULocation implements Serializable {
 
     private String name;
     private List<CNUCoordinatePair> coordinatePairs;

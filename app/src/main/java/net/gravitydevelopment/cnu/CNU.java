@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -22,9 +23,15 @@ import java.util.List;
 public class CNU extends FragmentActivity {
 
     public static final String LOG_TAG = "CNU";
+
+    private static final String BUNDLE_LAST_LAT = "lastLatitude";
+    private static final String BUNDLE_LAST_LON = "lastLongitude";
+    private static final String BUNDLE_LAST_LOCATION = "lastLocation";
+
     private static CNU sContext;
     private static boolean sRunning;
     private static CNULocationView currentLocationView;
+    private static CNULocation lastLocation;
     private static LocationBannerFragment regattasFrag;
     private static LocationBannerFragment commonsFrag;
     private static LocationBannerFragment einsteinsFrag;
@@ -37,15 +44,22 @@ public class CNU extends FragmentActivity {
         getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
         setContentView(R.layout.activity_cnudining);
 
-        if (savedInstanceState == null) {
-            regattasFrag = LocationBannerFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
-            commonsFrag = LocationBannerFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
-            einsteinsFrag = LocationBannerFragment.newInstance("Einstein's", "Einsteins", R.drawable.einsteins_full, Color.GRAY, true);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.regattas_container, regattasFrag)
-                    .replace(R.id.commons_container, commonsFrag)
-                    .replace(R.id.einsteins_container, einsteinsFrag)
-                    .commit();
+        Log.w(LOG_TAG, "savedInstanceState: " + savedInstanceState);
+
+        regattasFrag = LocationBannerFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
+        commonsFrag = LocationBannerFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
+        einsteinsFrag = LocationBannerFragment.newInstance("Einstein's", "Einsteins", R.drawable.einsteins_full, Color.GRAY, true);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.regattas_container, regattasFrag)
+                .replace(R.id.commons_container, commonsFrag)
+                .replace(R.id.einsteins_container, einsteinsFrag)
+                .commit();
+
+        if (savedInstanceState != null) {
+            double lat = savedInstanceState.getDouble(BUNDLE_LAST_LAT);
+            double lon = savedInstanceState.getDouble(BUNDLE_LAST_LON);
+            CNULocation location = (CNULocation) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
+            updateLocation(lat, lon, location);
         }
 
         if (!BackendService.isRunning() && Util.externalShouldConnect(this)) {
@@ -86,11 +100,23 @@ public class CNU extends FragmentActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (LocationService.hasLocation()) {
-            updateLocation(LocationService.getLastLatitude(), LocationService.getLastLongitude(), LocationService.getLastLocation());
-            updateInfo(LocationService.getLastLocationInfo());
-        }
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.w(LOG_TAG, "onSaveInstanceState: " + savedInstanceState);
+        savedInstanceState.putDouble(BUNDLE_LAST_LAT, LocationService.getLastLatitude());
+        savedInstanceState.putDouble(BUNDLE_LAST_LON, LocationService.getLastLongitude());
+        savedInstanceState.putSerializable(BUNDLE_LAST_LOCATION, lastLocation);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.w(LOG_TAG, "onRestoreInstanceState: " + savedInstanceState);
+        double lat = savedInstanceState.getDouble(BUNDLE_LAST_LAT);
+        double lon = savedInstanceState.getDouble(BUNDLE_LAST_LON);
+        CNULocation location = (CNULocation) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
+        updateLocation(lat, lon, location);
+
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -111,6 +137,7 @@ public class CNU extends FragmentActivity {
     }
 
     public void updateLocation(double latitude, double longitude, CNULocation location) {
+        lastLocation = location;
         regattasFrag.updateLocation(location);
         commonsFrag.updateLocation(location);
         einsteinsFrag.updateLocation(location);

@@ -114,7 +114,8 @@ public class LocationBannerFragment extends Fragment {
     }
 
     public void updateLocation(CNULocation location) {
-        setBadgeHidden(!location.getName().equals(mName));
+        boolean hidden = location == null || !location.getName().equals(mName);
+        setBadgeHidden(hidden);
     }
 
     public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo) {

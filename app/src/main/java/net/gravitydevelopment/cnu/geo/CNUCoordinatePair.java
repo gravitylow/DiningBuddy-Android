@@ -1,6 +1,8 @@
 package net.gravitydevelopment.cnu.geo;
 
-public class CNUCoordinatePair {
+import java.io.Serializable;
+
+public class CNUCoordinatePair implements Serializable {
 
     private double latitude;
     private double longitude;
