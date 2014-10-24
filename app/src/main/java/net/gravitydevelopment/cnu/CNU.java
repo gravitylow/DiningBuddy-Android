@@ -136,7 +136,7 @@ public class CNU extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateLocation(double latitude, double longitude, CNULocation location) {
+    public static void updateLocation(double latitude, double longitude, CNULocation location) {
         lastLocation = location;
         regattasFrag.updateLocation(location);
         commonsFrag.updateLocation(location);

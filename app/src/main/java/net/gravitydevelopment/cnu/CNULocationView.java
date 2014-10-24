@@ -22,6 +22,7 @@ public class CNULocationView extends FragmentActivity {
     public static final String ARG_DRAWABLE = "drawable";
     public static final String ARG_INITIAL_COLOR = "initialColor";
     public static final String ARG_SHOULD_OPEN_INFO = "shouldOpenInfo";
+    public static final String ARG_SHOW_BADGE = "showBadge";
 
     private LocationBannerFragment bannerFragment;
     private LocationMainFragment mainFragment;
@@ -40,9 +41,10 @@ public class CNULocationView extends FragmentActivity {
             String name = b.getString(ARG_NAME);
             int drawable = b.getInt(ARG_DRAWABLE);
             Serializable obj = b.getSerializable(ARG_INFO);
+            boolean showBadge = b.getBoolean(ARG_SHOW_BADGE);
 
             if (obj != null) {
-                bannerFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo) obj);
+                bannerFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo) obj, showBadge);
             } else {
                 bannerFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
             }

@@ -3,10 +3,12 @@ package net.gravitydevelopment.cnu.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.gravitydevelopment.cnu.CNU;
 import net.gravitydevelopment.cnu.CNULocationView;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
@@ -61,14 +63,17 @@ public class LocationMainFragment extends Fragment {
     }
 
     public void updateLocation(CNULocation location) {
+        Log.d(CNU.LOG_TAG, "Is showing feedback: " + isShowingFeedback);
         if (location != null && location.getName().equals(name)) {
             if (!isShowingFeedback) {
+                Log.d(CNU.LOG_TAG, "Adding tab ");
                 mTabHost.addTab(mTabHost.newTabSpec("feedbackfragment").setIndicator("Feedback"), LocationFeedbackFragment.class, args);
                 isShowingFeedback = true;
             }
         } else if (isShowingFeedback) {
-            mTabHost.setCurrentTab(mTabHost.getChildCount() - 1);
-            mTabHost.getTabWidget().removeView(mTabHost.getTabWidget().getChildTabViewAt(mTabHost.getChildCount() - 1));
+            Log.d(CNU.LOG_TAG, "Removing tab ");
+            mTabHost.setCurrentTab(mTabHost.getTabWidget().getTabCount() - 1);
+            mTabHost.getTabWidget().removeView(mTabHost.getTabWidget().getChildTabViewAt(mTabHost.getTabWidget().getTabCount()));
             isShowingFeedback = false;
         }
     }

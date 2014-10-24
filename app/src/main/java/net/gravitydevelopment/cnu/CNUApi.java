@@ -121,7 +121,12 @@ public class CNUApi {
                 int crowded = update.getInt("crowded");
                 long time = update.getLong("time");
                 boolean pinned = update.getBoolean("pinned");
-                String detail = update.getString("detail");
+                String detail;
+                if (update.has("detail")) {
+                    detail = update.getString("detail");
+                } else {
+                    detail = null;
+                }
                 CNULocationFeedItem item = new CNULocationFeedItem(message, minutes, crowded, time, pinned, detail);
                 list.add(item);
             }

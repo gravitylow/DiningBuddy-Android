@@ -12,6 +12,8 @@ import android.graphics.Shader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.SettingsService;

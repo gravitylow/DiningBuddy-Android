@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.gravitydevelopment.cnu.CNU;
 import net.gravitydevelopment.cnu.CNULocationView;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
@@ -27,6 +29,7 @@ public class LocationBannerFragment extends Fragment {
     private CNULocationInfo mInfo;
     private int mInitialColor;
     private boolean mShouldOpenInfo;
+    private boolean mShowBadge;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class LocationBannerFragment extends Fragment {
             mDrawable = getArguments().getInt(CNULocationView.ARG_DRAWABLE);
             mInitialColor = getArguments().getInt(CNULocationView.ARG_INITIAL_COLOR);
             mShouldOpenInfo = getArguments().getBoolean(CNULocationView.ARG_SHOULD_OPEN_INFO);
+            mShowBadge = getArguments().getBoolean(CNULocationView.ARG_SHOW_BADGE);
+            Log.d(CNU.LOG_TAG, "Banner initialized with showBadge: " + mShowBadge);
         }
     }
 
@@ -46,6 +51,8 @@ public class LocationBannerFragment extends Fragment {
         drawTitle(rootView, mTitle);
         drawPicture(rootView, mInitialColor);
         drawInfo(rootView, -1);
+        Log.d(CNU.LOG_TAG, "On create view: " + mShowBadge);
+        setBadgeHidden(rootView, !mShowBadge);
         Serializable obj = getArguments().getSerializable(CNULocationView.ARG_INFO);
         if (obj != null) {
             updateInfo(rootView, (CNULocationInfo) obj);
@@ -62,6 +69,8 @@ public class LocationBannerFragment extends Fragment {
                     if (mInfo != null) {
                         b.putSerializable(CNULocationView.ARG_INFO, mInfo);
                     }
+                    Log.d(CNU.LOG_TAG, "Fragment onClick -> set show badge" + mShowBadge);
+                    b.putBoolean(CNULocationView.ARG_SHOW_BADGE, mShowBadge);
                     intent.putExtras(b);
                     startActivity(intent);
                 }
@@ -107,22 +116,23 @@ public class LocationBannerFragment extends Fragment {
         ((TextView) view.findViewById(R.id.info)).setText(s);
     }
 
-    private void setBadgeHidden(boolean hidden) {
+    private void setBadgeHidden(View view, boolean hidden) {
         int visibility = hidden ? View.INVISIBLE : View.VISIBLE;
-        if (getView() == null) return;
-        getView().findViewById(R.id.badge).setVisibility(visibility);
+        if (view == null) return;
+        view.findViewById(R.id.badge).setVisibility(visibility);
     }
 
     public void updateLocation(CNULocation location) {
-        boolean hidden = location == null || !location.getName().equals(mName);
-        setBadgeHidden(hidden);
+        mShowBadge = location != null && location.getName().equals(mName);
+        Log.d(CNU.LOG_TAG, "Show badge set to " + mShowBadge);
+        setBadgeHidden(getView(), !mShowBadge);
     }
 
     public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo) {
-        return newInstance(title, name, drawable, initialColor, shouldOpenInfo, null);
+        return newInstance(title, name, drawable, initialColor, shouldOpenInfo, null, false);
     }
 
-    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo, CNULocationInfo initialInfo) {
+    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo, CNULocationInfo initialInfo, boolean showBadge) {
         LocationBannerFragment fragment = new LocationBannerFragment();
 
         Bundle args = new Bundle();
@@ -131,6 +141,7 @@ public class LocationBannerFragment extends Fragment {
         args.putInt(CNULocationView.ARG_DRAWABLE, drawable);
         args.putInt(CNULocationView.ARG_INITIAL_COLOR, initialColor);
         args.putBoolean(CNULocationView.ARG_SHOULD_OPEN_INFO, shouldOpenInfo);
+        args.putBoolean(CNULocationView.ARG_SHOW_BADGE, showBadge);
         if (initialInfo != null) {
             args.putSerializable(CNULocationView.ARG_INFO, initialInfo);
         }
