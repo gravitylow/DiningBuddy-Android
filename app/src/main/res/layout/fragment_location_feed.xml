@@ -5,16 +5,19 @@
     android:layout_height="match_parent"
     android:background="#DFDFD7"
     tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedFragment">
-    <LinearLayout
-        android:id="@+id/insertPoint"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
+        android:layout_height="wrap_content">
+        <TableLayout
+            android:id="@+id/table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Loading…"
-            android:id="@+id/loadingText"
-            android:gravity="center" />
-    </LinearLayout>
+            android:layout_gravity="center_horizontal" />
+    </ScrollView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Loading…"
+        android:id="@+id/loadingText"
+        android:gravity="center" />
 </LinearLayout>

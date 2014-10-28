@@ -23,7 +23,7 @@
             android:paddingLeft="5dp"
             android:visibility="invisible"
             android:layout_alignBottom="@id/image"
-            android:src="@drawable/location_marker" />
+            android:src="@drawable/ic_location_marker" />
     </RelativeLayout>
         <TextView
             android:layout_width="wrap_content"

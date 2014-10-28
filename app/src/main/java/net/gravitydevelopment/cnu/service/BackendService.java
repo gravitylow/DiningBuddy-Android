@@ -21,7 +21,7 @@ public class BackendService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         sRunning = true;
         return START_STICKY;
     }
@@ -29,7 +29,7 @@ public class BackendService extends Service {
     @Override
     public void onDestroy() {
         LocationService.die(this);
-        Toast.makeText(this, "Service Done", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Service Done", Toast.LENGTH_SHORT).show();
         sRunning = false;
     }
 
