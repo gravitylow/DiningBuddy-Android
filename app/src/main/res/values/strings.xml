@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">CNU</string>
-    <string name="settings_name">CNU Settings</string>
+    <string name="app_name">DiningBuddy</string>
+    <string name="settings_name">Settings</string>
     <string name="action_settings">Settings</string>
     <string name="action_developer">Developer</string>
     <string name="preference_wifi_only_tile">WiFi Only</string>
     <string name="preference_wifi_only_summary">Only send and receive location updates when connected to WiFi</string>
     <string name="preference_donate_tile">Donate</string>
     <string name="preference_donate_summary">Support my work!</string>
-    <string name="title_activity_cnudining">CNU Dining</string>
+    <string name="title_activity_cnudining">DiningBuddy</string>
     <string name="hello_world">Hello world!</string>
     <string name="regattas_title">Regattas</string>
     <string name="regattas_info">Loading…</string>
@@ -18,7 +18,7 @@
     <string name="title_activity_cnulocation_view">Location</string>
     <string name="feedback_crowded">Is this dining hall very crowded?</string>
     <string name="feedback_minutes">Please estimate waiting time for your food:</string>
-    <string name="feedback_comments">Any additional information?</string>
+    <string name="feedback_comments">How\'s it looking down there?</string>
     <string name="feedback_button">Submit</string>
     <string name="feedback_response">Thanks!</string>
     <string name="feedback_response_detail">Accurate feedback helps improve the data provided to you.</string>

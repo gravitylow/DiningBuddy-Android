@@ -67,8 +67,7 @@ public class LocationFeedFragment extends Fragment {
                     int i = 0;
                     for (CNULocationFeedItem item : items) {
                         getView().findViewById(R.id.loadingText).setVisibility(View.INVISIBLE);
-
-                        String message = Util.ellipsize(item.getMessage(), 25);
+                        String message = item.getMessage();
                         TableRow row = new TableRow(getActivity());
                         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT));
                         TextView text = new TextView(getActivity());
