@@ -64,7 +64,7 @@ public class LocationFeedbackFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     SettingsService settings = BackendService.getSettingsService();
-                    long lastUpdate = name.equals(Util.REGATTAS_NAME) ? settings.getLastFeedbackRegattas() : settings.getsLastFeedbackCommons();
+                    long lastUpdate = name.equals(Util.REGATTAS_NAME) ? settings.getLastFeedbackRegattas() : settings.getLastFeedbackCommons();
                     if ((System.currentTimeMillis() - lastUpdate) > Util.MIN_FEEDBACK_INTERVAL) {
                         int crowdedValue = ((Spinner) rootView.findViewById(R.id.crowded_spinner)).getSelectedItemPosition();
                         int minuteValue = ((Spinner) rootView.findViewById(R.id.minutes_spinner)).getSelectedItemPosition();
@@ -73,11 +73,11 @@ public class LocationFeedbackFragment extends Fragment {
                             CNULocation location = LocationService.getLastLocation();
                             BackendService.getLocationService().postFeedback(name, location, crowdedValue, minuteValue, feedback, SettingsService.getUUID());
                             if (name.equals(Util.REGATTAS_NAME)) {
-                                settings.setPrefsKeyLastFeedbackRegattas(System.currentTimeMillis());
+                                settings.setLastFeedbackRegattas(System.currentTimeMillis());
                             } else if (name.equals(Util.COMMONS_NAME)) {
-                                settings.setPrefsKeyLastFeedbackCommons(System.currentTimeMillis());
+                                settings.setLastFeedbackCommons(System.currentTimeMillis());
                             } else if (name.equals(Util.EINSTEINS_NAME)) {
-                                settings.setPrefsKeyLastFeedbackEinsteins(System.currentTimeMillis());
+                                settings.setLastFeedbackEinsteins(System.currentTimeMillis());
                             }
                         }
                         setSubmitted(rootView);

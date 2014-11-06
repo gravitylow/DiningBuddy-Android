@@ -1,6 +1,8 @@
 package net.gravitydevelopment.cnu.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -79,23 +81,17 @@ public class LocationFeedFragment extends Fragment {
                             text.setText(value);
                             list.add(0, row);
 
-                            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            LinearLayout viewGroup = (LinearLayout) getActivity().findViewById(R.id.popup_element);
-                            final View layout = inflater.inflate(R.layout.popup_menu, viewGroup);
-                            final PopupWindow window = new PopupWindow(getActivity());
-                            window.setContentView(layout);
-                            window.setWindowLayoutMode(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            ((TextView)layout.findViewById(R.id.menuDescription)).setText(item.getDetail());
+                            final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                                    .setMessage(item.getDetail())
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                        }
+                                    })
+                                    .create();
                             row.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    window.showAtLocation(layout, Gravity.CENTER, 0, 0);
-                                }
-                            });
-                            ((Button)layout.findViewById(R.id.okButton)).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    window.dismiss();
+                                    dialog.show();
                                 }
                             });
                         } else {
@@ -107,23 +103,17 @@ public class LocationFeedFragment extends Fragment {
                             text.setText(value);
                             list.add(row);
 
-                            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            LinearLayout viewGroup = (LinearLayout) getActivity().findViewById(R.id.popup_element);
-                            final View layout = inflater.inflate(R.layout.popup_menu, viewGroup);
-                            final PopupWindow window = new PopupWindow(getActivity());
-                            window.setContentView(layout);
-                            window.setWindowLayoutMode(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            ((TextView)layout.findViewById(R.id.menuDescription)).setText(item.getMessage());
+                            final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                                    .setMessage(item.getMessage())
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                        }
+                                    })
+                                    .create();
                             row.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    window.showAtLocation(layout, Gravity.CENTER, 0, 0);
-                                }
-                            });
-                            ((Button)layout.findViewById(R.id.okButton)).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    window.dismiss();
+                                    dialog.show();
                                 }
                             });
                         }

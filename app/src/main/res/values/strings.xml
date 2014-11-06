@@ -22,6 +22,16 @@
     <string name="feedback_button">Submit</string>
     <string name="feedback_response">Thanks!</string>
     <string name="feedback_response_detail">Accurate feedback helps improve the data provided to you.</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="first_user_alert_text">Hey there!\n\n
+        Thanks for being one of the first users to try out the app.
+        There\'s still heavy testing going on, so please feel free to
+        contact me personally with any issues you notice when using the app.
+        You can email me at ad@mfendley.com or tweet me @gravity_low.\n\n
+        To help grow the app and make predictions more accurate, be sure to
+        tell people about it and get them using it: the more users there are,
+        the better calculations become about how crowded the dining halls are.
+        Be sure to also leave feedback when \'re in a dining hall via the feedback
+        tab that will appear; it helps let everyone else know what\'s going on!\n\n
+        Have a great day and please enjoy!</string>
 
 </resources>

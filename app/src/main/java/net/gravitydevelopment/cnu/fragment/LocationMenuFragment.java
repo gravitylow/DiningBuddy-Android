@@ -1,6 +1,8 @@
 package net.gravitydevelopment.cnu.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -65,23 +67,17 @@ public class LocationMenuFragment extends Fragment {
                     button.setText(text);
                     insertPoint.addView(button);
 
-                    LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    LinearLayout viewGroup = (LinearLayout) getActivity().findViewById(R.id.popup_element);
-                    final View layout = inflater.inflate(R.layout.popup_menu, viewGroup);
-                    final PopupWindow window = new PopupWindow(getActivity());
-                    window.setContentView(layout);
-                    window.setWindowLayoutMode(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    ((TextView)layout.findViewById(R.id.menuDescription)).setText(item.getDescription());
+                    final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                            .setMessage(item.getDescription())
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            })
+                            .create();
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            window.showAtLocation(layout, Gravity.CENTER, 0, 0);
-                        }
-                    });
-                    ((Button)layout.findViewById(R.id.okButton)).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            window.dismiss();
+                            dialog.show();
                         }
                     });
                 }

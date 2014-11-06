@@ -16,6 +16,7 @@ public class SettingsService {
     public static final String PREFS_KEY_WIFI_ONLY = "pref_wifi_only";
     public static final String PREFS_KEY_LOCATIONS = "pref_locations";
     public static final String PREFS_KEY_UNIQUE_ID = "pref_unique_id";
+    public static final String PREFS_KEY_FIRST_USER_ALERT_SHOWN = "pref_first_user_alert_shown";
     public static final String PREFS_KEY_LAST_FEEDBACK_REGATTAS = "pref_last_feedback_regattas";
     public static final String PREFS_KEY_LAST_FEEDBACK_COMMONS = "pref_last_feedback_commons";
     public static final String PREFS_KEY_LAST_FEEDBACK_EINSTEINS = "pref_last_feedback_einsteins";
@@ -100,19 +101,29 @@ public class SettingsService {
         }
     }
 
+    public static boolean getFirstUserAlertShown(Context context) {
+        return context.getSharedPreferences(PREFS_NAME, 0).getBoolean(PREFS_KEY_FIRST_USER_ALERT_SHOWN, false);
+    }
+
+    public static void setFirstUserAlertShown(Context context, boolean b) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFS_NAME, 0).edit();
+        editor.putBoolean(PREFS_KEY_FIRST_USER_ALERT_SHOWN, b);
+        editor.apply();
+    }
+
     public long getLastFeedbackRegattas() {
         return sLastFeedbackRegattas;
     }
 
-    public long getsLastFeedbackCommons() {
+    public long getLastFeedbackCommons() {
         return sLastFeedbackCommons;
     }
 
-    public long getsLastFeedbackEinsteins() {
+    public long getLastFeedbackEinsteins() {
         return sLastFeedbackEinsteins;
     }
 
-    public void setPrefsKeyLastFeedbackRegattas(long l) {
+    public void setLastFeedbackRegattas(long l) {
         sLastFeedbackRegattas = l;
 
         SharedPreferences.Editor editor = sSettings.edit();
@@ -120,7 +131,7 @@ public class SettingsService {
         editor.apply();
     }
 
-    public void setPrefsKeyLastFeedbackCommons(long l) {
+    public void setLastFeedbackCommons(long l) {
         sLastFeedbackCommons = l;
 
         SharedPreferences.Editor editor = sSettings.edit();
@@ -128,7 +139,7 @@ public class SettingsService {
         editor.apply();
     }
 
-    public void setPrefsKeyLastFeedbackEinsteins(long l) {
+    public void setLastFeedbackEinsteins(long l) {
         sLastFeedbackEinsteins = l;
 
         SharedPreferences.Editor editor = sSettings.edit();

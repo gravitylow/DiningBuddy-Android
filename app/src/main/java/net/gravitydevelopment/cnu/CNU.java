@@ -1,5 +1,7 @@
 package net.gravitydevelopment.cnu;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
+import net.gravitydevelopment.cnu.service.SettingsService;
 
 import java.util.List;
 
@@ -79,6 +82,18 @@ public class CNU extends FragmentActivity {
         super.onStart();
 
         sRunning = true;
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.first_user_alert_text)
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                    }
+                })
+                .create();
+        if (!SettingsService.getFirstUserAlertShown(this)) {
+                dialog.show();
+                SettingsService.setFirstUserAlertShown(this, true);
+         }
     }
 
     @Override
