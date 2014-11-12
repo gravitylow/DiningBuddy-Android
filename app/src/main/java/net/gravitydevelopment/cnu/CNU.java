@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +25,7 @@ import net.gravitydevelopment.cnu.service.SettingsService;
 import java.util.List;
 
 
-public class CNU extends FragmentActivity {
+public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String LOG_TAG = "CNU";
 
@@ -38,6 +40,7 @@ public class CNU extends FragmentActivity {
     private static LocationBannerFragment regattasFrag;
     private static LocationBannerFragment commonsFrag;
     private static LocationBannerFragment einsteinsFrag;
+    private static SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,14 @@ public class CNU extends FragmentActivity {
         setContentView(R.layout.activity_cnudining);
 
         Log.w(LOG_TAG, "savedInstanceState: " + savedInstanceState);
+
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.view_refresh);
+        refreshLayout.setOnRefreshListener(this);
+        refreshLayout.setColorSchemeResources(
+                R.color.orange_primary,
+                R.color.sea_primary,
+                R.color.sky_primary,
+                R.color.grass_primary);
 
         regattasFrag = LocationBannerFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
         commonsFrag = LocationBannerFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
@@ -78,6 +89,11 @@ public class CNU extends FragmentActivity {
     }
 
     @Override
+    public void onRefresh() {
+        LocationService.requestFullUpdate();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
@@ -91,8 +107,8 @@ public class CNU extends FragmentActivity {
                 })
                 .create();
         if (!SettingsService.getFirstUserAlertShown(this)) {
-                dialog.show();
-                SettingsService.setFirstUserAlertShown(this, true);
+            dialog.show();
+            SettingsService.setFirstUserAlertShown(this, true);
          }
     }
 
@@ -192,6 +208,9 @@ public class CNU extends FragmentActivity {
                 regattasFrag.updateInfo(regattasInfo);
                 commonsFrag.updateInfo(commonsInfo);
                 einsteinsFrag.updateInfo(einsteinsInfo);
+            }
+            if (refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(false);
             }
         }
     }

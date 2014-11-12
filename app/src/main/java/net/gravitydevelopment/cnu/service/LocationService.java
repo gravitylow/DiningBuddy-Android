@@ -1,6 +1,7 @@
 package net.gravitydevelopment.cnu.service;
 
 import android.content.Context;
+import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 
@@ -19,8 +20,9 @@ public class LocationService {
     private static final long MIN_UPDATE = 60 * 1000;
     private static final long PEOPLE_UPDATE = 60 * 1000;
 
-    private CNULocator mLocator;
+    private static CNULocator mLocator;
 
+    private static LocationManager locationManager;
     private static double sLastLongitude;
     private static double sLastLatitude;
     private static CNULocation sLastLocation;
@@ -32,15 +34,15 @@ public class LocationService {
     private static boolean sHasLocation;
     private static boolean sDie;
 
-    private SettingsService mSettings;
+    private static SettingsService mSettings;
 
     public LocationService(final BackendService backend) {
         mSettings = BackendService.getSettingsService();
 
         sListener = new CNULocationListener(this);
 
-        ((LocationManager) backend.getSystemService(Context.LOCATION_SERVICE))
-                .requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, sListener);
+        locationManager = (LocationManager) backend.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, sListener);
 
         String cache = mSettings.getCachedLocations();
         if (cache != null) {
@@ -118,6 +120,32 @@ public class LocationService {
                 }
             });
         }
+    }
+
+    public static void findAndDistributeLocation(double latitude, double longitude) {
+        if (!CNULocator.isSetup() || !mSettings.getShouldConnect()) {
+            return;
+        }
+
+        CNULocation location = mLocator.getLocation(latitude, longitude);
+        CNU.updateLocation(latitude, longitude, location);
+        CNU.updateLocationView(location);
+        sLastLatitude = latitude;
+        sLastLongitude = longitude;
+        sLastLocation = location;
+        sHasLocation = true;
+    }
+
+    public static void requestFullUpdate() {
+        new Thread() {
+            public void run() {
+                updateInfo();
+                Location loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                double latitude = loc.getLatitude();
+                double longitude = loc.getLongitude();
+                findAndDistributeLocation(latitude, longitude);
+            }
+        }.start();
     }
 
     public static double getLastLatitude() {

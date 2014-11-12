@@ -124,7 +124,6 @@ public class LocationBannerFragment extends Fragment {
 
     public void updateLocation(CNULocation location) {
         mShowBadge = location != null && location.getName().equals(mName);
-        Log.d(CNU.LOG_TAG, "Show badge set to " + mShowBadge);
         setBadgeHidden(getView(), !mShowBadge);
     }
 

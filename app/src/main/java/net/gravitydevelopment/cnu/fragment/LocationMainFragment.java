@@ -59,6 +59,7 @@ public class LocationMainFragment extends Fragment {
             }
         }
 
+
         return rootView;
     }
 
