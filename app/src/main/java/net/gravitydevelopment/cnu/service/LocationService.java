@@ -122,14 +122,23 @@ public class LocationService {
         }
     }
 
-    public static void findAndDistributeLocation(double latitude, double longitude) {
+    public static void findAndDistributeLocation(final double latitude, final double longitude) {
         if (!CNULocator.isSetup() || !mSettings.getShouldConnect()) {
             return;
         }
 
-        CNULocation location = mLocator.getLocation(latitude, longitude);
-        CNU.updateLocation(latitude, longitude, location);
-        CNU.updateLocationView(location);
+        final CNULocation location = mLocator.getLocation(latitude, longitude);
+
+        if (CNU.getContext() != null) {
+            CNU.getContext().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    CNU.updateLocation(latitude, longitude, location);
+                    CNU.updateLocationView(location);
+                }
+            });
+        }
+
         sLastLatitude = latitude;
         sLastLongitude = longitude;
         sLastLocation = location;

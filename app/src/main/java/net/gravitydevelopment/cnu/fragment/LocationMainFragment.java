@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TabHost;
+import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.CNU;
 import net.gravitydevelopment.cnu.CNULocationView;
@@ -23,6 +25,7 @@ public class LocationMainFragment extends Fragment {
     private String name;
     private Bundle args;
     private boolean isShowingFeedback;
+    private SettingsService settings;
 
     public LocationMainFragment() {
 
@@ -39,36 +42,37 @@ public class LocationMainFragment extends Fragment {
         mTabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
-        mTabHost.addTab(mTabHost.newTabSpec("graphfragment").setIndicator("Activity"), LocationGraphFragment.class, args);
+        addTab(mTabHost, "graphfragment", "Activity", LocationGraphFragment.class, args);
         if (name.equals("Einsteins")) {
-            mTabHost.addTab(mTabHost.newTabSpec("hoursfragment").setIndicator("Hours"), LocationHoursFragment.class, args);
+            addTab(mTabHost, "hoursfragment", "Hours", LocationHoursFragment.class, args);
         } else {
-            mTabHost.addTab(mTabHost.newTabSpec("menufragment").setIndicator("Menu"), LocationMenuFragment.class, args);
+            addTab(mTabHost, "menufragment", "Menu", LocationMenuFragment.class, args);
         }
-        mTabHost.addTab(mTabHost.newTabSpec("feedfragment").setIndicator("Feed"), LocationFeedFragment.class, args);
+        addTab(mTabHost, "feedfragment", "Feed", LocationFeedFragment.class, args);
+
+        settings = BackendService.getSettingsService();
 
         CNULocation location = LocationService.getLastLocation();
-        SettingsService settings = BackendService.getSettingsService();
-        if (settings != null) {
-            long lastUpdate = name.equals(Util.REGATTAS_NAME) ? settings.getLastFeedbackRegattas() : name.equals(Util.COMMONS_NAME) ? settings.getLastFeedbackCommons() : settings.getLastFeedbackEinsteins();
-            if (location != null && location.getName().equals(name)) {
-                if ((System.currentTimeMillis() - lastUpdate) > Util.MIN_FEEDBACK_INTERVAL) {
-                    mTabHost.addTab(mTabHost.newTabSpec("feedbackfragment").setIndicator("Feedback"), LocationFeedbackFragment.class, args);
-                    isShowingFeedback = true;
-                }
-            }
+        if (shouldShowFeedback(location)) {
+            addTab(mTabHost, "feedbackfragment", "Feedback", LocationFeedbackFragment.class, args);
+            isShowingFeedback = true;
         }
-
 
         return rootView;
     }
 
+    private void addTab(FragmentTabHost host, String tag, String indicator, Class clazz, Bundle arguments) {
+        TabHost.TabSpec tabSpec = mTabHost.newTabSpec(tag);
+        tabSpec.setIndicator(indicator);
+        host.addTab(tabSpec, clazz, arguments);
+    }
+
     public void updateLocation(CNULocation location) {
         Log.d(CNU.LOG_TAG, "Is showing feedback: " + isShowingFeedback);
-        if (location != null && location.getName().equals(name)) {
+        if (shouldShowFeedback(location)) {
             if (!isShowingFeedback) {
                 Log.d(CNU.LOG_TAG, "Adding tab ");
-                mTabHost.addTab(mTabHost.newTabSpec("feedbackfragment").setIndicator("Feedback"), LocationFeedbackFragment.class, args);
+                addTab(mTabHost, "feedbackfragment", "Feedback", LocationFeedbackFragment.class, args);
                 isShowingFeedback = true;
             }
         } else if (isShowingFeedback) {
@@ -77,6 +81,25 @@ public class LocationMainFragment extends Fragment {
             mTabHost.getTabWidget().removeView(mTabHost.getTabWidget().getChildTabViewAt(mTabHost.getTabWidget().getTabCount()));
             isShowingFeedback = false;
         }
+    }
+
+    private boolean shouldShowFeedback(CNULocation location) {
+        if (location == null) {
+            return false;
+        }
+        boolean add = false;
+        if (location.getName().equals(name)) {
+            long last = 0;
+            if (name.equals(Util.REGATTAS_NAME)) {
+                last = settings.getLastFeedbackRegattas();
+            } else if (name.equals(Util.COMMONS_NAME)) {
+                last = settings.getLastFeedbackCommons();
+            } else if (name.equals(Util.EINSTEINS_NAME)) {
+                last = settings.getLastFeedbackEinsteins();
+            }
+            add = last == -1 || last == 0 || System.currentTimeMillis() > Util.MIN_FEEDBACK_INTERVAL;
+        }
+        return add;
     }
 
     public static LocationMainFragment newInstance(String locationName) {

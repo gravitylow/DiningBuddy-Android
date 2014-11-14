@@ -2,7 +2,6 @@ package net.gravitydevelopment.cnu;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,11 +11,10 @@ import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
 import net.gravitydevelopment.cnu.fragment.LocationMainFragment;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
-import net.gravitydevelopment.cnu.service.LocationService;
 
 import java.io.Serializable;
 
-public class CNULocationView extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class CNULocationView extends FragmentActivity {
 
     public static final String ARG_TITLE = "title";
     public static final String ARG_NAME = "name";
@@ -29,7 +27,6 @@ public class CNULocationView extends FragmentActivity implements SwipeRefreshLay
     private LocationBannerFragment bannerFragment;
     private LocationMainFragment mainFragment;
     private String name;
-    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +58,7 @@ public class CNULocationView extends FragmentActivity implements SwipeRefreshLay
             this.name = name;
         }
 
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.view_location_refresh);
-        refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeResources(
-                R.color.orange_primary,
-                R.color.sea_primary,
-                R.color.grass_primary,
-                R.color.sky_primary);
-
         CNU.setCurrentLocationView(this);
-    }
-
-    @Override
-    public void onRefresh() {
-        LocationService.requestFullUpdate();
     }
 
     @Override
@@ -123,9 +107,6 @@ public class CNULocationView extends FragmentActivity implements SwipeRefreshLay
                 bannerFragment.updateInfo(finalInfo);
             }
         });
-        if (refreshLayout.isRefreshing()) {
-            refreshLayout.setRefreshing(false);
-        }
     }
 
 }

@@ -15,9 +15,9 @@
     <string name="commons_title">The Commons</string>
     <string name="commons_info">Loading…</string>
     <string name="title_activity_cnulocation_view">Location</string>
-    <string name="feedback_crowded">Is this dining hall very crowded?</string>
+    <string name="feedback_crowded">Is it very crowded?</string>
     <string name="feedback_minutes">Please estimate waiting time for your food:</string>
-    <string name="feedback_comments">How\'s it looking down there?</string>
+    <string name="feedback_comments">Tell others how it looks!</string>
     <string name="feedback_button">Submit</string>
     <string name="feedback_response">Thanks!</string>
     <string name="feedback_response_detail">Accurate feedback helps improve the data provided to you.</string>
