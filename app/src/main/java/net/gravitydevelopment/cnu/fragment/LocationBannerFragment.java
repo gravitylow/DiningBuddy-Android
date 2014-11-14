@@ -41,7 +41,6 @@ public class LocationBannerFragment extends Fragment {
             mInitialColor = getArguments().getInt(CNULocationView.ARG_INITIAL_COLOR);
             mShouldOpenInfo = getArguments().getBoolean(CNULocationView.ARG_SHOULD_OPEN_INFO);
             mShowBadge = getArguments().getBoolean(CNULocationView.ARG_SHOW_BADGE);
-            Log.d(CNU.LOG_TAG, "Banner initialized with showBadge: " + mShowBadge);
         }
     }
 
@@ -51,7 +50,6 @@ public class LocationBannerFragment extends Fragment {
         drawTitle(rootView, mTitle);
         drawPicture(rootView, mInitialColor);
         drawInfo(rootView, -1);
-        Log.d(CNU.LOG_TAG, "On create view: " + mShowBadge);
         setBadgeHidden(rootView, !mShowBadge);
         Serializable obj = getArguments().getSerializable(CNULocationView.ARG_INFO);
         if (obj != null) {
