@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import net.gravitydevelopment.cnu.CNUApi;
+
+import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.CNULocationFeedItem;
-import net.gravitydevelopment.cnu.CNULocationView;
+import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
 
@@ -26,8 +27,8 @@ import java.util.List;
 public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private String mLocationName;
-    private TableLayout tableLayout;
-    private SwipeRefreshLayout refreshLayout;
+    private TableLayout mTableLayout;
+    private SwipeRefreshLayout mRefreshLayout;
 
     public LocationFeedFragment() {
 
@@ -37,23 +38,23 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mLocationName = getArguments().getString(CNULocationView.ARG_NAME);
+            mLocationName = getArguments().getString(LocationActivity.ARG_NAME);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_location_feed, container, false);
-        tableLayout = (TableLayout) rootView.findViewById(R.id.table);
+        mTableLayout = (TableLayout) rootView.findViewById(R.id.table);
         new Thread(new Runnable() {
             public void run() {
-                updateFeed(CNUApi.getFeed(mLocationName));
+                updateFeed(API.getFeed(mLocationName));
             }
         }).start();
 
-        refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.view_feed_refresh);
-        refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeResources(
+        mRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.view_feed_refresh);
+        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout.setColorSchemeResources(
                 R.color.orange_primary,
                 R.color.sea_primary,
                 R.color.sky_primary,
@@ -66,7 +67,7 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
     public void onRefresh() {
         new Thread(new Runnable() {
             public void run() {
-                updateFeed(CNUApi.getFeed(mLocationName));
+                updateFeed(API.getFeed(mLocationName));
             }
         }).start();
     }
@@ -129,15 +130,15 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
                             });
                         }
                     }
-                    tableLayout.removeAllViews();
+                    mTableLayout.removeAllViews();
                     for (TableRow row : list) {
-                        tableLayout.addView(row);
+                        mTableLayout.addView(row);
                     }
                 } else {
                     getView().findViewById(R.id.empty_text).setVisibility(View.VISIBLE);
                 }
-                if (refreshLayout.isRefreshing()) {
-                    refreshLayout.setRefreshing(false);
+                if (mRefreshLayout.isRefreshing()) {
+                    mRefreshLayout.setRefreshing(false);
                 }
             }
         });

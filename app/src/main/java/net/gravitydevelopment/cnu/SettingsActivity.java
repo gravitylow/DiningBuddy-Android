@@ -16,12 +16,11 @@ import android.widget.Toast;
 import com.cengalabs.flatui.FlatUI;
 
 import net.gravitydevelopment.cnu.service.BackendService;
-import net.gravitydevelopment.cnu.service.LocationService;
 import net.gravitydevelopment.cnu.service.SettingsService;
 
-public class CNUSettings extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity {
 
-    private PrefsFragment fragment;
+    private PrefsFragment mPrefsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +30,10 @@ public class CNUSettings extends PreferenceActivity {
         FlatUI.setDefaultTheme(FlatUI.GRASS);
         getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
 
-        fragment = new PrefsFragment();
+        mPrefsFragment = new PrefsFragment();
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, fragment)
+                .replace(android.R.id.content, mPrefsFragment)
                 .commit();
     }
 
@@ -98,22 +97,6 @@ public class CNUSettings extends PreferenceActivity {
                         return false;
                     }
                 });
-                /*
-                final Preference loc = new Preference(context);
-                loc.setTitle("Location Data");
-                String name = LocationService.getLastLocation() == null ? "Unknown" : LocationService.getLastLocation().getName();
-                String data = LocationService.getLastLatitude() + "," + LocationService.getLastLongitude() + ": " + name;
-                loc.setSummary(data);
-                screen.addPreference(loc);
-                loc.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        String name = LocationService.getLastLocation() == null ? "Unknown" : LocationService.getLastLocation().getName();
-                        String data = LocationService.getLastLatitude() + "," + LocationService.getLastLongitude() + ": " + name;
-                        loc.setSummary(data);
-                        return false;
-                    }
-                });*/
             }
         }
     }

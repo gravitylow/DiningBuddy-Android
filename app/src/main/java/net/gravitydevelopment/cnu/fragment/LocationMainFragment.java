@@ -8,10 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
-import android.widget.TextView;
 
-import net.gravitydevelopment.cnu.CNU;
-import net.gravitydevelopment.cnu.CNULocationView;
+import net.gravitydevelopment.cnu.DiningBuddy;
+import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
 import net.gravitydevelopment.cnu.geo.CNULocation;
@@ -22,10 +21,10 @@ import net.gravitydevelopment.cnu.service.SettingsService;
 public class LocationMainFragment extends Fragment {
 
     private FragmentTabHost mTabHost;
-    private String name;
-    private Bundle args;
-    private boolean isShowingFeedback;
-    private SettingsService settings;
+    private String mLocationName;
+    private Bundle mArgs;
+    private boolean mIsShowingFeedback;
+    private SettingsService mSettings;
 
     public LocationMainFragment() {
 
@@ -33,8 +32,8 @@ public class LocationMainFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        args = getArguments();
-        this.name = args.getString(CNULocationView.ARG_NAME);
+        mArgs = getArguments();
+        this.mLocationName = mArgs.getString(LocationActivity.ARG_NAME);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,21 +41,21 @@ public class LocationMainFragment extends Fragment {
         mTabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
-        addTab(mTabHost, "graphfragment", "Activity", LocationGraphFragment.class, args);
-        if (name.equals("Einsteins")) {
-            addTab(mTabHost, "hoursfragment", "Hours", LocationHoursFragment.class, args);
+        addTab(mTabHost, "graphfragment", "Activity", LocationGraphFragment.class, mArgs);
+        if (mLocationName.equals("Einsteins")) {
+            addTab(mTabHost, "hoursfragment", "Hours", LocationHoursFragment.class, mArgs);
         } else {
-            addTab(mTabHost, "menufragment", "Menu", LocationMenuFragment.class, args);
+            addTab(mTabHost, "menufragment", "Menu", LocationMenuFragment.class, mArgs);
         }
-        addTab(mTabHost, "feedfragment", "Feed", LocationFeedFragment.class, args);
+        addTab(mTabHost, "feedfragment", "Feed", LocationFeedFragment.class, mArgs);
 
-        settings = BackendService.getSettingsService();
+        mSettings = BackendService.getSettingsService();
 
         CNULocation location = LocationService.getLastLocation();
-        Log.d(CNU.LOG_TAG, "Should show: " + shouldShowFeedback(location));
+        Log.d(DiningBuddy.LOG_TAG, "Should show: " + shouldShowFeedback(location));
         if (shouldShowFeedback(location)) {
-            addTab(mTabHost, "feedbackfragment", "Feedback", LocationFeedbackFragment.class, args);
-            isShowingFeedback = true;
+            addTab(mTabHost, "feedbackfragment", "Feedback", LocationFeedbackFragment.class, mArgs);
+            mIsShowingFeedback = true;
         }
 
         return rootView;
@@ -70,16 +69,16 @@ public class LocationMainFragment extends Fragment {
 
     public void updateLocation(CNULocation location) {
         if (shouldShowFeedback(location)) {
-            if (!isShowingFeedback) {
-                Log.d(CNU.LOG_TAG, "Adding tab ");
-                addTab(mTabHost, "feedbackfragment", "Feedback", LocationFeedbackFragment.class, args);
-                isShowingFeedback = true;
+            if (!mIsShowingFeedback) {
+                Log.d(DiningBuddy.LOG_TAG, "Adding tab ");
+                addTab(mTabHost, "feedbackfragment", "Feedback", LocationFeedbackFragment.class, mArgs);
+                mIsShowingFeedback = true;
             }
-        } else if (isShowingFeedback) {
-            Log.d(CNU.LOG_TAG, "Removing tab ");
+        } else if (mIsShowingFeedback) {
+            Log.d(DiningBuddy.LOG_TAG, "Removing tab ");
             mTabHost.setCurrentTab(mTabHost.getTabWidget().getTabCount() - 1);
             mTabHost.getTabWidget().removeView(mTabHost.getTabWidget().getChildTabViewAt(mTabHost.getTabWidget().getTabCount()));
-            isShowingFeedback = false;
+            mIsShowingFeedback = false;
         }
     }
 
@@ -88,14 +87,14 @@ public class LocationMainFragment extends Fragment {
             return false;
         }
         boolean add = false;
-        if (location.getName().equals(name)) {
+        if (location.getName().equals(mLocationName)) {
             long last = 0;
-            if (name.equals(Util.REGATTAS_NAME)) {
-                last = settings.getLastFeedbackRegattas();
-            } else if (name.equals(Util.COMMONS_NAME)) {
-                last = settings.getLastFeedbackCommons();
-            } else if (name.equals(Util.EINSTEINS_NAME)) {
-                last = settings.getLastFeedbackEinsteins();
+            if (mLocationName.equals(Util.REGATTAS_NAME)) {
+                last = mSettings.getLastFeedbackRegattas();
+            } else if (mLocationName.equals(Util.COMMONS_NAME)) {
+                last = mSettings.getLastFeedbackCommons();
+            } else if (mLocationName.equals(Util.EINSTEINS_NAME)) {
+                last = mSettings.getLastFeedbackEinsteins();
             }
             add = last == -1 || last == 0 || System.currentTimeMillis() > Util.MIN_FEEDBACK_INTERVAL;
         }
@@ -105,7 +104,7 @@ public class LocationMainFragment extends Fragment {
     public static LocationMainFragment newInstance(String locationName) {
         LocationMainFragment fragment = new LocationMainFragment();
         Bundle args = new Bundle();
-        args.putString(CNULocationView.ARG_NAME, locationName);
+        args.putString(LocationActivity.ARG_NAME, locationName);
         fragment.setArguments(args);
         return fragment;
     }

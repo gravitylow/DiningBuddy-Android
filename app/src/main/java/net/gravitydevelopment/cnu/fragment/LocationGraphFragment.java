@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import net.gravitydevelopment.cnu.CNUApi;
-import net.gravitydevelopment.cnu.CNULocationView;
+import net.gravitydevelopment.cnu.API;
+import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 
 public class LocationGraphFragment extends Fragment {
@@ -26,7 +26,7 @@ public class LocationGraphFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mLocationName = getArguments().getString(CNULocationView.ARG_NAME);
+            mLocationName = getArguments().getString(LocationActivity.ARG_NAME);
         }
     }
 
@@ -35,7 +35,7 @@ public class LocationGraphFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_location_graph, container, false);
         WebView webView = (WebView) rootView.findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl(CNUApi.getApiUrl() + "graphs/" + mLocationName);
+        webView.loadUrl(API.getApiUrl() + "graphs/" + mLocationName);
         webView.setScrollContainer(false);
         webView.setVerticalScrollBarEnabled(false);
         webView.setBackgroundColor(Color.parseColor("#DFDFD7"));
@@ -51,7 +51,7 @@ public class LocationGraphFragment extends Fragment {
     public static LocationGraphFragment newInstance(String locationName) {
         LocationGraphFragment fragment = new LocationGraphFragment();
         Bundle args = new Bundle();
-        args.putString(CNULocationView.ARG_NAME, locationName);
+        args.putString(LocationActivity.ARG_NAME, locationName);
         fragment.setArguments(args);
         return fragment;
     }

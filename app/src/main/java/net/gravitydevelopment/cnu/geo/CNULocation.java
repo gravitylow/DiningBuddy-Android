@@ -11,49 +11,49 @@ import java.util.List;
  */
 public class CNULocation implements Serializable {
 
-    private String name;
-    private List<CNUCoordinatePair> coordinatePairs;
-    private List<CNULocation> subLocations;
+    private String mName;
+    private List<CNUCoordinatePair> mCoordinatePairList;
+    private List<CNULocation> mSubLocationsList;
 
     public CNULocation(String name, List<CNUCoordinatePair> coordinatePairs, List<CNULocation> subLocations) {
-        this.name = name;
-        this.coordinatePairs = coordinatePairs;
-        this.subLocations = subLocations;
+        this.mName = name;
+        this.mCoordinatePairList = coordinatePairs;
+        this.mSubLocationsList = subLocations;
     }
 
     public CNULocation(String name, List<CNUCoordinatePair> coordinatePairs) {
-        this.name = name;
-        this.coordinatePairs = coordinatePairs;
-        this.subLocations = new ArrayList<CNULocation>();
+        this.mName = name;
+        this.mCoordinatePairList = coordinatePairs;
+        this.mSubLocationsList = new ArrayList<CNULocation>();
     }
 
     public CNULocation() {
-        this.coordinatePairs = new ArrayList<CNUCoordinatePair>();
-        this.subLocations = new ArrayList<CNULocation>();
+        this.mCoordinatePairList = new ArrayList<CNUCoordinatePair>();
+        this.mSubLocationsList = new ArrayList<CNULocation>();
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setSubLocations(List<CNULocation> subLocations) {
-        this.subLocations = subLocations;
+        this.mSubLocationsList = subLocations;
     }
 
     public List<CNULocation> getSubLocations() {
-        return subLocations;
+        return mSubLocationsList;
     }
 
     public boolean hasSubLocations() {
-        return subLocations.size() > 0;
+        return mSubLocationsList.size() > 0;
     }
 
     public void addCoordinatePair(CNUCoordinatePair coordinatePair) {
-        coordinatePairs.add(coordinatePair);
+        mCoordinatePairList.add(coordinatePair);
     }
 
     public boolean isInsideLocation(double latitude, double longitude) {
@@ -63,11 +63,11 @@ public class CNULocation implements Serializable {
         double point1long;
         double point2lat;
         double point2long;
-        int n = coordinatePairs.size();
+        int n = mCoordinatePairList.size();
 
         for (i=0;i<n;i++) {
-            CNUCoordinatePair pair1 = coordinatePairs.get(i);
-            CNUCoordinatePair pair2 = coordinatePairs.get((i+1)%n);
+            CNUCoordinatePair pair1 = mCoordinatePairList.get(i);
+            CNUCoordinatePair pair2 = mCoordinatePairList.get((i+1)%n);
             point1lat = pair1.getLatitude() - latitude;
             point1long = pair1.getLongitude() - longitude;
             point2lat = pair2.getLatitude() - latitude;
@@ -101,17 +101,17 @@ public class CNULocation implements Serializable {
     @Override
     public String toString() {
         return "CNULocation{"
-                + "name = " + name
-                + ", coordinatePairs = " + coordinatePairs
-                + ", subLocations = " + subLocations
+                + "mName = " + mName
+                + ", mCoordinatePairList = " + mCoordinatePairList
+                + ", mSubLocationsList = " + mSubLocationsList
                 + "}";
     }
 
     private String coordinatePairsJsonValue() {
         StringBuilder builder = new StringBuilder();
         builder.append("[");
-        if (coordinatePairs.size() > 0) {
-            for (CNUCoordinatePair pair : coordinatePairs) {
+        if (mCoordinatePairList.size() > 0) {
+            for (CNUCoordinatePair pair : mCoordinatePairList) {
                 builder.append(pair.jsonValue());
                 builder.append(",");
             }
@@ -124,8 +124,8 @@ public class CNULocation implements Serializable {
     private String subLocationsJsonValue() {
         StringBuilder builder = new StringBuilder();
         builder.append("[");
-        if (subLocations.size() > 0) {
-            for (CNULocation sub : subLocations) {
+        if (mSubLocationsList.size() > 0) {
+            for (CNULocation sub : mSubLocationsList) {
                 builder.append(sub.jsonValue());
                 builder.append(",");
             }
@@ -137,7 +137,7 @@ public class CNULocation implements Serializable {
 
     public String jsonValue() {
         return "{"
-            + "\"name\" : \"" + name + "\""
+            + "\"name\" : \"" + mName + "\""
             + ", \"coordinatePairs\" : " + coordinatePairsJsonValue()
             + ", \"subLocations\" : " + subLocationsJsonValue()
             + "}";

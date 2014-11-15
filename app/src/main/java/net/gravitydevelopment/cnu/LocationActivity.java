@@ -14,9 +14,9 @@ import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 
 import java.io.Serializable;
 
-public class CNULocationView extends FragmentActivity {
+public class LocationActivity extends FragmentActivity {
 
-    public static final String ARG_TITLE = "title";
+    public static final String ARG_DISPLAY_NAME = "displayName";
     public static final String ARG_NAME = "name";
     public static final String ARG_INFO = "info";
     public static final String ARG_DRAWABLE = "drawable";
@@ -24,9 +24,9 @@ public class CNULocationView extends FragmentActivity {
     public static final String ARG_SHOULD_OPEN_INFO = "shouldOpenInfo";
     public static final String ARG_SHOW_BADGE = "showBadge";
 
-    private LocationBannerFragment bannerFragment;
-    private LocationMainFragment mainFragment;
-    private String name;
+    private LocationBannerFragment mBannerFragment;
+    private LocationMainFragment mMainFragment;
+    private String mLocationName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,37 +34,37 @@ public class CNULocationView extends FragmentActivity {
         FlatUI.initDefaultValues(this);
         FlatUI.setDefaultTheme(FlatUI.GRASS);
         getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
-        setContentView(R.layout.activity_cnulocation_view);
+        setContentView(R.layout.activity_location);
         if (savedInstanceState == null) {
             Bundle b = getIntent().getExtras();
-            String title = b.getString(ARG_TITLE);
+            String display = b.getString(ARG_DISPLAY_NAME);
             String name = b.getString(ARG_NAME);
             int drawable = b.getInt(ARG_DRAWABLE);
             Serializable obj = b.getSerializable(ARG_INFO);
             boolean showBadge = b.getBoolean(ARG_SHOW_BADGE);
 
             if (obj != null) {
-                bannerFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo) obj, showBadge);
+                mBannerFragment = LocationBannerFragment.newInstance(display, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo) obj, showBadge);
             } else {
-                bannerFragment = LocationBannerFragment.newInstance(title, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
+                mBannerFragment = LocationBannerFragment.newInstance(display, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
             }
 
-            mainFragment = LocationMainFragment.newInstance(name);
+            mMainFragment = LocationMainFragment.newInstance(name);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.location_container, bannerFragment)
-                    .add(R.id.tab_container, mainFragment)
+                    .add(R.id.location_container, mBannerFragment)
+                    .add(R.id.tab_container, mMainFragment)
                     .commit();
 
-            this.name = name;
+            this.mLocationName = name;
         }
 
-        CNU.setCurrentLocationView(this);
+        DiningBuddy.setCurrentLocationView(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        CNU.setCurrentLocationView(null);
+        DiningBuddy.setCurrentLocationView(null);
     }
 
     @Override
@@ -83,28 +83,28 @@ public class CNULocationView extends FragmentActivity {
     }
 
     public void updateLocation(CNULocation location) {
-        if (mainFragment != null) {
-            mainFragment.updateLocation(location);
+        if (mMainFragment != null) {
+            mMainFragment.updateLocation(location);
         }
-        if (bannerFragment != null) {
-            bannerFragment.updateLocation(location);
+        if (mBannerFragment != null) {
+            mBannerFragment.updateLocation(location);
         }
     }
 
     public void updateInfo(CNULocationInfo regattas, CNULocationInfo commons, CNULocationInfo einsteins) {
         CNULocationInfo info = null;
-        if (name.equals(Util.REGATTAS_NAME)) {
+        if (mLocationName.equals(Util.REGATTAS_NAME)) {
             info = regattas;
-        } else if (name.equals(Util.COMMONS_NAME)) {
+        } else if (mLocationName.equals(Util.COMMONS_NAME)) {
             info = commons;
-        } else if (name.equals(Util.EINSTEINS_NAME)) {
+        } else if (mLocationName.equals(Util.EINSTEINS_NAME)) {
             info = einsteins;
         }
         final CNULocationInfo finalInfo = info;
-        bannerFragment.getActivity().runOnUiThread(new Runnable() {
+        mBannerFragment.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                bannerFragment.updateInfo(finalInfo);
+                mBannerFragment.updateInfo(finalInfo);
             }
         });
     }

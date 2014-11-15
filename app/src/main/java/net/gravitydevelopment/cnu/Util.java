@@ -12,8 +12,6 @@ import android.graphics.Shader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.SettingsService;
@@ -78,13 +76,13 @@ public class Util {
     }
 
     public static void startBackend(Context context) {
-        Log.d(CNU.LOG_TAG, "Starting service...");
+        Log.d(DiningBuddy.LOG_TAG, "Starting service...");
         Intent startServiceIntent = new Intent(context, BackendService.class);
         context.startService(startServiceIntent);
     }
 
     public static void stopBackend(Context context) {
-        Log.d(CNU.LOG_TAG, "Stopping service...");
+        Log.d(DiningBuddy.LOG_TAG, "Stopping service...");
         context.stopService(new Intent(context, BackendService.class));
     }
 

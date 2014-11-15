@@ -6,7 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import net.gravitydevelopment.cnu.CNU;
+import net.gravitydevelopment.cnu.DiningBuddy;
 
 import java.util.UUID;
 
@@ -59,7 +59,7 @@ public class SettingsService {
         SharedPreferences.Editor editor = sSettings.edit();
         editor.putString(PREFS_KEY_UNIQUE_ID, id.toString());
         editor.apply();
-        Log.d(CNU.LOG_TAG, "Saved UUID: " + id);
+        Log.d(DiningBuddy.LOG_TAG, "Saved UUID: " + id);
         return id.toString();
     }
 

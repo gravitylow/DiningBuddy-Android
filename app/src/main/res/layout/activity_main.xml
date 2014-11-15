@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DFDFD7"
-    tools:context="net.gravitydevelopment.cnu.CNU"
+    tools:context="net.gravitydevelopment.cnu.DiningBuddy"
     android:id="@+id/view_refresh">
 
     <LinearLayout

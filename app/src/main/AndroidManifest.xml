@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".CNU"
+            android:name=".DiningBuddy"
             android:label="@string/title_activity_cnudining"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -24,9 +24,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CNUSettings"
+            android:name=".SettingsActivity"
             android:label="@string/settings_name"
-            android:parentActivityName=".CNU" >
+            android:parentActivityName=".DiningBuddy" >
         </activity>
 
         <receiver android:name=".receiver.ConnectionReceiver" >
@@ -38,9 +38,9 @@
         <service android:name=".service.BackendService" />
 
         <activity
-            android:name=".CNULocationView"
+            android:name=".LocationActivity"
             android:label="@string/title_activity_cnulocation_view"
-            android:parentActivityName=".CNU"
+            android:parentActivityName=".DiningBuddy"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

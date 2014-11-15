@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/feedback_text"
+        android:labelFor="@+id/feedback"
         android:text="@string/feedback_comments" />
 
     <EditText
@@ -42,6 +43,8 @@
         android:id="@+id/feedback"
         android:maxLength ="1000"
         android:layout_gravity="center_horizontal"
+        android:inputType="text"
+        android:hint="@string/feedback_hint"
         android:singleLine="true"/>
 
     <com.cengalabs.flatui.views.FlatButton

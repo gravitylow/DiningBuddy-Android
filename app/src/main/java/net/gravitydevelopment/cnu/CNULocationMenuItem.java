@@ -2,31 +2,31 @@ package net.gravitydevelopment.cnu;
 
 public class CNULocationMenuItem {
 
-    private String startTime;
-    private String endTime;
-    private String summary;
-    private String description;
+    private String mStartTime;
+    private String mEndTime;
+    private String mSummary;
+    private String mDescription;
 
     public CNULocationMenuItem(String startTime, String endTime, String summary, String description) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.summary = summary;
-        this.description = description;
+        this.mStartTime = startTime;
+        this.mEndTime = endTime;
+        this.mSummary = summary;
+        this.mDescription = description;
     }
 
     public String getStartTime() {
-        return startTime;
+        return mStartTime;
     }
 
     public String getEndTime() {
-        return endTime;
+        return mEndTime;
     }
 
     public String getSummary() {
-        return summary;
+        return mSummary;
     }
 
     public String getDescription() {
-        return description;
+        return mDescription;
     }
 }

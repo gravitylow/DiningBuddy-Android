@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="#DFDFD7"
-    tools:context="net.gravitydevelopment.cnu.CNU"
+    tools:context="net.gravitydevelopment.cnu.DiningBuddy"
     android:id="@+id/view_location">
     <FrameLayout
         android:id="@+id/location_container"

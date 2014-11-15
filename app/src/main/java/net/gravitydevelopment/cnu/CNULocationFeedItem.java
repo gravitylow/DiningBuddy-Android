@@ -2,43 +2,43 @@ package net.gravitydevelopment.cnu;
 
 public class CNULocationFeedItem {
 
-    private String message;
-    private int minutes;
-    private int crowded;
-    private long time;
-    private boolean pinned;
-    private String detail;
+    private String mMessage;
+    private int mMinutes;
+    private int mCrowded;
+    private long mTime;
+    private boolean mPinned;
+    private String mDetail;
 
     public CNULocationFeedItem(String message, int minutes, int crowded, long time, boolean pinned, String detail) {
-        this.message = message;
-        this.minutes = minutes;
-        this.crowded = crowded;
-        this.time = time;
-        this.pinned = pinned;
-        this.detail = detail;
+        this.mMessage = message;
+        this.mMinutes = minutes;
+        this.mCrowded = crowded;
+        this.mTime = time;
+        this.mPinned = pinned;
+        this.mDetail = detail;
     }
 
     public String getMessage() {
-        return message;
+        return mMessage;
     }
 
     public int getMinutes() {
-        return minutes;
+        return mMinutes;
     }
 
     public int getCrowded() {
-        return crowded;
+        return mCrowded;
     }
 
     public long getTime() {
-        return time;
+        return mTime;
     }
 
     public boolean isPinned() {
-        return pinned;
+        return mPinned;
     }
 
     public String getDetail() {
-        return detail;
+        return mDetail;
     }
 }

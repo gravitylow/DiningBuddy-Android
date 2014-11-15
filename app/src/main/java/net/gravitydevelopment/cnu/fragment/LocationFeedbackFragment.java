@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import net.gravitydevelopment.cnu.CNULocationView;
+import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
 import net.gravitydevelopment.cnu.geo.CNULocation;
@@ -22,8 +22,8 @@ import java.util.ArrayList;
 
 public class LocationFeedbackFragment extends Fragment {
 
-    private String name;
-    private boolean submitted;
+    private String mLocationName;
+    private boolean mFeedbackSubmitted;
 
     public LocationFeedbackFragment() {
 
@@ -33,7 +33,7 @@ public class LocationFeedbackFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            name = getArguments().getString(CNULocationView.ARG_NAME);
+            mLocationName = getArguments().getString(LocationActivity.ARG_NAME);
         }
     }
 
@@ -57,26 +57,26 @@ public class LocationFeedbackFragment extends Fragment {
         ArrayAdapter<String> minutesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, minutes);
         minutesSpinner.setAdapter(minutesAdapter);
 
-        if (submitted) {
+        if (mFeedbackSubmitted) {
             setSubmitted(rootView);
         } else {
             rootView.findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     SettingsService settings = BackendService.getSettingsService();
-                    long lastUpdate = name.equals(Util.REGATTAS_NAME) ? settings.getLastFeedbackRegattas() : settings.getLastFeedbackCommons();
+                    long lastUpdate = mLocationName.equals(Util.REGATTAS_NAME) ? settings.getLastFeedbackRegattas() : settings.getLastFeedbackCommons();
                     if ((System.currentTimeMillis() - lastUpdate) > Util.MIN_FEEDBACK_INTERVAL) {
                         int crowdedValue = ((Spinner) rootView.findViewById(R.id.crowded_spinner)).getSelectedItemPosition();
                         int minuteValue = ((Spinner) rootView.findViewById(R.id.minutes_spinner)).getSelectedItemPosition();
                         String feedback = ((EditText) rootView.findViewById(R.id.feedback)).getText().toString();
                         if (BackendService.isRunning()) {
                             CNULocation location = LocationService.getLastLocation();
-                            BackendService.getLocationService().postFeedback(name, location, crowdedValue, minuteValue, feedback, SettingsService.getUUID());
-                            if (name.equals(Util.REGATTAS_NAME)) {
+                            BackendService.getLocationService().postFeedback(mLocationName, location, crowdedValue, minuteValue, feedback, SettingsService.getUUID());
+                            if (mLocationName.equals(Util.REGATTAS_NAME)) {
                                 settings.setLastFeedbackRegattas(System.currentTimeMillis());
-                            } else if (name.equals(Util.COMMONS_NAME)) {
+                            } else if (mLocationName.equals(Util.COMMONS_NAME)) {
                                 settings.setLastFeedbackCommons(System.currentTimeMillis());
-                            } else if (name.equals(Util.EINSTEINS_NAME)) {
+                            } else if (mLocationName.equals(Util.EINSTEINS_NAME)) {
                                 settings.setLastFeedbackEinsteins(System.currentTimeMillis());
                             }
                         }
@@ -91,7 +91,7 @@ public class LocationFeedbackFragment extends Fragment {
     }
 
     private void setSubmitted(View rootView) {
-        submitted = true;
+        mFeedbackSubmitted = true;
         rootView.findViewById(R.id.crowded_text).setVisibility(View.GONE);
         rootView.findViewById(R.id.crowded_spinner).setVisibility(View.GONE);
         rootView.findViewById(R.id.minutes_text).setVisibility(View.GONE);
@@ -107,7 +107,7 @@ public class LocationFeedbackFragment extends Fragment {
     public static LocationFeedbackFragment newInstance(String name) {
         LocationFeedbackFragment fragment = new LocationFeedbackFragment();
         Bundle args = new Bundle();
-        args.putString(CNULocationView.ARG_NAME, name);
+        args.putString(LocationActivity.ARG_NAME, name);
         fragment.setArguments(args);
         return fragment;
     }

@@ -7,13 +7,11 @@
     <string name="action_developer">Developer</string>
     <string name="preference_wifi_only_tile">WiFi Only</string>
     <string name="preference_wifi_only_summary">Only send and receive location updates when connected to WiFi</string>
-    <string name="preference_donate_tile">Donate</string>
-    <string name="preference_donate_summary">Support my work!</string>
     <string name="title_activity_cnudining">DiningBuddy</string>
     <string name="regattas_title">Regattas</string>
-    <string name="regattas_info">Loading…</string>
     <string name="commons_title">The Commons</string>
-    <string name="commons_info">Loading…</string>
+    <string name="einsteins_title">Einstein\'s</string>
+    <string name="loading_text">Loading…</string>
     <string name="empty_feed_text">No recent updates</string>
     <string name="title_activity_cnulocation_view">Location</string>
     <string name="feedback_crowded">Is it very crowded?</string>
@@ -22,6 +20,11 @@
     <string name="feedback_button">Submit</string>
     <string name="feedback_response">Thanks!</string>
     <string name="feedback_response_detail">Accurate feedback helps improve the data provided to you.</string>
+    <string name="feedback_hint">Leave feedback about this location</string>
+    <string name="einsteins_hours">Monday - Thursday: 7:30AM - 1AM
+        \n\nFriday: 7:30AM - 8PM
+        \n\nSaturday: 9AM - 5PM
+        \n\nSunday: 1PM - 1AM</string>
     <string name="first_user_alert_text">Hey there!\n\n
         Thanks for being one of the first users to try out the app.
         There\'s still heavy testing going on, so please feel free to

@@ -5,8 +5,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 
-import net.gravitydevelopment.cnu.CNU;
-import net.gravitydevelopment.cnu.CNUApi;
+import net.gravitydevelopment.cnu.API;
+import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.listener.CNULocationListener;
 import net.gravitydevelopment.cnu.geo.CNULocation;
@@ -22,12 +22,11 @@ public class LocationService {
 
     private static CNULocator mLocator;
 
-    private static LocationManager locationManager;
+    private static LocationManager sLocationManager;
     private static double sLastLongitude;
     private static double sLastLatitude;
     private static CNULocation sLastLocation;
     private static List<CNULocationInfo> sLastLocationInfo;
-    private static long sLastUpdate;
     private static long sLastPublishedUpdate;
     private static CNULocationListener sListener;
 
@@ -41,16 +40,16 @@ public class LocationService {
 
         sListener = new CNULocationListener(this);
 
-        locationManager = (LocationManager) backend.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, sListener);
+        sLocationManager = (LocationManager) backend.getSystemService(Context.LOCATION_SERVICE);
+        sLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, sListener);
 
         String cache = mSettings.getCachedLocations();
         if (cache != null) {
             mLocator = new CNULocator(cache);
-            Log.d(CNU.LOG_TAG, "Setup from cache");
+            Log.d(DiningBuddy.LOG_TAG, "Setup from cache");
         } else {
             mLocator = new CNULocator();
-            Log.d(CNU.LOG_TAG, "No cache; awaiting connection to server");
+            Log.d(DiningBuddy.LOG_TAG, "No cache; awaiting connection to server");
         }
         if (mSettings.getShouldConnect()) {
             mLocator.updateLocations();
@@ -79,11 +78,11 @@ public class LocationService {
         }
 
         CNULocation location = mLocator.getLocation(latitude, longitude);
-        CNU.updateLocation(latitude, longitude, location);
-        CNU.updateLocationView(location);
+        DiningBuddy.updateLocation(latitude, longitude, location);
+        DiningBuddy.updateLocationView(location);
 
         if (sLastPublishedUpdate == 0 || (System.currentTimeMillis() - sLastPublishedUpdate) >= MIN_UPDATE) {
-            Log.d(CNU.LOG_TAG, "Posting location " + location);
+            Log.d(DiningBuddy.LOG_TAG, "Posting location " + location);
             mLocator.postLocation(latitude, longitude, location, SettingsService.getUUID());
             sLastPublishedUpdate = System.currentTimeMillis();
         }
@@ -92,7 +91,6 @@ public class LocationService {
         sLastLongitude = longitude;
         sLastLocation = location;
         sHasLocation = true;
-        sLastUpdate = System.currentTimeMillis();
 
         new Thread() {
             public void run() {
@@ -106,17 +104,17 @@ public class LocationService {
             return;
         }
 
-        sLastLocationInfo = CNUApi.getInfo();
+        sLastLocationInfo = API.getInfo();
 
         if (sLastLocationInfo == null) {
             return;
         }
 
-        if (CNU.getContext() != null) {
-            CNU.getContext().runOnUiThread(new Runnable() {
+        if (DiningBuddy.getContext() != null) {
+            DiningBuddy.getContext().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    CNU.getContext().updateInfo(sLastLocationInfo);
+                    DiningBuddy.getContext().updateInfo(sLastLocationInfo);
                 }
             });
         }
@@ -129,12 +127,12 @@ public class LocationService {
 
         final CNULocation location = mLocator.getLocation(latitude, longitude);
 
-        if (CNU.getContext() != null) {
-            CNU.getContext().runOnUiThread(new Runnable() {
+        if (DiningBuddy.getContext() != null) {
+            DiningBuddy.getContext().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    CNU.updateLocation(latitude, longitude, location);
-                    CNU.updateLocationView(location);
+                    DiningBuddy.updateLocation(latitude, longitude, location);
+                    DiningBuddy.updateLocationView(location);
                 }
             });
         }
@@ -149,7 +147,7 @@ public class LocationService {
         new Thread() {
             public void run() {
                 updateInfo();
-                Location loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                Location loc = sLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 double latitude = loc.getLatitude();
                 double longitude = loc.getLongitude();
                 findAndDistributeLocation(latitude, longitude);
@@ -195,7 +193,7 @@ public class LocationService {
     public void postFeedback(final String target, final CNULocation location, final int crowded, final int minutes, final String feedback, final UUID uuid) {
         new Thread(new Runnable() {
             public void run() {
-                CNUApi.sendFeedback(target, location, crowded, minutes, feedback, System.currentTimeMillis(), uuid);
+                API.sendFeedback(target, location, crowded, minutes, feedback, System.currentTimeMillis(), uuid);
             }
         }).start();
     }

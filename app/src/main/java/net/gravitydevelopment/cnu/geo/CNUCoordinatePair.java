@@ -4,26 +4,31 @@ import java.io.Serializable;
 
 public class CNUCoordinatePair implements Serializable {
 
-    private double latitude;
-    private double longitude;
+    private double mLatitude;
+    private double mLongitude;
 
     public CNUCoordinatePair(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.mLatitude = latitude;
+        this.mLongitude = longitude;
     }
 
     public double getLatitude() {
-        return latitude;
+        return mLatitude;
     }
 
     public double getLongitude() {
-        return longitude;
+        return mLongitude;
+    }
+
+    @Override
+    public String toString() {
+        return "CNUCoordinatePair{mLatitude=" + mLatitude + ", mLongitude = " + mLongitude + "}";
     }
 
     public String jsonValue() {
         return "{"
-                + "\"lat\" : " + latitude
-                + ", \"lon\" : " + longitude
+                + "\"lat\" : " + mLatitude
+                + ", \"lon\" : " + mLongitude
                 + "}";
     }
 }

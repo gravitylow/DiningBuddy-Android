@@ -4,14 +4,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.cengalabs.flatui.FlatUI;
 
@@ -25,7 +23,7 @@ import net.gravitydevelopment.cnu.service.SettingsService;
 import java.util.List;
 
 
-public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String LOG_TAG = "CNU";
 
@@ -33,14 +31,14 @@ public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefres
     private static final String BUNDLE_LAST_LON = "lastLongitude";
     private static final String BUNDLE_LAST_LOCATION = "lastLocation";
 
-    private static CNU sContext;
+    private static DiningBuddy sContext;
     private static boolean sRunning;
-    private static CNULocationView currentLocationView;
-    private static CNULocation lastLocation;
-    private static LocationBannerFragment regattasFrag;
-    private static LocationBannerFragment commonsFrag;
-    private static LocationBannerFragment einsteinsFrag;
-    private static SwipeRefreshLayout refreshLayout;
+    private static LocationActivity mCurrentLocationView;
+    private static CNULocation sLastLocation;
+    private static LocationBannerFragment sRegattasFrag;
+    private static LocationBannerFragment sCommonsFrag;
+    private static LocationBannerFragment sEinsteinsFrag;
+    private static SwipeRefreshLayout sRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,25 +46,28 @@ public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefres
         FlatUI.initDefaultValues(this);
         FlatUI.setDefaultTheme(FlatUI.GRASS);
         getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
-        setContentView(R.layout.activity_cnudining);
+        setContentView(R.layout.activity_main);
 
         Log.w(LOG_TAG, "savedInstanceState: " + savedInstanceState);
 
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.view_refresh);
-        refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeResources(
+        sRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.view_refresh);
+        sRefreshLayout.setOnRefreshListener(this);
+        sRefreshLayout.setColorSchemeResources(
                 R.color.orange_primary,
                 R.color.sea_primary,
                 R.color.sky_primary,
                 R.color.grass_primary);
 
-        regattasFrag = LocationBannerFragment.newInstance("Regattas", "Regattas", R.drawable.regattas_full, Color.GRAY, true);
-        commonsFrag = LocationBannerFragment.newInstance("The Commons", "Commons", R.drawable.commons_full, Color.GRAY, true);
-        einsteinsFrag = LocationBannerFragment.newInstance("Einstein's", "Einsteins", R.drawable.einsteins_full, Color.GRAY, true);
+        String regattasTitle = getString(R.string.regattas_title);
+        String commonsTitle = getString(R.string.commons_title);
+        String einsteinsTitle = getString(R.string.einsteins_title);
+        sRegattasFrag = LocationBannerFragment.newInstance(regattasTitle, "Regattas", R.drawable.regattas_full, Color.GRAY, true);
+        sCommonsFrag = LocationBannerFragment.newInstance(commonsTitle, "Commons", R.drawable.commons_full, Color.GRAY, true);
+        sEinsteinsFrag = LocationBannerFragment.newInstance(einsteinsTitle, "Einsteins", R.drawable.einsteins_full, Color.GRAY, true);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.regattas_container, regattasFrag)
-                .replace(R.id.commons_container, commonsFrag)
-                .replace(R.id.einsteins_container, einsteinsFrag)
+                .replace(R.id.regattas_container, sRegattasFrag)
+                .replace(R.id.commons_container, sCommonsFrag)
+                .replace(R.id.einsteins_container, sEinsteinsFrag)
                 .commit();
 
         if (savedInstanceState != null) {
@@ -135,7 +136,7 @@ public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefres
         Log.w(LOG_TAG, "onSaveInstanceState: " + savedInstanceState);
         savedInstanceState.putDouble(BUNDLE_LAST_LAT, LocationService.getLastLatitude());
         savedInstanceState.putDouble(BUNDLE_LAST_LON, LocationService.getLastLongitude());
-        savedInstanceState.putSerializable(BUNDLE_LAST_LOCATION, lastLocation);
+        savedInstanceState.putSerializable(BUNDLE_LAST_LOCATION, sLastLocation);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -160,7 +161,7 @@ public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefres
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent startActivityIntent = new Intent(this, CNUSettings.class);
+            Intent startActivityIntent = new Intent(this, SettingsActivity.class);
             startActivity(startActivityIntent);
             return true;
         }
@@ -168,15 +169,15 @@ public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefres
     }
 
     public static void updateLocation(double latitude, double longitude, CNULocation location) {
-        lastLocation = location;
-        if (regattasFrag != null) {
-            regattasFrag.updateLocation(location);
+        sLastLocation = location;
+        if (sRegattasFrag != null) {
+            sRegattasFrag.updateLocation(location);
         }
-        if (commonsFrag != null) {
-            commonsFrag.updateLocation(location);
+        if (sCommonsFrag != null) {
+            sCommonsFrag.updateLocation(location);
         }
-        if (einsteinsFrag != null) {
-            einsteinsFrag.updateLocation(location);
+        if (sEinsteinsFrag != null) {
+            sEinsteinsFrag.updateLocation(location);
         }
     }
 
@@ -204,24 +205,24 @@ public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefres
         }
         updateLocationViewInfo(regattasInfo, commonsInfo, einsteinsInfo);
         if (isRunning()) {
-            if (regattasFrag != null && commonsFrag != null && einsteinsFrag != null) {
-                regattasFrag.updateInfo(regattasInfo);
-                commonsFrag.updateInfo(commonsInfo);
-                einsteinsFrag.updateInfo(einsteinsInfo);
+            if (sRegattasFrag != null && sCommonsFrag != null && sEinsteinsFrag != null) {
+                sRegattasFrag.updateInfo(regattasInfo);
+                sCommonsFrag.updateInfo(commonsInfo);
+                sEinsteinsFrag.updateInfo(einsteinsInfo);
             }
-            if (refreshLayout.isRefreshing()) {
-                refreshLayout.setRefreshing(false);
+            if (sRefreshLayout.isRefreshing()) {
+                sRefreshLayout.setRefreshing(false);
             }
         }
     }
 
     public static void updateLocationViewInfo(CNULocationInfo regattasInfo, CNULocationInfo commonsInfo, CNULocationInfo einsteinsInfo) {
-        if (currentLocationView != null) {
-            currentLocationView.updateInfo(regattasInfo, commonsInfo, einsteinsInfo);
+        if (mCurrentLocationView != null) {
+            mCurrentLocationView.updateInfo(regattasInfo, commonsInfo, einsteinsInfo);
         }
     }
 
-    public static CNU getContext() {
+    public static DiningBuddy getContext() {
         return sContext;
     }
 
@@ -229,17 +230,17 @@ public class CNU extends FragmentActivity implements SwipeRefreshLayout.OnRefres
         return sRunning;
     }
 
-    public static void setCurrentLocationView(CNULocationView view) {
-        currentLocationView = view;
+    public static void setCurrentLocationView(LocationActivity view) {
+        mCurrentLocationView = view;
     }
 
-    public static CNULocationView getCurrentLocationView() {
-        return currentLocationView;
+    public static LocationActivity getCurrentLocationView() {
+        return mCurrentLocationView;
     }
 
     public static void updateLocationView(CNULocation location) {
-        if (currentLocationView != null) {
-            currentLocationView.updateLocation(location);
+        if (mCurrentLocationView != null) {
+            mCurrentLocationView.updateLocation(location);
         }
     }
 }

@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import net.gravitydevelopment.cnu.CNU;
-import net.gravitydevelopment.cnu.CNUApi;
+import net.gravitydevelopment.cnu.API;
+import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.CNULocationMenuItem;
-import net.gravitydevelopment.cnu.CNULocationView;
+import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 public class LocationMenuFragment extends Fragment {
 
     private String mLocationName;
-    private LinearLayout insertPoint;
+    private LinearLayout mInsertPoint;
 
     public LocationMenuFragment() {
 
@@ -34,18 +34,18 @@ public class LocationMenuFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mLocationName = getArguments().getString(CNULocationView.ARG_NAME);
+            mLocationName = getArguments().getString(LocationActivity.ARG_NAME);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_location_menu, container, false);
-        Log.d(CNU.LOG_TAG, "root: " + rootView);
-        insertPoint = (LinearLayout) rootView.findViewById(R.id.insertPoint);
+        Log.d(DiningBuddy.LOG_TAG, "root: " + rootView);
+        mInsertPoint = (LinearLayout) rootView.findViewById(R.id.insertPoint);
         new Thread(new Runnable() {
             public void run() {
-                updateMenu(CNUApi.getMenu(mLocationName));
+                updateMenu(API.getMenu(mLocationName));
             }
         }).start();
 
@@ -56,12 +56,12 @@ public class LocationMenuFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                insertPoint.findViewById(R.id.loadingText).setVisibility(View.INVISIBLE);
+                mInsertPoint.findViewById(R.id.loadingText).setVisibility(View.INVISIBLE);
                 for (CNULocationMenuItem item : items) {
                     final Button button = new Button(getActivity());
                     Spanned text = Html.fromHtml("<strong>" + item.getStartTime() + " - " + item.getEndTime() + "</strong><br>" + item.getSummary());
                     button.setText(text);
-                    insertPoint.addView(button);
+                    mInsertPoint.addView(button);
 
                     final AlertDialog dialog = new AlertDialog.Builder(getActivity())
                             .setMessage(item.getDescription())

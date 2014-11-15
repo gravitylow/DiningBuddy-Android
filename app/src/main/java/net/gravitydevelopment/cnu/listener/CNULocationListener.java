@@ -8,14 +8,14 @@ import net.gravitydevelopment.cnu.service.LocationService;
 
 public class CNULocationListener implements LocationListener {
 
-    private LocationService locationService;
+    private LocationService mLocationService;
 
     public CNULocationListener(LocationService locationService) {
-        this.locationService = locationService;
+        this.mLocationService = locationService;
     }
 
     public void onLocationChanged(Location location) {
-        locationService.updateLocation(location.getLatitude(), location.getLongitude());
+        mLocationService.updateLocation(location.getLatitude(), location.getLongitude());
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {}

@@ -12,20 +12,20 @@ public class CNULocationInfo implements Serializable {
         SOMEWHAT_CROWDED("Somewhat crowded", "#f39c12"),
         CROWDED("Very crowded", "#d94130");
 
-        private String text;
-        private int color;
+        private String mText;
+        private int mColor;
 
         private CrowdedRating(String text, String hex) {
-            this.text = text;
-            color = Color.parseColor(hex);
+            this.mText = text;
+            mColor = Color.parseColor(hex);
         }
 
         public int getColor() {
-            return color;
+            return mColor;
         }
 
         public String getText() {
-            return text;
+            return mText;
         }
 
         public static ArrayList<String> getFeedbackList() {
@@ -37,34 +37,34 @@ public class CNULocationInfo implements Serializable {
         }
     }
 
-    private final String location;
-    private final int people;
-    private CrowdedRating crowdedRating;
+    private final String mLocationName;
+    private final int mPeopleCount;
+    private CrowdedRating mCrowdedRating;
 
     public CNULocationInfo(String location) {
         this(location, 0, 0);
     }
 
     public CNULocationInfo(String location, int people, int crowded) {
-        this.location = location;
-        this.people = people;
-        this.crowdedRating = CrowdedRating.values()[crowded];
+        this.mLocationName = location;
+        this.mPeopleCount = people;
+        this.mCrowdedRating = CrowdedRating.values()[crowded];
     }
 
     public String getLocation() {
-        return location;
+        return mLocationName;
     }
 
     public int getPeople() {
-        return people;
+        return mPeopleCount;
     }
 
     public CrowdedRating getCrowdedRating() {
-        return crowdedRating;
+        return mCrowdedRating;
     }
 
     @Override
     public String toString() {
-        return "CNULocationInfo{location=" + location + ", people=" + people + ", crowdedRating = " + crowdedRating + "}";
+        return "CNULocationInfo{mLocationName=" + mLocationName + ", mPeopleCount=" + mPeopleCount + ", mCrowdedRating = " + mCrowdedRating + "}";
     }
 }

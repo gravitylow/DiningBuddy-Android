@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import net.gravitydevelopment.cnu.CNU;
-import net.gravitydevelopment.cnu.CNULocationView;
+import net.gravitydevelopment.cnu.DiningBuddy;
+import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
 import net.gravitydevelopment.cnu.geo.CNULocation;
@@ -23,8 +23,8 @@ import java.io.Serializable;
 
 public class LocationBannerFragment extends Fragment {
 
-    private String mTitle;
-    private String mName;
+    private String mLocationName;
+    private String mLocationDisplayName;
     private int mDrawable;
     private CNULocationInfo mInfo;
     private int mInitialColor;
@@ -35,23 +35,23 @@ public class LocationBannerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mTitle = getArguments().getString(CNULocationView.ARG_TITLE);
-            mName = getArguments().getString(CNULocationView.ARG_NAME);
-            mDrawable = getArguments().getInt(CNULocationView.ARG_DRAWABLE);
-            mInitialColor = getArguments().getInt(CNULocationView.ARG_INITIAL_COLOR);
-            mShouldOpenInfo = getArguments().getBoolean(CNULocationView.ARG_SHOULD_OPEN_INFO);
-            mShowBadge = getArguments().getBoolean(CNULocationView.ARG_SHOW_BADGE);
+            mLocationName = getArguments().getString(LocationActivity.ARG_NAME);
+            mLocationDisplayName = getArguments().getString(LocationActivity.ARG_DISPLAY_NAME);
+            mDrawable = getArguments().getInt(LocationActivity.ARG_DRAWABLE);
+            mInitialColor = getArguments().getInt(LocationActivity.ARG_INITIAL_COLOR);
+            mShouldOpenInfo = getArguments().getBoolean(LocationActivity.ARG_SHOULD_OPEN_INFO);
+            mShowBadge = getArguments().getBoolean(LocationActivity.ARG_SHOW_BADGE);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_location_banner, container, false);
-        drawTitle(rootView, mTitle);
+        drawTitle(rootView, mLocationDisplayName);
         drawPicture(rootView, mInitialColor);
         drawInfo(rootView, -1);
         setBadgeHidden(rootView, !mShowBadge);
-        Serializable obj = getArguments().getSerializable(CNULocationView.ARG_INFO);
+        Serializable obj = getArguments().getSerializable(LocationActivity.ARG_INFO);
         if (obj != null) {
             updateInfo(rootView, (CNULocationInfo) obj);
         }
@@ -59,16 +59,16 @@ public class LocationBannerFragment extends Fragment {
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), CNULocationView.class);
+                    Intent intent = new Intent(getActivity(), LocationActivity.class);
                     Bundle b = new Bundle();
-                    b.putString(CNULocationView.ARG_TITLE, mTitle);
-                    b.putString(CNULocationView.ARG_NAME, mName);
-                    b.putInt(CNULocationView.ARG_DRAWABLE, mDrawable);
+                    b.putString(LocationActivity.ARG_DISPLAY_NAME, mLocationDisplayName);
+                    b.putString(LocationActivity.ARG_NAME, mLocationName);
+                    b.putInt(LocationActivity.ARG_DRAWABLE, mDrawable);
                     if (mInfo != null) {
-                        b.putSerializable(CNULocationView.ARG_INFO, mInfo);
+                        b.putSerializable(LocationActivity.ARG_INFO, mInfo);
                     }
-                    Log.d(CNU.LOG_TAG, "Fragment onClick -> set show badge" + mShowBadge);
-                    b.putBoolean(CNULocationView.ARG_SHOW_BADGE, mShowBadge);
+                    Log.d(DiningBuddy.LOG_TAG, "Fragment onClick -> set show badge" + mShowBadge);
+                    b.putBoolean(LocationActivity.ARG_SHOW_BADGE, mShowBadge);
                     intent.putExtras(b);
                     startActivity(intent);
                 }
@@ -110,7 +110,8 @@ public class LocationBannerFragment extends Fragment {
     }
 
     private void drawInfo(View view, int people) {
-        String s = people < 0 ? "Loading…" : "Currently: " + people + " people.";
+        String loading = getString(R.string.loading_text);
+        String s = people < 0 ? loading : "Currently: " + people + " people.";
         ((TextView) view.findViewById(R.id.info)).setText(s);
     }
 
@@ -121,7 +122,7 @@ public class LocationBannerFragment extends Fragment {
     }
 
     public void updateLocation(CNULocation location) {
-        mShowBadge = location != null && location.getName().equals(mName);
+        mShowBadge = location != null && location.getName().equals(mLocationName);
         setBadgeHidden(getView(), !mShowBadge);
     }
 
@@ -133,14 +134,14 @@ public class LocationBannerFragment extends Fragment {
         LocationBannerFragment fragment = new LocationBannerFragment();
 
         Bundle args = new Bundle();
-        args.putString(CNULocationView.ARG_TITLE, title);
-        args.putString(CNULocationView.ARG_NAME, name);
-        args.putInt(CNULocationView.ARG_DRAWABLE, drawable);
-        args.putInt(CNULocationView.ARG_INITIAL_COLOR, initialColor);
-        args.putBoolean(CNULocationView.ARG_SHOULD_OPEN_INFO, shouldOpenInfo);
-        args.putBoolean(CNULocationView.ARG_SHOW_BADGE, showBadge);
+        args.putString(LocationActivity.ARG_DISPLAY_NAME, title);
+        args.putString(LocationActivity.ARG_NAME, name);
+        args.putInt(LocationActivity.ARG_DRAWABLE, drawable);
+        args.putInt(LocationActivity.ARG_INITIAL_COLOR, initialColor);
+        args.putBoolean(LocationActivity.ARG_SHOULD_OPEN_INFO, shouldOpenInfo);
+        args.putBoolean(LocationActivity.ARG_SHOW_BADGE, showBadge);
         if (initialInfo != null) {
-            args.putSerializable(CNULocationView.ARG_INFO, initialInfo);
+            args.putSerializable(LocationActivity.ARG_INFO, initialInfo);
         }
         fragment.setArguments(args);
 
