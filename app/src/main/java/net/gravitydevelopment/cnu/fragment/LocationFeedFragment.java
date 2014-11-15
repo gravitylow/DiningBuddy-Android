@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
     private String mLocationName;
     private TableLayout mTableLayout;
     private SwipeRefreshLayout mRefreshLayout;
+    private TextView mBackgroundText;
 
     public LocationFeedFragment() {
 
@@ -60,6 +62,8 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
                 R.color.sky_primary,
                 R.color.grass_primary);
 
+        mBackgroundText = (TextView) rootView.findViewById(R.id.background_text);
+
         return rootView;
     }
 
@@ -77,10 +81,10 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
             @Override
             public void run() {
                 if (items.size() > 0) {
+                    mBackgroundText.setVisibility(View.INVISIBLE);
                     List<TableRow> list = new ArrayList<TableRow>();
                     int i = 0;
                     for (CNULocationFeedItem item : items) {
-                        getView().findViewById(R.id.empty_text).setVisibility(View.VISIBLE);
                         String message = item.getMessage();
                         TableRow row = new TableRow(getActivity());
                         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT));
@@ -135,7 +139,8 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
                         mTableLayout.addView(row);
                     }
                 } else {
-                    getView().findViewById(R.id.empty_text).setVisibility(View.VISIBLE);
+                    mBackgroundText.setText(getString(R.string.empty_feed_text));
+                    mBackgroundText.setVisibility(View.VISIBLE);
                 }
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);

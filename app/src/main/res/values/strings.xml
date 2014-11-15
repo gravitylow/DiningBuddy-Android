@@ -20,7 +20,7 @@
     <string name="feedback_button">Submit</string>
     <string name="feedback_response">Thanks!</string>
     <string name="feedback_response_detail">Accurate feedback helps improve the data provided to you.</string>
-    <string name="feedback_hint">Leave feedback about this location</string>
+    <string name="feedback_hint">What\'s going on?</string>
     <string name="einsteins_hours">Monday - Thursday: 7:30AM - 1AM
         \n\nFriday: 7:30AM - 8PM
         \n\nSaturday: 9AM - 5PM

@@ -5,16 +5,20 @@
     android:layout_height="match_parent"
     android:background="#DFDFD7"
     tools:context="net.gravitydevelopment.cnu.fragment.LocationMenuFragment">
-    <LinearLayout
-        android:id="@+id/insertPoint"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/background_text"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/loading_text"
-            android:id="@+id/loadingText"
-            android:gravity="center" />
-    </LinearLayout>
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/loading_text" />
+        <LinearLayout
+            android:id="@+id/insertPoint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </FrameLayout>
 </LinearLayout>
