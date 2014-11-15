@@ -53,6 +53,7 @@ public class LocationMainFragment extends Fragment {
         settings = BackendService.getSettingsService();
 
         CNULocation location = LocationService.getLastLocation();
+        Log.d(CNU.LOG_TAG, "Should show: " + shouldShowFeedback(location));
         if (shouldShowFeedback(location)) {
             addTab(mTabHost, "feedbackfragment", "Feedback", LocationFeedbackFragment.class, args);
             isShowingFeedback = true;
@@ -68,7 +69,6 @@ public class LocationMainFragment extends Fragment {
     }
 
     public void updateLocation(CNULocation location) {
-        Log.d(CNU.LOG_TAG, "Is showing feedback: " + isShowingFeedback);
         if (shouldShowFeedback(location)) {
             if (!isShowingFeedback) {
                 Log.d(CNU.LOG_TAG, "Adding tab ");

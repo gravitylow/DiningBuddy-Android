@@ -79,7 +79,7 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
                     List<TableRow> list = new ArrayList<TableRow>();
                     int i = 0;
                     for (CNULocationFeedItem item : items) {
-                        getView().findViewById(R.id.loadingText).setVisibility(View.INVISIBLE);
+                        getView().findViewById(R.id.empty_text).setVisibility(View.VISIBLE);
                         String message = item.getMessage();
                         TableRow row = new TableRow(getActivity());
                         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT));
@@ -134,7 +134,7 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
                         tableLayout.addView(row);
                     }
                 } else {
-                    ((TextView)getView().findViewById(R.id.loadingText)).setText("No recent updates");
+                    getView().findViewById(R.id.empty_text).setVisibility(View.VISIBLE);
                 }
                 if (refreshLayout.isRefreshing()) {
                     refreshLayout.setRefreshing(false);

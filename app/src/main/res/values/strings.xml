@@ -14,6 +14,7 @@
     <string name="regattas_info">Loading…</string>
     <string name="commons_title">The Commons</string>
     <string name="commons_info">Loading…</string>
+    <string name="empty_feed_text">No recent updates</string>
     <string name="title_activity_cnulocation_view">Location</string>
     <string name="feedback_crowded">Is it very crowded?</string>
     <string name="feedback_minutes">Please estimate waiting time for your food:</string>
