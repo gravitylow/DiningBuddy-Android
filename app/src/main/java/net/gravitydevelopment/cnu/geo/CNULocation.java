@@ -13,23 +13,16 @@ public class CNULocation implements Serializable {
 
     private String mName;
     private List<CNUCoordinatePair> mCoordinatePairList;
-    private List<CNULocation> mSubLocationsList;
+    private int mPriority = 0;
 
-    public CNULocation(String name, List<CNUCoordinatePair> coordinatePairs, List<CNULocation> subLocations) {
+    public CNULocation(String name, List<CNUCoordinatePair> coordinatePairs, int priority) {
         this.mName = name;
         this.mCoordinatePairList = coordinatePairs;
-        this.mSubLocationsList = subLocations;
-    }
-
-    public CNULocation(String name, List<CNUCoordinatePair> coordinatePairs) {
-        this.mName = name;
-        this.mCoordinatePairList = coordinatePairs;
-        this.mSubLocationsList = new ArrayList<CNULocation>();
+        this.mPriority = priority;
     }
 
     public CNULocation() {
         this.mCoordinatePairList = new ArrayList<CNUCoordinatePair>();
-        this.mSubLocationsList = new ArrayList<CNULocation>();
     }
 
     public void setName(String name) {
@@ -38,22 +31,6 @@ public class CNULocation implements Serializable {
 
     public String getName() {
         return mName;
-    }
-
-    public void setSubLocations(List<CNULocation> subLocations) {
-        this.mSubLocationsList = subLocations;
-    }
-
-    public List<CNULocation> getSubLocations() {
-        return mSubLocationsList;
-    }
-
-    public boolean hasSubLocations() {
-        return mSubLocationsList.size() > 0;
-    }
-
-    public void addCoordinatePair(CNUCoordinatePair coordinatePair) {
-        mCoordinatePairList.add(coordinatePair);
     }
 
     public boolean isInsideLocation(double latitude, double longitude) {
@@ -103,43 +80,6 @@ public class CNULocation implements Serializable {
         return "CNULocation{"
                 + "mName = " + mName
                 + ", mCoordinatePairList = " + mCoordinatePairList
-                + ", mSubLocationsList = " + mSubLocationsList
                 + "}";
-    }
-
-    private String coordinatePairsJsonValue() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("[");
-        if (mCoordinatePairList.size() > 0) {
-            for (CNUCoordinatePair pair : mCoordinatePairList) {
-                builder.append(pair.jsonValue());
-                builder.append(",");
-            }
-            builder.deleteCharAt(builder.length() - 1);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
-
-    private String subLocationsJsonValue() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("[");
-        if (mSubLocationsList.size() > 0) {
-            for (CNULocation sub : mSubLocationsList) {
-                builder.append(sub.jsonValue());
-                builder.append(",");
-            }
-            builder.deleteCharAt(builder.length() - 1);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
-
-    public String jsonValue() {
-        return "{"
-            + "\"name\" : \"" + mName + "\""
-            + ", \"coordinatePairs\" : " + coordinatePairsJsonValue()
-            + ", \"subLocations\" : " + subLocationsJsonValue()
-            + "}";
     }
 }

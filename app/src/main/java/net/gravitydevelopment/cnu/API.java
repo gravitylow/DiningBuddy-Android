@@ -1,5 +1,6 @@
 package net.gravitydevelopment.cnu;
 
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import net.gravitydevelopment.cnu.geo.CNUCoordinatePair;
@@ -24,32 +25,29 @@ public class API {
     private static final String API_HOST = "https://api.gravitydevelopment.net";
     private static final String API_VERSION = "v1.0";
     private static final String API_QUERY = "/cnu/api/" + API_VERSION + "/";
-    private static final String API_USER_AGENT = "CNU-Android-v1";
     private static final String API_CONTENT_TYPE = "application/json";
+    private static String API_USER_AGENT = "CNU-Android";
 
-    public static List<CNULocation> getLocations() {
+    static {
+        String version = "?";
         try {
-            URL url = new URL(API_HOST + API_QUERY + "locations");
-            String response = read(url);
-
-            return locationsFromJson(response);
-        } catch (Exception e) {
+            version = DiningBuddy.getContext().getPackageManager()
+                    .getPackageInfo(DiningBuddy.getContext().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-            return new ArrayList<CNULocation>();
         }
+        API_USER_AGENT += "-v" + version;
     }
 
-    public static void addLocation(CNULocation location) {
+    public static String getLocations() {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "locations");
-            JSONObject object = new JSONObject(location.jsonValue());
+            URL url = new URL(API_HOST + API_QUERY + "locations2");
+            String response = read(url);
 
-            int result = write(url, object);
-            if (result != HttpURLConnection.HTTP_CREATED) {
-                Log.e(DiningBuddy.LOG_TAG, "Error adding location");
-            }
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -164,7 +162,7 @@ public class API {
                 + ", \"lat\": " + latitude
                 + ", \"lon\": " + longitude
                 + ", \"location\": \"" + location.getName() + "\""
-                + ", \"time\": " + time
+                + ", \"send_time\": " + time
                 + "}";
         try {
             URL url = new URL(API_HOST + API_QUERY + "update");
@@ -174,7 +172,7 @@ public class API {
             if (result != HttpURLConnection.HTTP_CREATED) {
                 Log.e(DiningBuddy.LOG_TAG, "Error sending update: " + result);
             }
-            Log.d(DiningBuddy.LOG_TAG, "Posted update: " + result);
+            Log.d(DiningBuddy.LOG_TAG, "Posted update: " + result + " at " + System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -192,8 +190,7 @@ public class API {
                 + ", \"minutes\": " + minutes
                 + ", \"feedback\": \"" + feedback + "\""
                 + ", \"location\": \"" + location.getName() + "\""
-                + ", \"time\": " + time
-                + ", \"pinned\": " + false
+                + ", \"send_time\": " + time
                 + "}";
         try {
             URL url = new URL(API_HOST + API_QUERY + "feedback");
@@ -203,46 +200,45 @@ public class API {
             if (result != HttpURLConnection.HTTP_CREATED) {
                 Log.e(DiningBuddy.LOG_TAG, "Error sending update: " + result);
             }
-            Log.d(DiningBuddy.LOG_TAG, "Posted update: " + result);
+            Log.d(DiningBuddy.LOG_TAG, "Posted update: " + result + " at " + System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static List<CNULocation> locationsFromArray(JSONArray locations) {
-        List<CNULocation> list = new ArrayList<CNULocation>();
+    public static List<CNULocation> locationsFromJson(String json) {
         try {
-            for (int i = 0; i < locations.length(); i++) {
-                JSONObject location = locations.getJSONObject(i);
-                String name = location.getString("name");
-                JSONArray fences = location.getJSONArray("coordinatePairs");
-                List<CNUCoordinatePair> coordinatePairs = new ArrayList<CNUCoordinatePair>();
-                for (int j = 0; j < fences.length(); j++) {
-                    JSONObject fence = fences.getJSONObject(j);
-                    double latitude = fence.getDouble("lat");
-                    double longitude = fence.getDouble("lon");
-                    coordinatePairs.add(new CNUCoordinatePair(latitude, longitude));
-                }
-                JSONArray subLocations = location.getJSONArray("subLocations");
-                CNULocation newLoc;
-                if (subLocations.length() > 0) {
-                    newLoc = new CNULocation(name, coordinatePairs, locationsFromArray(subLocations));
-                } else {
-                    newLoc = new CNULocation(name, coordinatePairs);
-                }
-                list.add(newLoc);
-            }
-            return list;
+            JSONObject object = new JSONObject(json);
+            return locationsFromObject(object);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<CNULocation>();
         }
     }
 
-    public static List<CNULocation> locationsFromJson(String json) {
+    private static List<CNULocation> locationsFromObject(JSONObject object) {
+        List<CNULocation> list = new ArrayList<CNULocation>();
         try {
-            JSONArray array = new JSONArray(json);
-            return locationsFromArray(array);
+            JSONArray array = object.getJSONArray("features");
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject location = array.getJSONObject(i);
+                JSONObject properties = location.getJSONObject("properties");
+                JSONObject geometry = location.getJSONObject("geometry");
+
+                String name = properties.getString("name");
+                int priority = properties.getInt("priority");
+
+                JSONArray coordinates = geometry.getJSONArray("coordinates").getJSONArray(0);
+                List<CNUCoordinatePair> coordinatePairs = new ArrayList<CNUCoordinatePair>();
+                for (int j = 0; j < coordinates.length(); j++) {
+                    JSONArray values = coordinates.getJSONArray(j);
+                    double longitude = values.getDouble(0);
+                    double latitude = values.getDouble(1);
+                    coordinatePairs.add(new CNUCoordinatePair(latitude, longitude));
+                }
+                list.add(new CNULocation(name, coordinatePairs, priority));
+            }
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<CNULocation>();
@@ -271,8 +267,7 @@ public class API {
             writer.write(object.toString());
             writer.flush();
 
-            int result = conn.getResponseCode();
-            return result;
+            return conn.getResponseCode();
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

@@ -24,11 +24,4 @@ public class CNUCoordinatePair implements Serializable {
     public String toString() {
         return "CNUCoordinatePair{mLatitude=" + mLatitude + ", mLongitude = " + mLongitude + "}";
     }
-
-    public String jsonValue() {
-        return "{"
-                + "\"lat\" : " + mLatitude
-                + ", \"lon\" : " + mLongitude
-                + "}";
-    }
 }

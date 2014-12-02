@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -76,6 +77,37 @@ public class SettingsActivity extends PreferenceActivity {
                     return true;
                 }
             });
+
+            final CheckBoxPreference favoriteNotificationPreference = (CheckBoxPreference) findPreference("preference_notify_favorites");
+            favoriteNotificationPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean value = (Boolean) newValue;
+                    BackendService.getSettingsService().setNotifyFavorites(value);
+                    return true;
+                }
+            });
+
+            final EditTextPreference favoritesPreference = (EditTextPreference) findPreference("preference_favorites");
+            favoritesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    String value = (String) newValue;
+                    BackendService.getSettingsService().setFavorites(value);
+                    return true;
+                }
+            });
+
+            final TimePreference favoritesNotifyTimePreference = (TimePreference) findPreference("preference_favorites_notify_time");
+            favoritesNotifyTimePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    long time = favoritesNotifyTimePreference.getTime();
+                    BackendService.getSettingsService().setFavoritesNotificationTime(time);
+                    return true;
+                }
+            });
+
 
             screen = getPreferenceScreen();
         }

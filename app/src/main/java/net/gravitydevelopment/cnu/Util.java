@@ -22,6 +22,8 @@ public class Util {
     public static final String COMMONS_NAME = "Commons";
     public static final String EINSTEINS_NAME = "Einsteins";
 
+    public static final int NOTIFICATION_ID_FAVORITES = 001;
+
     public static final long MIN_FEEDBACK_INTERVAL = 30 * 60 * 1000;
 
     public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int crowdedColor) {
