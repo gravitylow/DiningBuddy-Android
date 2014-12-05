@@ -22,7 +22,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        Log.d(DiningBuddy.LOG_TAG, "Broadcast!");
         SharedPreferences prefs = context.getSharedPreferences(SettingsService.PREFS_NAME, 0);
         String favorites = prefs.getString(SettingsService.PREFS_KEY_FAVORITES, null);
 

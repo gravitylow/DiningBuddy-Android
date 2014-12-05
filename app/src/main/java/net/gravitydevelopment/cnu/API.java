@@ -30,18 +30,20 @@ public class API {
 
     static {
         String version = "?";
-        try {
-            version = DiningBuddy.getContext().getPackageManager()
-                    .getPackageInfo(DiningBuddy.getContext().getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if (DiningBuddy.getContext() != null) {
+            try {
+                version = DiningBuddy.getContext().getPackageManager()
+                        .getPackageInfo(DiningBuddy.getContext().getPackageName(), 0).versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         API_USER_AGENT += "-v" + version;
     }
 
     public static String getLocations() {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "locations2");
+            URL url = new URL(API_HOST + API_QUERY + "locations2/");
             String response = read(url);
 
             return response;
@@ -53,7 +55,7 @@ public class API {
 
     public static List<CNULocationInfo> getInfo() {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "info");
+            URL url = new URL(API_HOST + API_QUERY + "info/");
             String response = read(url);
 
             JSONArray array = new JSONArray(response);
@@ -66,7 +68,7 @@ public class API {
 
     public static List<CNULocationMenuItem> getMenu(String location) {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "menus/" + location);
+            URL url = new URL(API_HOST + API_QUERY + "menus/" + location + "/");
             String response = read(url);
 
             JSONArray array = new JSONArray(response);
@@ -96,9 +98,51 @@ public class API {
         }
     }
 
+    public static List<String> getAlerts() {
+        List<String> list = new ArrayList<String>();
+        try {
+            URL url = new URL(API_HOST + API_QUERY + "alerts/");
+            String response = read(url);
+
+            JSONArray array = new JSONArray(response);
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                String targetOS = object.getString("target_os");
+                String targetVersion = object.getString("target_version");
+                long targetTimeMin = object.getLong("target_time_min");
+                long targetTimeMax = object.getLong("target_time_max");
+                String message = object.getString("message");
+
+                String thisOS = "Android";
+                String thisVersion = DiningBuddy.getContext().getPackageManager()
+                        .getPackageInfo(DiningBuddy.getContext().getPackageName(), 0).versionName;
+                long thisTime = System.currentTimeMillis();
+
+                // Reasons to disqualify this alert:
+                if (!targetOS.equals("all") && !targetOS.equals(thisOS)) {
+                    Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for target: " + targetOS + ", " + thisOS);
+                    continue;
+                }
+                if (!targetVersion.equals("all") && !targetVersion.equals(thisVersion)) {
+                    Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for version: " + targetVersion + ", " + thisVersion);
+                    continue;
+                }
+                if ((targetTimeMin != 0 && targetTimeMin > thisTime) || (targetTimeMax != 0 && targetTimeMax < thisTime)) {
+                    Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for time: " + thisTime);
+                    continue;
+                }
+                list.add(message);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<String>();
+        }
+        return list;
+    }
+
     public static List<CNULocationFeedItem> getFeed(String location) {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "feed/" + location);
+            URL url = new URL(API_HOST + API_QUERY + "feed/" + location + "/");
             String response = read(url);
 
             JSONArray array = new JSONArray(response);

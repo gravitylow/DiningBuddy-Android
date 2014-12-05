@@ -110,7 +110,35 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
         if (!SettingsService.getFirstUserAlertShown(this)) {
             dialog.show();
             SettingsService.setFirstUserAlertShown(this, true);
-         }
+        }
+
+        if (!BackendService.alertsShown()) {
+            BackendService.setAlertsShown();
+            // Check for any alerts
+            new Thread() {
+                public void run() {
+                    final List<String> alerts = API.getAlerts();
+                    DiningBuddy.getContext().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (alerts.size() > 0) {
+                                for (String string : alerts) {
+                                    new AlertDialog.Builder(DiningBuddy.this)
+                                            .setMessage(string)
+                                            .setPositiveButton("Ok",
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog,
+                                                                int id) {
+                                                        }
+                                                    }).show();
+                                }
+
+                            }
+                        }
+                    });
+                }
+            }.start();
+        }
     }
 
     @Override

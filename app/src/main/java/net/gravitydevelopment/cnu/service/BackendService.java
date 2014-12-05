@@ -10,6 +10,7 @@ public class BackendService extends Service {
     private static LocationService sLocationService;
     private static SettingsService sSettingsService;
     private static boolean sRunning;
+    private static boolean sAlertsShown;
 
     @Override
     public void onCreate() {
@@ -28,6 +29,10 @@ public class BackendService extends Service {
     public void onDestroy() {
         LocationService.die(this);
         sRunning = false;
+    }
+
+    public static void setAlertsShown() {
+        sAlertsShown = true;
     }
 
     @Override
@@ -49,5 +54,9 @@ public class BackendService extends Service {
 
     public static boolean isRunning() {
         return sRunning;
+    }
+
+    public static boolean alertsShown() {
+        return sAlertsShown;
     }
 }
