@@ -209,7 +209,7 @@ public class API {
                 + ", \"send_time\": " + time
                 + "}";
         try {
-            URL url = new URL(API_HOST + API_QUERY + "update");
+            URL url = new URL(API_HOST + API_QUERY + "update/");
             JSONObject object = new JSONObject(json);
 
             int result = write(url, object);
@@ -242,9 +242,9 @@ public class API {
 
             int result = write(url, object);
             if (result != HttpURLConnection.HTTP_CREATED) {
-                Log.e(DiningBuddy.LOG_TAG, "Error sending update: " + result);
+                Log.e(DiningBuddy.LOG_TAG, "Error sending feedback: " + result);
             }
-            Log.d(DiningBuddy.LOG_TAG, "Posted update: " + result + " at " + System.currentTimeMillis());
+            Log.d(DiningBuddy.LOG_TAG, "Posted feedback: " + result + " at " + System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
         }
