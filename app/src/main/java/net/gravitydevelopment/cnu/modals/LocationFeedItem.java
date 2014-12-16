@@ -1,6 +1,6 @@
-package net.gravitydevelopment.cnu;
+package net.gravitydevelopment.cnu.modals;
 
-public class CNULocationFeedItem {
+public class LocationFeedItem {
 
     private String mMessage;
     private int mMinutes;
@@ -9,7 +9,7 @@ public class CNULocationFeedItem {
     private boolean mPinned;
     private String mDetail;
 
-    public CNULocationFeedItem(String message, int minutes, int crowded, long time, boolean pinned, String detail) {
+    public LocationFeedItem(String message, int minutes, int crowded, long time, boolean pinned, String detail) {
         this.mMessage = message;
         this.mMinutes = minutes;
         this.mCrowded = crowded;

@@ -1,7 +1,7 @@
 package net.gravitydevelopment.cnu.receiver;
 
 import net.gravitydevelopment.cnu.API;
-import net.gravitydevelopment.cnu.CNULocationMenuItem;
+import net.gravitydevelopment.cnu.modals.LocationMenuItem;
 import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 
 import java.util.List;
 
@@ -29,15 +28,15 @@ public class AlarmReceiver extends BroadcastReceiver {
             final String[] favoritesList = favorites.split(",");
             new Thread() {
                 public void run() {
-                    List<CNULocationMenuItem> regattas = API.getMenu(Util.REGATTAS_NAME);
-                    List<CNULocationMenuItem> commons = API.getMenu(Util.COMMONS_NAME);
+                    List<LocationMenuItem> regattas = API.getMenu(Util.REGATTAS_NAME);
+                    List<LocationMenuItem> commons = API.getMenu(Util.COMMONS_NAME);
 
                     StringBuilder regattasItems = new StringBuilder();
                     StringBuilder commonsItems = new StringBuilder();
 
                     int count = 0;
 
-                    for (CNULocationMenuItem item : regattas) {
+                    for (LocationMenuItem item : regattas) {
                         for (String string : favoritesList) {
                             if (item.getDescription().toLowerCase().contains(string.toLowerCase())) {
                                 regattasItems.append(string + " at " + item.getSummary().toLowerCase() + ", ");
@@ -45,7 +44,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             }
                         }
                     }
-                    for (CNULocationMenuItem item : commons) {
+                    for (LocationMenuItem item : commons) {
                         for (String string : favoritesList) {
                             if (item.getDescription().toLowerCase().contains(string.toLowerCase())) {
                                 commonsItems.append(string + " at " + item.getSummary().toLowerCase()  + ", ");

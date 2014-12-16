@@ -6,6 +6,9 @@ import android.util.Log;
 import net.gravitydevelopment.cnu.geo.CNUCoordinatePair;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
+import net.gravitydevelopment.cnu.modals.AlertItem;
+import net.gravitydevelopment.cnu.modals.LocationFeedItem;
+import net.gravitydevelopment.cnu.modals.LocationMenuItem;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,7 +46,7 @@ public class API {
 
     public static String getLocations() {
         try {
-            URL url = new URL(API_HOST + API_QUERY + "locations2/");
+            URL url = new URL(API_HOST + API_QUERY + "locations/");
             String response = read(url);
 
             return response;
@@ -66,7 +69,7 @@ public class API {
         }
     }
 
-    public static List<CNULocationMenuItem> getMenu(String location) {
+    public static List<LocationMenuItem> getMenu(String location) {
         try {
             URL url = new URL(API_HOST + API_QUERY + "menus/" + location + "/");
             String response = read(url);
@@ -75,12 +78,12 @@ public class API {
             return menuFromArray(array);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<CNULocationMenuItem>();
+            return new ArrayList<LocationMenuItem>();
         }
     }
 
-    public static List<CNULocationMenuItem> menuFromArray(JSONArray info) {
-        List<CNULocationMenuItem> list = new ArrayList<CNULocationMenuItem>();
+    public static List<LocationMenuItem> menuFromArray(JSONArray info) {
+        List<LocationMenuItem> list = new ArrayList<LocationMenuItem>();
         try {
             for (int i = 0; i < info.length(); i++) {
                 JSONObject location = info.getJSONObject(i);
@@ -88,18 +91,18 @@ public class API {
                 String endTime = location.getString("end");
                 String summary = location.getString("summary");
                 String description = location.getString("description");
-                CNULocationMenuItem item = new CNULocationMenuItem(startTime, endTime, summary, description);
+                LocationMenuItem item = new LocationMenuItem(startTime, endTime, summary, description);
                 list.add(item);
             }
             return list;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<CNULocationMenuItem>();
+            return new ArrayList<LocationMenuItem>();
         }
     }
 
-    public static List<String> getAlerts() {
-        List<String> list = new ArrayList<String>();
+    public static List<AlertItem> getAlerts() {
+        List<AlertItem> list = new ArrayList<AlertItem>();
         try {
             URL url = new URL(API_HOST + API_QUERY + "alerts/");
             String response = read(url);
@@ -112,35 +115,20 @@ public class API {
                 long targetTimeMin = object.getLong("target_time_min");
                 long targetTimeMax = object.getLong("target_time_max");
                 String message = object.getString("message");
-
-                String thisOS = "Android";
-                String thisVersion = DiningBuddy.getContext().getPackageManager()
-                        .getPackageInfo(DiningBuddy.getContext().getPackageName(), 0).versionName;
-                long thisTime = System.currentTimeMillis();
-
-                // Reasons to disqualify this alert:
-                if (!targetOS.equals("all") && !targetOS.equals(thisOS)) {
-                    Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for target: " + targetOS + ", " + thisOS);
-                    continue;
+                String title = object.getString("title");
+                AlertItem item = new AlertItem(title, message, targetOS, targetVersion, targetTimeMin, targetTimeMax);
+                if (item.isApplicable()) {
+                    list.add(item);
                 }
-                if (!targetVersion.equals("all") && !targetVersion.equals(thisVersion)) {
-                    Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for version: " + targetVersion + ", " + thisVersion);
-                    continue;
-                }
-                if ((targetTimeMin != 0 && targetTimeMin > thisTime) || (targetTimeMax != 0 && targetTimeMax < thisTime)) {
-                    Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for time: " + thisTime);
-                    continue;
-                }
-                list.add(message);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<String>();
+            return new ArrayList<AlertItem>();
         }
         return list;
     }
 
-    public static List<CNULocationFeedItem> getFeed(String location) {
+    public static List<LocationFeedItem> getFeed(String location) {
         try {
             URL url = new URL(API_HOST + API_QUERY + "feed/" + location + "/");
             String response = read(url);
@@ -149,12 +137,12 @@ public class API {
             return feedFromArray(array);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<CNULocationFeedItem>();
+            return new ArrayList<LocationFeedItem>();
         }
     }
 
-    public static List<CNULocationFeedItem> feedFromArray(JSONArray info) {
-        List<CNULocationFeedItem> list = new ArrayList<CNULocationFeedItem>();
+    public static List<LocationFeedItem> feedFromArray(JSONArray info) {
+        List<LocationFeedItem> list = new ArrayList<LocationFeedItem>();
         try {
             for (int i = 0; i < info.length(); i++) {
                 JSONObject update = info.getJSONObject(i);
@@ -169,13 +157,13 @@ public class API {
                 } else {
                     detail = null;
                 }
-                CNULocationFeedItem item = new CNULocationFeedItem(message, minutes, crowded, time, pinned, detail);
+                LocationFeedItem item = new LocationFeedItem(message, minutes, crowded, time, pinned, detail);
                 list.add(item);
             }
             return list;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<CNULocationFeedItem>();
+            return new ArrayList<LocationFeedItem>();
         }
     }
 

@@ -16,6 +16,7 @@ import com.cengalabs.flatui.FlatUI;
 import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
 import net.gravitydevelopment.cnu.geo.CNULocation;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
+import net.gravitydevelopment.cnu.modals.AlertItem;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
 import net.gravitydevelopment.cnu.service.SettingsService;
@@ -100,35 +101,28 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
 
         sRunning = true;
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setMessage(R.string.first_user_alert_text)
-                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                    }
-                })
-                .create();
-        if (!SettingsService.getFirstUserAlertShown(this)) {
-            dialog.show();
-            SettingsService.setFirstUserAlertShown(this, true);
-        }
-
         if (!BackendService.alertsShown()) {
             BackendService.setAlertsShown();
             // Check for any alerts
             new Thread() {
                 public void run() {
-                    final List<String> alerts = API.getAlerts();
+                    final List<AlertItem> alerts = API.getAlerts();
                     DiningBuddy.getContext().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (alerts.size() > 0) {
-                                for (String string : alerts) {
+                                for (final AlertItem item : alerts) {
+                                    if (SettingsService.isAlertRead(DiningBuddy.this, item.getMessage())) {
+                                        continue;
+                                    }
                                     new AlertDialog.Builder(DiningBuddy.this)
-                                            .setMessage(string)
+                                            .setMessage(item.getMessage())
+                                            .setTitle(item.getTitle())
                                             .setPositiveButton("Ok",
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog,
                                                                 int id) {
+                                                            SettingsService.setAlertRead(DiningBuddy.this, item.getMessage());
                                                         }
                                                     }).show();
                                 }

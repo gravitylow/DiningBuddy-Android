@@ -12,6 +12,9 @@ import android.util.Log;
 import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.receiver.AlarmReceiver;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class SettingsService {
@@ -23,7 +26,7 @@ public class SettingsService {
     public static final String PREFS_KEY_FAVORITES_NOTIFY_TIME = "pref_favorites_notify_time";
     public static final String PREFS_KEY_LOCATIONS = "pref_locations";
     public static final String PREFS_KEY_UNIQUE_ID = "pref_unique_id";
-    public static final String PREFS_KEY_FIRST_USER_ALERT_SHOWN = "pref_first_user_alert_shown";
+    public static final String PREFS_KEY_ALERTS_READ = "pref_alerts_read";
     public static final String PREFS_KEY_LAST_FEEDBACK_REGATTAS = "pref_last_feedback_regattas";
     public static final String PREFS_KEY_LAST_FEEDBACK_COMMONS = "pref_last_feedback_commons";
     public static final String PREFS_KEY_LAST_FEEDBACK_EINSTEINS = "pref_last_feedback_einsteins";
@@ -39,6 +42,7 @@ public class SettingsService {
     private static long sLastFeedbackRegattas;
     private static long sLastFeedbackCommons;
     private static long sLastFeedbackEinsteins;
+    private static List<String> sAlertsRead;
 
     public SettingsService(BackendService backend) {
         mBackendService = backend;
@@ -118,13 +122,18 @@ public class SettingsService {
         }
     }
 
-    public static boolean getFirstUserAlertShown(Context context) {
-        return context.getSharedPreferences(PREFS_NAME, 0).getBoolean(PREFS_KEY_FIRST_USER_ALERT_SHOWN, false);
+    public static boolean isAlertRead(Context context, String alert) {
+        return context.getSharedPreferences(PREFS_NAME, 0)
+                .getStringSet(PREFS_KEY_ALERTS_READ, new HashSet<String>())
+                .contains(alert);
     }
 
-    public static void setFirstUserAlertShown(Context context, boolean b) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        editor.putBoolean(PREFS_KEY_FIRST_USER_ALERT_SHOWN, b);
+    public static void setAlertRead(Context context, String alert) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        Set<String> alerts = prefs.getStringSet(PREFS_KEY_ALERTS_READ, new HashSet<String>());
+        alerts.add(alert);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putStringSet(PREFS_KEY_ALERTS_READ, alerts);
         editor.apply();
     }
 

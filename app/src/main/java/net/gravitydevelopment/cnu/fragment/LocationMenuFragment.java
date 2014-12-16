@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.DiningBuddy;
-import net.gravitydevelopment.cnu.CNULocationMenuItem;
+import net.gravitydevelopment.cnu.modals.LocationMenuItem;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 
@@ -55,12 +55,12 @@ public class LocationMenuFragment extends Fragment {
         return rootView;
     }
 
-    public void updateMenu(final List<CNULocationMenuItem> items) {
+    public void updateMenu(final List<LocationMenuItem> items) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mBackgroundText.setVisibility(View.INVISIBLE);
-                for (CNULocationMenuItem item : items) {
+                for (LocationMenuItem item : items) {
                     final Button button = new Button(getActivity());
                     Spanned text = Html.fromHtml("<strong>" + item.getStartTime() + " - " + item.getEndTime() + "</strong><br>" + item.getSummary());
                     button.setText(text);

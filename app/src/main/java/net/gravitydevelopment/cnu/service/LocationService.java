@@ -1,6 +1,7 @@
 package net.gravitydevelopment.cnu.service;
 
 import android.content.Context;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
@@ -41,7 +42,12 @@ public class LocationService {
         sListener = new CNULocationListener(this);
 
         sLocationManager = (LocationManager) backend.getSystemService(Context.LOCATION_SERVICE);
-        sLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, sListener);
+        Criteria criteria = new Criteria();
+        //criteria.setAccuracy(Criteria.ACCURACY_);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        String bestProvider = sLocationManager.getBestProvider(criteria, true);
+        Log.d(DiningBuddy.LOG_TAG, "Best provider: " + bestProvider);
+        sLocationManager.requestLocationUpdates(bestProvider, 0, 0, sListener);
 
         String cache = mSettings.getCachedLocations();
         if (cache != null) {
