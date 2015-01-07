@@ -9,25 +9,25 @@
             android:key="preference_wifi_only"
             android:title="@string/preference_wifi_only_tile"
             android:summary="@string/preference_wifi_only_summary" />
-        <CheckBoxPreference
+        <!--<CheckBoxPreference
             android:id="@+id/preference_notify_favorites"
             android:key="preference_notify_favorites"
             android:title="@string/preference_notify_favorites_title"
-            android:summary="@string/preference_notify_favorites_summary" />
+            android:summary="@string/preference_notify_favorites_summary" />-->
     </PreferenceCategory>
-    <PreferenceCategory android:title="Favorites">
-        <EditTextPreference
-            android:dependency="preference_notify_favorites"
-            android:id="@+id/preference_favorites"
-            android:key="preference_favorites"
-            android:title="@string/preference_favorites_title"
-            android:summary="@string/preference_favorites_summary"
-            android:hint="@string/preference_favorites_hint" />
-        <net.gravitydevelopment.cnu.TimePreference
-            android:dependency="preference_notify_favorites"
-            android:id="@+id/preference_favorites_notify_time"
-            android:key="preference_favorites_notify_time"
-            android:defaultValue=""
-            android:title="@string/preference_favorites_notify_time_title"/>
-    </PreferenceCategory>
+<!--<PreferenceCategory android:title="Favorites">
+    <EditTextPreference
+        android:dependency="preference_notify_favorites"
+        android:id="@+id/preference_favorites"
+        android:key="preference_favorites"
+        android:title="@string/preference_favorites_title"
+        android:summary="@string/preference_favorites_summary"
+        android:hint="@string/preference_favorites_hint" />
+    <net.gravitydevelopment.cnu.TimePreference
+        android:dependency="preference_notify_favorites"
+        android:id="@+id/preference_favorites_notify_time"
+        android:key="preference_favorites_notify_time"
+        android:defaultValue=""
+        android:title="@string/preference_favorites_notify_time_title"/>
+</PreferenceCategory>-->
 </PreferenceScreen>

@@ -78,7 +78,7 @@ public class SettingsActivity extends PreferenceActivity {
                 }
             });
 
-            final CheckBoxPreference favoriteNotificationPreference = (CheckBoxPreference) findPreference("preference_notify_favorites");
+            /*final CheckBoxPreference favoriteNotificationPreference = (CheckBoxPreference) findPreference("preference_notify_favorites");
             favoriteNotificationPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -106,7 +106,7 @@ public class SettingsActivity extends PreferenceActivity {
                     BackendService.getSettingsService().setFavoritesNotificationTime(time);
                     return true;
                 }
-            });
+            });*/
 
 
             screen = getPreferenceScreen();

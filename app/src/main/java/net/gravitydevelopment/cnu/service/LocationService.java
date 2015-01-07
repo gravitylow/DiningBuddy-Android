@@ -33,6 +33,7 @@ public class LocationService {
 
     private static boolean sHasLocation;
     private static boolean sDie;
+    private static String sProvider;
 
     private static SettingsService mSettings;
 
@@ -45,9 +46,9 @@ public class LocationService {
         Criteria criteria = new Criteria();
         //criteria.setAccuracy(Criteria.ACCURACY_);
         criteria.setPowerRequirement(Criteria.POWER_LOW);
-        String bestProvider = sLocationManager.getBestProvider(criteria, true);
-        Log.d(DiningBuddy.LOG_TAG, "Best provider: " + bestProvider);
-        sLocationManager.requestLocationUpdates(bestProvider, 0, 0, sListener);
+        sProvider = sLocationManager.getBestProvider(criteria, true);
+        Log.d(DiningBuddy.LOG_TAG, "Best provider: " + sProvider);
+        sLocationManager.requestLocationUpdates(sProvider, 0, 0, sListener);
 
         String cache = mSettings.getCachedLocations();
         if (cache != null) {
@@ -153,7 +154,7 @@ public class LocationService {
         new Thread() {
             public void run() {
                 updateInfo();
-                Location loc = sLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                Location loc = sLocationManager.getLastKnownLocation(sProvider);
                 double latitude = loc.getLatitude();
                 double longitude = loc.getLongitude();
                 findAndDistributeLocation(latitude, longitude);
