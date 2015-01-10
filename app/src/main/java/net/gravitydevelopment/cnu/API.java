@@ -225,7 +225,7 @@ public class API {
                 + ", \"send_time\": " + time
                 + "}";
         try {
-            URL url = new URL(API_HOST + API_QUERY + "feedback");
+            URL url = new URL(API_HOST + API_QUERY + "feedback/");
             JSONObject object = new JSONObject(json);
 
             int result = write(url, object);
