@@ -1,13 +1,18 @@
 package net.gravitydevelopment.cnu.service;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.util.Log;
 
 import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.DiningBuddy;
+import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.listener.CNULocationListener;
 import net.gravitydevelopment.cnu.geo.CNULocation;
@@ -44,11 +49,14 @@ public class LocationService {
 
         sLocationManager = (LocationManager) backend.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
-        //criteria.setAccuracy(Criteria.ACCURACY_);
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         sProvider = sLocationManager.getBestProvider(criteria, true);
         Log.d(DiningBuddy.LOG_TAG, "Best provider: " + sProvider);
-        sLocationManager.requestLocationUpdates(sProvider, 0, 0, sListener);
+        if (sProvider == null || sProvider.equals("passive")) {
+            showNoLocationServiceDialog();
+        } else {
+            sLocationManager.requestLocationUpdates(sProvider, 0, 0, sListener);
+        }
 
         String cache = mSettings.getCachedLocations();
         if (cache != null) {
@@ -77,6 +85,25 @@ public class LocationService {
                 }
             }
         }.start();
+    }
+
+    public static void showNoLocationServiceDialog() {
+        new AlertDialog.Builder(DiningBuddy.getContext())
+                .setMessage(R.string.error_no_provider)
+                .setTitle(R.string.error_title)
+                .setNegativeButton("Ignore",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        })
+                .setPositiveButton("Fix",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                    int id) {
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                DiningBuddy.getContext().startActivity(intent);
+                            }
+                        }).show();
     }
 
     public void updateLocation(final double latitude, final double longitude) {
@@ -154,10 +181,19 @@ public class LocationService {
         new Thread() {
             public void run() {
                 updateInfo();
-                Location loc = sLocationManager.getLastKnownLocation(sProvider);
-                double latitude = loc.getLatitude();
-                double longitude = loc.getLongitude();
-                findAndDistributeLocation(latitude, longitude);
+                if (sProvider == null || sProvider.equals("passive")) {
+                    DiningBuddy.getContext().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LocationService.showNoLocationServiceDialog();
+                        }
+                    });
+                } else {
+                    Location loc = sLocationManager.getLastKnownLocation(sProvider);
+                    double latitude = loc.getLatitude();
+                    double longitude = loc.getLongitude();
+                    findAndDistributeLocation(latitude, longitude);
+                }
             }
         }.start();
     }

@@ -38,4 +38,8 @@
         \n\nSaturday: 9AM - 5PM
         \n\nSunday: 1PM - 1AM</string>
 
+    <string name="error_title">Whoops!</string>
+    <string name="error_no_provider">Looks like you don\'t have GPS enabled, so DiningBuddy isn\'t
+        going to be able to find your location. Click Fix to turn GPS on in your settings.</string>
+
 </resources>
