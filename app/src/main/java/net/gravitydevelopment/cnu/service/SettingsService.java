@@ -12,8 +12,10 @@ import android.util.Log;
 import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.receiver.AlarmReceiver;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,7 +25,6 @@ public class SettingsService {
     public static final String PREFS_KEY_WIFI_ONLY = "pref_wifi_only";
     public static final String PREFS_KEY_NOTIFY_FAVORITES = "pref_notify_favorites";
     public static final String PREFS_KEY_FAVORITES = "pref_favorites";
-    public static final String PREFS_KEY_FAVORITES_NOTIFY_TIME = "pref_favorites_notify_time";
     public static final String PREFS_KEY_LOCATIONS = "pref_locations";
     public static final String PREFS_KEY_UNIQUE_ID = "pref_unique_id";
     public static final String PREFS_KEY_ALERTS_READ = "pref_alerts_read";
@@ -38,11 +39,9 @@ public class SettingsService {
     private static boolean sPrefWifiOnly;
     private static boolean sPrefNotifyFavorites;
     private static String sPrefFavorites;
-    private static long sPrefFavoritesNotificationTime;
     private static long sLastFeedbackRegattas;
     private static long sLastFeedbackCommons;
     private static long sLastFeedbackEinsteins;
-    private static List<String> sAlertsRead;
 
     public SettingsService(BackendService backend) {
         mBackendService = backend;
@@ -57,7 +56,6 @@ public class SettingsService {
         sLastFeedbackEinsteins = sSettings.getLong(PREFS_KEY_LAST_FEEDBACK_EINSTEINS, -1);
         sPrefNotifyFavorites = sSettings.getBoolean(PREFS_KEY_NOTIFY_FAVORITES, false);
         sPrefFavorites = sSettings.getString(PREFS_KEY_FAVORITES, "");
-        sPrefFavoritesNotificationTime = sSettings.getLong(PREFS_KEY_FAVORITES_NOTIFY_TIME, -1);
 
         setupNotification();
     }
@@ -181,10 +179,6 @@ public class SettingsService {
         return sPrefFavorites;
     }
 
-    public long getFavoritesNotificationTime() {
-        return sPrefFavoritesNotificationTime;
-    }
-
     public void setNotifyFavorites(boolean value) {
         sPrefNotifyFavorites = value;
 
@@ -203,21 +197,17 @@ public class SettingsService {
         editor.apply();
     }
 
-    public void setFavoritesNotificationTime(long notificationTime) {
-        sPrefFavoritesNotificationTime = notificationTime;
-
-        SharedPreferences.Editor editor = sSettings.edit();
-        editor.putLong(PREFS_KEY_FAVORITES_NOTIFY_TIME, notificationTime);
-        editor.apply();
-
-        setupNotification();
-    }
-
     private void setupNotification() {
         Context context = mBackendService.getApplicationContext();
         Intent intent = new Intent(context , AlarmReceiver.class);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 6);
+        // Fudge to help the poor server
+        calendar.set(Calendar.MINUTE, new Random().nextInt(5));
+        calendar.set(Calendar.SECOND, new Random().nextInt(50));
 
         Log.d(DiningBuddy.LOG_TAG, "Alarm unscheduled");
 
@@ -225,8 +215,8 @@ public class SettingsService {
         alarmManager.cancel(pendingIntent);
         if (sPrefNotifyFavorites) {
             // Schedule new alarm
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, sPrefFavoritesNotificationTime, AlarmManager.INTERVAL_DAY, pendingIntent);
-            Log.d(DiningBuddy.LOG_TAG, "Alarm scheduled for " + sPrefFavoritesNotificationTime);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            Log.d(DiningBuddy.LOG_TAG, "Alarm scheduled for " + calendar.getTimeInMillis());
         }
 
     }
