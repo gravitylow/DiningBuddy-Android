@@ -40,16 +40,16 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                     for (LocationMenuItem item : regattas) {
                         for (String string : favoritesList) {
-                            if (item.getDescription().toLowerCase().contains(string.toLowerCase())) {
-                                regattasItems.append(string + " at " + item.getSummary().toLowerCase() + ", ");
+                            if (item.getDescription().toLowerCase().contains(string.toLowerCase().trim())) {
+                                regattasItems.append(string.trim() + " at " + item.getSummary().toLowerCase() + ", ");
                                 count++;
                             }
                         }
                     }
                     for (LocationMenuItem item : commons) {
                         for (String string : favoritesList) {
-                            if (item.getDescription().toLowerCase().contains(string.toLowerCase())) {
-                                commonsItems.append(string + " at " + item.getSummary().toLowerCase()  + ", ");
+                            if (item.getDescription().toLowerCase().contains(string.toLowerCase().trim())) {
+                                commonsItems.append(string.trim() + " at " + item.getSummary().toLowerCase()  + ", ");
                                 count++;
                             }
                         }
