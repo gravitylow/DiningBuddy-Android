@@ -204,6 +204,7 @@ public class SettingsService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 6);
         // Fudge to help the poor server
         calendar.set(Calendar.MINUTE, new Random().nextInt(5));

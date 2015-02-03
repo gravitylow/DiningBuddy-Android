@@ -202,6 +202,7 @@ public class API {
 
             int result = write(url, object);
             if (result != HttpURLConnection.HTTP_CREATED) {
+                Log.e(DiningBuddy.LOG_TAG, json);
                 Log.e(DiningBuddy.LOG_TAG, "Error sending update: " + result + " " + url);
             }
             Log.d(DiningBuddy.LOG_TAG, "Posted update: " + result + " at " + System.currentTimeMillis());
