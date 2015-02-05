@@ -53,8 +53,8 @@ public class Util {
             canvas.drawRoundRect(rectColor, 50, 50, color);
             canvas.drawRoundRect(rectImage, 50, 50, paint);
 
-        } catch (NullPointerException e) {
-        } catch (OutOfMemoryError o) {
+        } catch (NullPointerException ignored) {
+        } catch (OutOfMemoryError ignored) {
         }
         return result;
     }
@@ -67,11 +67,7 @@ public class Util {
             NetworkInfo info = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE))
                     .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-            if (info.isConnectedOrConnecting() && !BackendService.isRunning()) {
-                return true;
-            } else {
-                return false;
-            }
+            return info.isConnectedOrConnecting() && !BackendService.isRunning();
         } else {
             return true;
         }
@@ -96,7 +92,7 @@ public class Util {
         } else if (mins >= 1 && mins < 2) {
             return "1 minute ago";
         } else {
-            return ((int)mins) + " minutes ago";
+            return ((int) mins) + " minutes ago";
         }
     }
 }

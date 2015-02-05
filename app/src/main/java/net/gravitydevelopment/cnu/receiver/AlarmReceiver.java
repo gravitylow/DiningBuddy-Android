@@ -1,13 +1,5 @@
 package net.gravitydevelopment.cnu.receiver;
 
-import net.gravitydevelopment.cnu.API;
-import net.gravitydevelopment.cnu.modals.LocationMenuItem;
-import net.gravitydevelopment.cnu.DiningBuddy;
-import net.gravitydevelopment.cnu.R;
-import net.gravitydevelopment.cnu.Util;
-import net.gravitydevelopment.cnu.service.SettingsService;
-
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
+
+import net.gravitydevelopment.cnu.API;
+import net.gravitydevelopment.cnu.DiningBuddy;
+import net.gravitydevelopment.cnu.R;
+import net.gravitydevelopment.cnu.Util;
+import net.gravitydevelopment.cnu.modals.LocationMenuItem;
+import net.gravitydevelopment.cnu.service.SettingsService;
 
 import java.util.List;
 
@@ -40,16 +38,22 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                     for (LocationMenuItem item : regattas) {
                         for (String string : favoritesList) {
-                            if (item.getDescription().toLowerCase().contains(string.toLowerCase().trim())) {
-                                regattasItems.append(string.trim() + " at " + item.getSummary().toLowerCase() + ", ");
+                            if (item.getDescription().toLowerCase().contains(string.toLowerCase())) {
+                                regattasItems.append(string)
+                                        .append(" at ")
+                                        .append(item.getSummary().toLowerCase())
+                                        .append(", ");
                                 count++;
                             }
                         }
                     }
                     for (LocationMenuItem item : commons) {
                         for (String string : favoritesList) {
-                            if (item.getDescription().toLowerCase().contains(string.toLowerCase().trim())) {
-                                commonsItems.append(string.trim() + " at " + item.getSummary().toLowerCase()  + ", ");
+                            if (item.getDescription().toLowerCase().contains(string.toLowerCase())) {
+                                commonsItems.append(string)
+                                        .append(" at ")
+                                        .append(item.getSummary().toLowerCase())
+                                        .append(", ");
                                 count++;
                             }
                         }
@@ -61,7 +65,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         if (regattasItems.length() > 0) {
                             regattasItems.delete(regattasItems.length() - 2, regattasItems.length());
-                            value += "Regattas is serving " + regattasItems.toString() + ".";
+                            value += "Regattas is serving: " + regattasItems.toString() + ".";
                         }
 
                         if (commonsItems.length() > 0) {
@@ -69,7 +73,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             if (value.length() > 0) {
                                 value += " ";
                             }
-                            value += "Commons is serving " + commonsItems.toString() + ".";
+                            value += "Commons is serving: " + regattasItems.toString() + ".";
                         }
 
                         Intent viewIntent = new Intent(context, DiningBuddy.class);
@@ -82,13 +86,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                                         .setContentText(value)
                                         .setAutoCancel(true)
                                         .setContentIntent(viewPendingIntent);
-                        if (value.length() >= 40) {
-                            NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
-                            style.bigText(value);
-                            String shortText = value.substring(0, 35) + "...";
-                            notificationBuilder.setContentText(shortText);
-                            notificationBuilder.setStyle(style);
-                        }
 
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 

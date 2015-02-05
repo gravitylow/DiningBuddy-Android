@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.DiningBuddy;
-import net.gravitydevelopment.cnu.modals.LocationMenuItem;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
+import net.gravitydevelopment.cnu.modals.LocationMenuItem;
 
 import java.util.List;
 

@@ -12,32 +12,8 @@ public class BackendService extends Service {
     private static boolean sRunning;
     private static boolean sAlertsShown;
 
-    @Override
-    public void onCreate() {
-        sSettingsService = new SettingsService(this);
-        sLocationService = new LocationService(this);
-        sBackendService = this;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        sRunning = true;
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        LocationService.die(this);
-        sRunning = false;
-    }
-
     public static void setAlertsShown() {
         sAlertsShown = true;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     public static BackendService getBackendService() {
@@ -58,5 +34,29 @@ public class BackendService extends Service {
 
     public static boolean alertsShown() {
         return sAlertsShown;
+    }
+
+    @Override
+    public void onCreate() {
+        sSettingsService = new SettingsService(this);
+        sLocationService = new LocationService(this);
+        sBackendService = this;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        sRunning = true;
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        LocationService.die(this);
+        sRunning = false;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

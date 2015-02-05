@@ -25,12 +25,12 @@ public class CNULocation implements Serializable {
         this.mCoordinatePairList = new ArrayList<CNUCoordinatePair>();
     }
 
-    public void setName(String name) {
-        this.mName = name;
-    }
-
     public String getName() {
         return mName;
+    }
+
+    public void setName(String name) {
+        this.mName = name;
     }
 
     public boolean isInsideLocation(double latitude, double longitude) {
@@ -42,9 +42,9 @@ public class CNULocation implements Serializable {
         double point2long;
         int n = mCoordinatePairList.size();
 
-        for (i=0;i<n;i++) {
+        for (i = 0; i < n; i++) {
             CNUCoordinatePair pair1 = mCoordinatePairList.get(i);
-            CNUCoordinatePair pair2 = mCoordinatePairList.get((i+1)%n);
+            CNUCoordinatePair pair2 = mCoordinatePairList.get((i + 1) % n);
             point1lat = pair1.getLatitude() - latitude;
             point1long = pair1.getLongitude() - longitude;
             point2lat = pair2.getLatitude() - latitude;
@@ -52,18 +52,14 @@ public class CNULocation implements Serializable {
             angle += angle2D(point1lat, point1long, point2lat, point2long);
         }
 
-        if (Math.abs(angle) < Math.PI) {
-            return false;
-        } else {
-            return true;
-        }
+        return Math.abs(angle) >= Math.PI;
     }
 
     public double angle2D(double y1, double x1, double y2, double x2) {
         double dtheta, theta1, theta2;
 
-        theta1 = Math.atan2(y1,x1);
-        theta2 = Math.atan2(y2,x2);
+        theta1 = Math.atan2(y1, x1);
+        theta2 = Math.atan2(y2, x2);
         dtheta = theta2 - theta1;
         while (dtheta > Math.PI) {
             dtheta -= Math.PI * 2;
@@ -72,7 +68,7 @@ public class CNULocation implements Serializable {
             dtheta += Math.PI * 2;
         }
 
-        return(dtheta);
+        return (dtheta);
     }
 
     @Override

@@ -16,10 +16,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.API;
-import net.gravitydevelopment.cnu.modals.LocationFeedItem;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
+import net.gravitydevelopment.cnu.modals.LocationFeedItem;
 
 import java.util.ArrayList;
 import java.util.List;

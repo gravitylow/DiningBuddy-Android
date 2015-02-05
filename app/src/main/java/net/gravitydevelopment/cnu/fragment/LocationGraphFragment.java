@@ -47,12 +47,4 @@ public class LocationGraphFragment extends Fragment {
 
         return rootView;
     }
-
-    public static LocationGraphFragment newInstance(String locationName) {
-        LocationGraphFragment fragment = new LocationGraphFragment();
-        Bundle args = new Bundle();
-        args.putString(LocationActivity.ARG_NAME, locationName);
-        fragment.setArguments(args);
-        return fragment;
-    }
 }

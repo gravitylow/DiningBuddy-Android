@@ -12,10 +12,8 @@ import android.util.Log;
 import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.receiver.AlarmReceiver;
 
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,23 +23,25 @@ public class SettingsService {
     public static final String PREFS_KEY_WIFI_ONLY = "pref_wifi_only";
     public static final String PREFS_KEY_NOTIFY_FAVORITES = "pref_notify_favorites";
     public static final String PREFS_KEY_FAVORITES = "pref_favorites";
+    public static final String PREFS_KEY_FAVORITES_NOTIFY_TIME = "pref_favorites_notify_time";
     public static final String PREFS_KEY_LOCATIONS = "pref_locations";
     public static final String PREFS_KEY_UNIQUE_ID = "pref_unique_id";
     public static final String PREFS_KEY_ALERTS_READ = "pref_alerts_read";
     public static final String PREFS_KEY_LAST_FEEDBACK_REGATTAS = "pref_last_feedback_regattas";
     public static final String PREFS_KEY_LAST_FEEDBACK_COMMONS = "pref_last_feedback_commons";
     public static final String PREFS_KEY_LAST_FEEDBACK_EINSTEINS = "pref_last_feedback_einsteins";
-
-    private BackendService mBackendService;
     private static SharedPreferences sSettings;
     private static UUID sUUID;
     private static NetworkInfo sWifiInfo;
     private static boolean sPrefWifiOnly;
     private static boolean sPrefNotifyFavorites;
     private static String sPrefFavorites;
+    private static long sPrefFavoritesNotificationTime;
     private static long sLastFeedbackRegattas;
     private static long sLastFeedbackCommons;
     private static long sLastFeedbackEinsteins;
+    private static List<String> sAlertsRead;
+    private BackendService mBackendService;
 
     public SettingsService(BackendService backend) {
         mBackendService = backend;
@@ -56,30 +56,9 @@ public class SettingsService {
         sLastFeedbackEinsteins = sSettings.getLong(PREFS_KEY_LAST_FEEDBACK_EINSTEINS, -1);
         sPrefNotifyFavorites = sSettings.getBoolean(PREFS_KEY_NOTIFY_FAVORITES, false);
         sPrefFavorites = sSettings.getString(PREFS_KEY_FAVORITES, "");
+        sPrefFavoritesNotificationTime = sSettings.getLong(PREFS_KEY_FAVORITES_NOTIFY_TIME, -1);
 
         setupNotification();
-    }
-
-    private UUID getOrCreateUniqueId() {
-        String id = getUniqueId();
-        if (id == null) {
-            id = createUniqueId();
-        }
-        return UUID.fromString(id);
-    }
-
-
-    private String getUniqueId() {
-        return sSettings.getString(PREFS_KEY_UNIQUE_ID, null);
-    }
-
-    private String createUniqueId() {
-        UUID id = UUID.randomUUID();
-        SharedPreferences.Editor editor = sSettings.edit();
-        editor.putString(PREFS_KEY_UNIQUE_ID, id.toString());
-        editor.apply();
-        Log.d(DiningBuddy.LOG_TAG, "Saved UUID: " + id);
-        return id.toString();
     }
 
     public static boolean isWifiConnected() {
@@ -96,10 +75,6 @@ public class SettingsService {
         editor.apply();
     }
 
-    public String getCachedLocations() {
-        return sSettings.getString(PREFS_KEY_LOCATIONS, null);
-    }
-
     public static boolean getWifiOnly() {
         return sPrefWifiOnly;
     }
@@ -113,11 +88,7 @@ public class SettingsService {
     }
 
     public static boolean getShouldConnect() {
-        if (getWifiOnly()) {
-            return isWifiConnected();
-        } else {
-            return true;
-        }
+        return !getWifiOnly() || isWifiConnected();
     }
 
     public static boolean isAlertRead(Context context, String alert) {
@@ -135,16 +106,33 @@ public class SettingsService {
         editor.apply();
     }
 
+    private UUID getOrCreateUniqueId() {
+        String id = getUniqueId();
+        if (id == null) {
+            id = createUniqueId();
+        }
+        return UUID.fromString(id);
+    }
+
+    private String getUniqueId() {
+        return sSettings.getString(PREFS_KEY_UNIQUE_ID, null);
+    }
+
+    private String createUniqueId() {
+        UUID id = UUID.randomUUID();
+        SharedPreferences.Editor editor = sSettings.edit();
+        editor.putString(PREFS_KEY_UNIQUE_ID, id.toString());
+        editor.apply();
+        Log.d(DiningBuddy.LOG_TAG, "Saved UUID: " + id);
+        return id.toString();
+    }
+
+    public String getCachedLocations() {
+        return sSettings.getString(PREFS_KEY_LOCATIONS, null);
+    }
+
     public long getLastFeedbackRegattas() {
         return sLastFeedbackRegattas;
-    }
-
-    public long getLastFeedbackCommons() {
-        return sLastFeedbackCommons;
-    }
-
-    public long getLastFeedbackEinsteins() {
-        return sLastFeedbackEinsteins;
     }
 
     public void setLastFeedbackRegattas(long l) {
@@ -155,12 +143,20 @@ public class SettingsService {
         editor.apply();
     }
 
+    public long getLastFeedbackCommons() {
+        return sLastFeedbackCommons;
+    }
+
     public void setLastFeedbackCommons(long l) {
         sLastFeedbackCommons = l;
 
         SharedPreferences.Editor editor = sSettings.edit();
         editor.putLong(PREFS_KEY_LAST_FEEDBACK_COMMONS, l);
         editor.apply();
+    }
+
+    public long getLastFeedbackEinsteins() {
+        return sLastFeedbackEinsteins;
     }
 
     public void setLastFeedbackEinsteins(long l) {
@@ -175,10 +171,6 @@ public class SettingsService {
         return sPrefNotifyFavorites;
     }
 
-    public String getFavorites() {
-        return sPrefFavorites;
-    }
-
     public void setNotifyFavorites(boolean value) {
         sPrefNotifyFavorites = value;
 
@@ -189,6 +181,10 @@ public class SettingsService {
         setupNotification();
     }
 
+    public String getFavorites() {
+        return sPrefFavorites;
+    }
+
     public void setFavorites(String favorites) {
         sPrefFavorites = favorites;
 
@@ -197,18 +193,25 @@ public class SettingsService {
         editor.apply();
     }
 
+    public long getFavoritesNotificationTime() {
+        return sPrefFavoritesNotificationTime;
+    }
+
+    public void setFavoritesNotificationTime(long notificationTime) {
+        sPrefFavoritesNotificationTime = notificationTime;
+
+        SharedPreferences.Editor editor = sSettings.edit();
+        editor.putLong(PREFS_KEY_FAVORITES_NOTIFY_TIME, notificationTime);
+        editor.apply();
+
+        setupNotification();
+    }
+
     private void setupNotification() {
         Context context = mBackendService.getApplicationContext();
-        Intent intent = new Intent(context , AlarmReceiver.class);
+        Intent intent = new Intent(context, AlarmReceiver.class);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 6);
-        // Fudge to help the poor server
-        calendar.set(Calendar.MINUTE, new Random().nextInt(5));
-        calendar.set(Calendar.SECOND, new Random().nextInt(50));
 
         Log.d(DiningBuddy.LOG_TAG, "Alarm unscheduled");
 
@@ -216,8 +219,8 @@ public class SettingsService {
         alarmManager.cancel(pendingIntent);
         if (sPrefNotifyFavorites) {
             // Schedule new alarm
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-            Log.d(DiningBuddy.LOG_TAG, "Alarm scheduled for " + calendar.getTimeInMillis());
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, sPrefFavoritesNotificationTime, AlarmManager.INTERVAL_DAY, pendingIntent);
+            Log.d(DiningBuddy.LOG_TAG, "Alarm scheduled for " + sPrefFavoritesNotificationTime);
         }
 
     }

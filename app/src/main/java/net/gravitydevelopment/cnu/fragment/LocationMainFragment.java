@@ -30,6 +30,14 @@ public class LocationMainFragment extends Fragment {
 
     }
 
+    public static LocationMainFragment newInstance(String locationName) {
+        LocationMainFragment fragment = new LocationMainFragment();
+        Bundle args = new Bundle();
+        args.putString(LocationActivity.ARG_NAME, locationName);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mArgs = getArguments();
@@ -89,23 +97,19 @@ public class LocationMainFragment extends Fragment {
         boolean add = false;
         if (location.getName().equals(mLocationName)) {
             long last = 0;
-            if (mLocationName.equals(Util.REGATTAS_NAME)) {
-                last = mSettings.getLastFeedbackRegattas();
-            } else if (mLocationName.equals(Util.COMMONS_NAME)) {
-                last = mSettings.getLastFeedbackCommons();
-            } else if (mLocationName.equals(Util.EINSTEINS_NAME)) {
-                last = mSettings.getLastFeedbackEinsteins();
+            switch (mLocationName) {
+                case Util.REGATTAS_NAME:
+                    last = mSettings.getLastFeedbackRegattas();
+                    break;
+                case Util.COMMONS_NAME:
+                    last = mSettings.getLastFeedbackCommons();
+                    break;
+                case Util.EINSTEINS_NAME:
+                    last = mSettings.getLastFeedbackEinsteins();
+                    break;
             }
             add = last == -1 || last == 0 || System.currentTimeMillis() > Util.MIN_FEEDBACK_INTERVAL;
         }
         return add;
-    }
-
-    public static LocationMainFragment newInstance(String locationName) {
-        LocationMainFragment fragment = new LocationMainFragment();
-        Bundle args = new Bundle();
-        args.putString(LocationActivity.ARG_NAME, locationName);
-        fragment.setArguments(args);
-        return fragment;
     }
 }

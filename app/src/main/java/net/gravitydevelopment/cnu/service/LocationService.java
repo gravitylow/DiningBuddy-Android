@@ -1,22 +1,17 @@
 package net.gravitydevelopment.cnu.service;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.provider.Settings;
 import android.util.Log;
 
 import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.DiningBuddy;
-import net.gravitydevelopment.cnu.R;
-import net.gravitydevelopment.cnu.geo.CNULocationInfo;
-import net.gravitydevelopment.cnu.listener.CNULocationListener;
 import net.gravitydevelopment.cnu.geo.CNULocation;
+import net.gravitydevelopment.cnu.geo.CNULocationInfo;
 import net.gravitydevelopment.cnu.geo.CNULocator;
+import net.gravitydevelopment.cnu.listener.CNULocationListener;
 
 import java.util.List;
 import java.util.UUID;
@@ -49,14 +44,11 @@ public class LocationService {
 
         sLocationManager = (LocationManager) backend.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
+        //criteria.setAccuracy(Criteria.ACCURACY_);
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         sProvider = sLocationManager.getBestProvider(criteria, true);
         Log.d(DiningBuddy.LOG_TAG, "Best provider: " + sProvider);
-        if (sProvider == null || sProvider.equals("passive")) {
-            showNoLocationServiceDialog();
-        } else {
-            sLocationManager.requestLocationUpdates(sProvider, 0, 0, sListener);
-        }
+        sLocationManager.requestLocationUpdates(sProvider, 0, 0, sListener);
 
         String cache = mSettings.getCachedLocations();
         if (cache != null) {
@@ -66,7 +58,7 @@ public class LocationService {
             mLocator = new CNULocator();
             Log.d(DiningBuddy.LOG_TAG, "No cache; awaiting connection to server");
         }
-        if (mSettings.getShouldConnect()) {
+        if (SettingsService.getShouldConnect()) {
             mLocator.updateLocations();
         }
 
@@ -87,52 +79,6 @@ public class LocationService {
         }.start();
     }
 
-    public static void showNoLocationServiceDialog() {
-        new AlertDialog.Builder(DiningBuddy.getContext())
-                .setMessage(R.string.error_no_provider)
-                .setTitle(R.string.error_title)
-                .setNegativeButton("Ignore",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        })
-                .setPositiveButton("Fix",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                    int id) {
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                DiningBuddy.getContext().startActivity(intent);
-                            }
-                        }).show();
-    }
-
-    public void updateLocation(final double latitude, final double longitude) {
-        if (!CNULocator.isSetup() || !mSettings.getShouldConnect()) {
-            return;
-        }
-
-        CNULocation location = mLocator.getLocation(latitude, longitude);
-        DiningBuddy.updateLocation(latitude, longitude, location);
-        DiningBuddy.updateLocationView(location);
-
-        if (sLastPublishedUpdate == 0 || (System.currentTimeMillis() - sLastPublishedUpdate) >= MIN_UPDATE) {
-            Log.d(DiningBuddy.LOG_TAG, "Posting location " + location);
-            mLocator.postLocation(latitude, longitude, location, SettingsService.getUUID());
-            sLastPublishedUpdate = System.currentTimeMillis();
-        }
-
-        sLastLatitude = latitude;
-        sLastLongitude = longitude;
-        sLastLocation = location;
-        sHasLocation = true;
-
-        new Thread() {
-            public void run() {
-                mSettings.cacheLocations(mLocator.jsonValue());
-            }
-        }.start();
-    }
-
     public static void updateInfo() {
         if (!CNULocator.isSetup()) {
             return;
@@ -148,14 +94,14 @@ public class LocationService {
             DiningBuddy.getContext().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    DiningBuddy.getContext().updateInfo(sLastLocationInfo);
+                    DiningBuddy.updateInfo(sLastLocationInfo);
                 }
             });
         }
     }
 
     public static void findAndDistributeLocation(final double latitude, final double longitude) {
-        if (!CNULocator.isSetup() || !mSettings.getShouldConnect()) {
+        if (!CNULocator.isSetup() || !SettingsService.getShouldConnect()) {
             return;
         }
 
@@ -181,19 +127,10 @@ public class LocationService {
         new Thread() {
             public void run() {
                 updateInfo();
-                if (sProvider == null || sProvider.equals("passive")) {
-                    DiningBuddy.getContext().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            LocationService.showNoLocationServiceDialog();
-                        }
-                    });
-                } else {
-                    Location loc = sLocationManager.getLastKnownLocation(sProvider);
-                    double latitude = loc.getLatitude();
-                    double longitude = loc.getLongitude();
-                    findAndDistributeLocation(latitude, longitude);
-                }
+                Location loc = sLocationManager.getLastKnownLocation(sProvider);
+                double latitude = loc.getLatitude();
+                double longitude = loc.getLongitude();
+                findAndDistributeLocation(latitude, longitude);
             }
         }.start();
     }
@@ -231,6 +168,33 @@ public class LocationService {
                 }
             }.start();
         }
+    }
+
+    public void updateLocation(final double latitude, final double longitude) {
+        if (!CNULocator.isSetup() || !SettingsService.getShouldConnect()) {
+            return;
+        }
+
+        CNULocation location = mLocator.getLocation(latitude, longitude);
+        DiningBuddy.updateLocation(latitude, longitude, location);
+        DiningBuddy.updateLocationView(location);
+
+        if (sLastPublishedUpdate == 0 || (System.currentTimeMillis() - sLastPublishedUpdate) >= MIN_UPDATE) {
+            Log.d(DiningBuddy.LOG_TAG, "Posting location " + location);
+            mLocator.postLocation(latitude, longitude, location, SettingsService.getUUID());
+            sLastPublishedUpdate = System.currentTimeMillis();
+        }
+
+        sLastLatitude = latitude;
+        sLastLongitude = longitude;
+        sLastLocation = location;
+        sHasLocation = true;
+
+        new Thread() {
+            public void run() {
+                SettingsService.cacheLocations(mLocator.jsonValue());
+            }
+        }.start();
     }
 
     public void postFeedback(final String target, final CNULocation location, final int crowded, final int minutes, final String feedback, final UUID uuid) {

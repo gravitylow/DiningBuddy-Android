@@ -41,6 +41,82 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
     private static LocationBannerFragment sEinsteinsFrag;
     private static SwipeRefreshLayout sRefreshLayout;
 
+    public static void updateLocation(double latitude, double longitude, CNULocation location) {
+        sLastLocation = location;
+        if (sRegattasFrag != null) {
+            sRegattasFrag.updateLocation(location);
+        }
+        if (sCommonsFrag != null) {
+            sCommonsFrag.updateLocation(location);
+        }
+        if (sEinsteinsFrag != null) {
+            sEinsteinsFrag.updateLocation(location);
+        }
+    }
+
+    public static void updateInfo(List<CNULocationInfo> info) {
+        CNULocationInfo regattasInfo = null;
+        CNULocationInfo commonsInfo = null;
+        CNULocationInfo einsteinsInfo = null;
+        for (CNULocationInfo location : info) {
+            if (location.getLocation().equals(Util.REGATTAS_NAME)) {
+                regattasInfo = location;
+            } else if (location.getLocation().equals(Util.COMMONS_NAME)) {
+                commonsInfo = location;
+            } else if (location.getLocation().equals(Util.EINSTEINS_NAME)) {
+                einsteinsInfo = location;
+            }
+        }
+        if (regattasInfo == null) {
+            regattasInfo = new CNULocationInfo(Util.REGATTAS_NAME);
+        }
+        if (commonsInfo == null) {
+            commonsInfo = new CNULocationInfo(Util.COMMONS_NAME);
+        }
+        if (einsteinsInfo == null) {
+            einsteinsInfo = new CNULocationInfo(Util.EINSTEINS_NAME);
+        }
+        updateLocationViewInfo(regattasInfo, commonsInfo, einsteinsInfo);
+        if (isRunning()) {
+            if (sRegattasFrag != null && sCommonsFrag != null && sEinsteinsFrag != null) {
+                sRegattasFrag.updateInfo(regattasInfo);
+                sCommonsFrag.updateInfo(commonsInfo);
+                sEinsteinsFrag.updateInfo(einsteinsInfo);
+            }
+            if (sRefreshLayout.isRefreshing()) {
+                sRefreshLayout.setRefreshing(false);
+            }
+        }
+    }
+
+    public static void updateLocationViewInfo(CNULocationInfo regattasInfo, CNULocationInfo commonsInfo, CNULocationInfo einsteinsInfo) {
+        if (mCurrentLocationView != null) {
+            mCurrentLocationView.updateInfo(regattasInfo, commonsInfo, einsteinsInfo);
+        }
+    }
+
+    public static DiningBuddy getContext() {
+        return sContext;
+    }
+
+    public static boolean isRunning() {
+        return sRunning;
+    }
+
+    public static LocationActivity getCurrentLocationView() {
+        return mCurrentLocationView;
+    }
+
+    public static void setCurrentLocationView(LocationActivity view) {
+        mCurrentLocationView = view;
+    }
+
+    public static void updateLocationView(CNULocation location) {
+        if (mCurrentLocationView != null) {
+            mCurrentLocationView.updateLocation(location);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +197,7 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
                                             .setPositiveButton("Ok",
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog,
-                                                                int id) {
+                                                                            int id) {
                                                             SettingsService.setAlertRead(DiningBuddy.this, item.getMessage());
                                                         }
                                                     }).show();
@@ -188,81 +264,5 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public static void updateLocation(double latitude, double longitude, CNULocation location) {
-        sLastLocation = location;
-        if (sRegattasFrag != null) {
-            sRegattasFrag.updateLocation(location);
-        }
-        if (sCommonsFrag != null) {
-            sCommonsFrag.updateLocation(location);
-        }
-        if (sEinsteinsFrag != null) {
-            sEinsteinsFrag.updateLocation(location);
-        }
-    }
-
-    public static void updateInfo(List<CNULocationInfo> info) {
-        CNULocationInfo regattasInfo = null;
-        CNULocationInfo commonsInfo = null;
-        CNULocationInfo einsteinsInfo = null;
-        for (CNULocationInfo location : info) {
-            if (location.getLocation().equals(Util.REGATTAS_NAME)) {
-                regattasInfo = location;
-            } else if (location.getLocation().equals(Util.COMMONS_NAME)) {
-                commonsInfo = location;
-            } else if (location.getLocation().equals(Util.EINSTEINS_NAME)) {
-                einsteinsInfo = location;
-            }
-        }
-        if (regattasInfo == null) {
-            regattasInfo = new CNULocationInfo(Util.REGATTAS_NAME);
-        }
-        if (commonsInfo == null) {
-            commonsInfo = new CNULocationInfo(Util.COMMONS_NAME);
-        }
-        if (einsteinsInfo == null) {
-            einsteinsInfo = new CNULocationInfo(Util.EINSTEINS_NAME);
-        }
-        updateLocationViewInfo(regattasInfo, commonsInfo, einsteinsInfo);
-        if (isRunning()) {
-            if (sRegattasFrag != null && sCommonsFrag != null && sEinsteinsFrag != null) {
-                sRegattasFrag.updateInfo(regattasInfo);
-                sCommonsFrag.updateInfo(commonsInfo);
-                sEinsteinsFrag.updateInfo(einsteinsInfo);
-            }
-            if (sRefreshLayout.isRefreshing()) {
-                sRefreshLayout.setRefreshing(false);
-            }
-        }
-    }
-
-    public static void updateLocationViewInfo(CNULocationInfo regattasInfo, CNULocationInfo commonsInfo, CNULocationInfo einsteinsInfo) {
-        if (mCurrentLocationView != null) {
-            mCurrentLocationView.updateInfo(regattasInfo, commonsInfo, einsteinsInfo);
-        }
-    }
-
-    public static DiningBuddy getContext() {
-        return sContext;
-    }
-
-    public static boolean isRunning() {
-        return sRunning;
-    }
-
-    public static void setCurrentLocationView(LocationActivity view) {
-        mCurrentLocationView = view;
-    }
-
-    public static LocationActivity getCurrentLocationView() {
-        return mCurrentLocationView;
-    }
-
-    public static void updateLocationView(CNULocation location) {
-        if (mCurrentLocationView != null) {
-            mCurrentLocationView.updateLocation(location);
-        }
     }
 }

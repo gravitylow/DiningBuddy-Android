@@ -31,6 +31,28 @@ public class LocationBannerFragment extends Fragment {
     private boolean mShouldOpenInfo;
     private boolean mShowBadge;
 
+    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo) {
+        return newInstance(title, name, drawable, initialColor, shouldOpenInfo, null, false);
+    }
+
+    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo, CNULocationInfo initialInfo, boolean showBadge) {
+        LocationBannerFragment fragment = new LocationBannerFragment();
+
+        Bundle args = new Bundle();
+        args.putString(LocationActivity.ARG_DISPLAY_NAME, title);
+        args.putString(LocationActivity.ARG_NAME, name);
+        args.putInt(LocationActivity.ARG_DRAWABLE, drawable);
+        args.putInt(LocationActivity.ARG_INITIAL_COLOR, initialColor);
+        args.putBoolean(LocationActivity.ARG_SHOULD_OPEN_INFO, shouldOpenInfo);
+        args.putBoolean(LocationActivity.ARG_SHOW_BADGE, showBadge);
+        if (initialInfo != null) {
+            args.putSerializable(LocationActivity.ARG_INFO, initialInfo);
+        }
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +77,7 @@ public class LocationBannerFragment extends Fragment {
         if (obj != null) {
             updateInfo(rootView, (CNULocationInfo) obj);
         }
-        if(mShouldOpenInfo) {
+        if (mShouldOpenInfo) {
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -124,27 +146,5 @@ public class LocationBannerFragment extends Fragment {
     public void updateLocation(CNULocation location) {
         mShowBadge = location != null && location.getName().equals(mLocationName);
         setBadgeHidden(getView(), !mShowBadge);
-    }
-
-    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo) {
-        return newInstance(title, name, drawable, initialColor, shouldOpenInfo, null, false);
-    }
-
-    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo, CNULocationInfo initialInfo, boolean showBadge) {
-        LocationBannerFragment fragment = new LocationBannerFragment();
-
-        Bundle args = new Bundle();
-        args.putString(LocationActivity.ARG_DISPLAY_NAME, title);
-        args.putString(LocationActivity.ARG_NAME, name);
-        args.putInt(LocationActivity.ARG_DRAWABLE, drawable);
-        args.putInt(LocationActivity.ARG_INITIAL_COLOR, initialColor);
-        args.putBoolean(LocationActivity.ARG_SHOULD_OPEN_INFO, shouldOpenInfo);
-        args.putBoolean(LocationActivity.ARG_SHOW_BADGE, showBadge);
-        if (initialInfo != null) {
-            args.putSerializable(LocationActivity.ARG_INFO, initialInfo);
-        }
-        fragment.setArguments(args);
-
-        return fragment;
     }
 }

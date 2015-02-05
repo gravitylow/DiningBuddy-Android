@@ -47,7 +47,7 @@ public class LocationFeedbackFragment extends Fragment {
 
         Spinner minutesSpinner = (Spinner) rootView.findViewById(R.id.minutes_spinner);
         ArrayList<String> minutes = new ArrayList<String>();
-        for (int i=0;i<=10;i++) {
+        for (int i = 0; i <= 10; i++) {
             String s = "" + i;
             if (i == 10) s += "+";
             s += " minute";
@@ -101,15 +101,6 @@ public class LocationFeedbackFragment extends Fragment {
         rootView.findViewById(R.id.submit).setVisibility(View.GONE);
         rootView.findViewById(R.id.feedback_response_text).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.feedback_response_text_detail).setVisibility(View.VISIBLE);
-    }
-
-
-    public static LocationFeedbackFragment newInstance(String name) {
-        LocationFeedbackFragment fragment = new LocationFeedbackFragment();
-        Bundle args = new Bundle();
-        args.putString(LocationActivity.ARG_NAME, name);
-        fragment.setArguments(args);
-        return fragment;
     }
 
 }

@@ -23,6 +23,10 @@ public class CNULocator {
         sSetup = true;
     }
 
+    public static boolean isSetup() {
+        return sSetup;
+    }
+
     public CNULocation getLocation(double latitude, double longitude) {
         for (CNULocation location : sLocationsList) {
             if (location.isInsideLocation(latitude, longitude)) {
@@ -65,10 +69,6 @@ public class CNULocator {
 
     public List<CNULocation> getLocations() {
         return sLocationsList;
-    }
-
-    public static boolean isSetup() {
-        return sSetup;
     }
 
     public String jsonValue() {

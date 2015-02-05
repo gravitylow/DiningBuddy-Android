@@ -18,9 +18,12 @@ public class CNULocationListener implements LocationListener {
         mLocationService.updateLocation(location.getLatitude(), location.getLongitude());
     }
 
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
-    public void onProviderEnabled(String provider) {}
+    public void onProviderEnabled(String provider) {
+    }
 
-    public void onProviderDisabled(String provider) {}
+    public void onProviderDisabled(String provider) {
+    }
 }

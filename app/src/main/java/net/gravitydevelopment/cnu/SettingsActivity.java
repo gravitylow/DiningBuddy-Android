@@ -61,6 +61,26 @@ public class SettingsActivity extends PreferenceActivity {
         private static ClipboardManager clipboard;
         private static boolean developer = false;
 
+        public static void addDeveloperPrefs() {
+            if (!developer) {
+                developer = true;
+                Preference id = new Preference(context);
+                id.setTitle("Unique ID");
+                String uuid = SettingsService.getUUID().toString();
+                id.setSummary(uuid);
+                screen.addPreference(id);
+                final ClipData clip = ClipData.newPlainText("CNU Unique ID", uuid);
+                id.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(context, "Copied to the clipboard", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+            }
+        }
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -99,26 +119,6 @@ public class SettingsActivity extends PreferenceActivity {
             });
 
             screen = getPreferenceScreen();
-        }
-
-        public static void addDeveloperPrefs() {
-            if (!developer) {
-                developer = true;
-                Preference id = new Preference(context);
-                id.setTitle("Unique ID");
-                String uuid = SettingsService.getUUID().toString();
-                id.setSummary(uuid);
-                screen.addPreference(id);
-                final ClipData clip = ClipData.newPlainText("CNU Unique ID", uuid);
-                id.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        clipboard.setPrimaryClip(clip);
-                        Toast.makeText(context, "Copied to the clipboard", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                });
-            }
         }
     }
 
