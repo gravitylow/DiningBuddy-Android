@@ -38,8 +38,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                     for (LocationMenuItem item : regattas) {
                         for (String string : favoritesList) {
-                            if (item.getDescription().toLowerCase().contains(string.toLowerCase())) {
-                                regattasItems.append(string)
+                            if (item.getDescription().toLowerCase().contains(string.toLowerCase().trim())) {
+                                regattasItems.append(string.trim())
                                         .append(" at ")
                                         .append(item.getSummary().toLowerCase())
                                         .append(", ");
@@ -49,8 +49,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                     }
                     for (LocationMenuItem item : commons) {
                         for (String string : favoritesList) {
-                            if (item.getDescription().toLowerCase().contains(string.toLowerCase())) {
-                                commonsItems.append(string)
+                            if (item.getDescription().toLowerCase().contains(string.toLowerCase().trim())) {
+                                commonsItems.append(string.trim())
                                         .append(" at ")
                                         .append(item.getSummary().toLowerCase())
                                         .append(", ");
@@ -65,7 +65,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         if (regattasItems.length() > 0) {
                             regattasItems.delete(regattasItems.length() - 2, regattasItems.length());
-                            value += "Regattas is serving: " + regattasItems.toString() + ".";
+                            value += "Regattas is serving " + regattasItems.toString() + ".";
                         }
 
                         if (commonsItems.length() > 0) {
@@ -73,7 +73,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             if (value.length() > 0) {
                                 value += " ";
                             }
-                            value += "Commons is serving: " + regattasItems.toString() + ".";
+                            value += "Commons is serving " + regattasItems.toString() + ".";
                         }
 
                         Intent viewIntent = new Intent(context, DiningBuddy.class);
@@ -86,6 +86,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                                         .setContentText(value)
                                         .setAutoCancel(true)
                                         .setContentIntent(viewPendingIntent);
+
+                        if (value.length() >= 40) {
+                            NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
+                            style.bigText(value);
+                            String shortText = value.substring(0, 35) + "...";
+                            notificationBuilder.setContentText(shortText);
+                            notificationBuilder.setStyle(style);
+                        }
 
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
