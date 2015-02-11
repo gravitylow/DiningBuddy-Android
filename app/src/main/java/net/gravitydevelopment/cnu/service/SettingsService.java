@@ -92,18 +92,34 @@ public class SettingsService {
     }
 
     public static boolean isAlertRead(Context context, String alert) {
+        alert = makeSafeAlert(alert);
+
         return context.getSharedPreferences(PREFS_NAME, 0)
                 .getStringSet(PREFS_KEY_ALERTS_READ, new HashSet<String>())
                 .contains(alert);
     }
 
     public static void setAlertRead(Context context, String alert) {
+        alert = makeSafeAlert(alert);
+
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         Set<String> alerts = prefs.getStringSet(PREFS_KEY_ALERTS_READ, new HashSet<String>());
-        alerts.add(alert);
+
+        Set<String> newAlerts = new HashSet<String>();
+        newAlerts.addAll(alerts);
+        newAlerts.add(alert);
+
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putStringSet(PREFS_KEY_ALERTS_READ, alerts);
-        editor.apply();
+
+        editor.remove(PREFS_KEY_ALERTS_READ);
+        editor.commit();
+
+        editor.putStringSet(PREFS_KEY_ALERTS_READ, newAlerts);
+        editor.commit();
+    }
+
+    private static String makeSafeAlert(String alert) {
+        return alert.replaceAll("\"", "").replaceAll(" ", "").replaceAll("\\.", "").replaceAll(":", "");
     }
 
     private UUID getOrCreateUniqueId() {
