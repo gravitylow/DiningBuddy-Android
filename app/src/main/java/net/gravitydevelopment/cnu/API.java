@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+
 public class API {
     private static final String API_HOST = "https://api.gravitydevelopment.net";
     private static final String API_VERSION = "v1.0";
@@ -280,8 +284,7 @@ public class API {
 
     private static String read(URL url) {
         try {
-            URLConnection conn = url.openConnection();
-            conn.addRequestProperty("User-Agent", API_USER_AGENT);
+            HttpsURLConnection conn = getConnectionFromURL(url);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             return reader.readLine();
         } catch (IOException e) {
@@ -292,9 +295,8 @@ public class API {
 
     private static int write(URL url, JSONObject object) {
         try {
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            HttpsURLConnection conn = getConnectionFromURL(url);
             conn.setRequestProperty("Content-Type", API_CONTENT_TYPE);
-            conn.setRequestProperty("User-Agent", API_USER_AGENT);
             conn.setRequestMethod("POST");
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
             writer.write(object.toString());
@@ -305,6 +307,19 @@ public class API {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    private static HttpsURLConnection getConnectionFromURL(URL url) throws IOException {
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        // Uncomment to use staging server
+        /*conn.setHostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String arg0, SSLSession arg1) {
+                return true;
+            }
+        });*/
+        conn.addRequestProperty("User-Agent", API_USER_AGENT);
+        return conn;
     }
 
     public static String getApiUrl() {
