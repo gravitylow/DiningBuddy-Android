@@ -90,22 +90,25 @@ public class LocationService {
     }
 
     public static void showNoLocationServiceDialog() {
-        new AlertDialog.Builder(DiningBuddy.getContext())
-                .setMessage(R.string.error_no_provider)
-                .setTitle(R.string.error_title)
-                .setNegativeButton("Ignore",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        })
-                .setPositiveButton("Fix",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                    int id) {
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                DiningBuddy.getContext().startActivity(intent);
-                            }
-                        }).show();
+        if (DiningBuddy.getContext() != null) {
+            new AlertDialog.Builder(DiningBuddy.getContext())
+                    .setMessage(R.string.error_no_provider)
+                    .setTitle(R.string.error_title)
+                    .setNegativeButton("Ignore",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            })
+                    .setPositiveButton("Fix",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                        int id) {
+                                    Intent intent = new Intent(
+                                            Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    DiningBuddy.getContext().startActivity(intent);
+                                }
+                            }).show();
+        }
     }
 
     public static void updateInfo() {
@@ -161,12 +164,14 @@ public class LocationService {
                     sProvider = sLocationManager.getBestProvider(sCriteria, true);
                 }
                 if (sProvider == null || sProvider.equals("passive")) {
-                    DiningBuddy.getContext().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            LocationService.showNoLocationServiceDialog();
-                        }
-                    });
+                    if (DiningBuddy.getContext() != null) {
+                        DiningBuddy.getContext().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LocationService.showNoLocationServiceDialog();
+                            }
+                        });
+                    }
                 } else {
                     Location loc = sLocationManager.getLastKnownLocation(sProvider);
                     double latitude = loc.getLatitude();
