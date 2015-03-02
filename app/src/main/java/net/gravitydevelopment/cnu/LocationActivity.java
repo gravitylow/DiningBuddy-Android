@@ -9,8 +9,8 @@ import com.cengalabs.flatui.FlatUI;
 
 import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
 import net.gravitydevelopment.cnu.fragment.LocationMainFragment;
-import net.gravitydevelopment.cnu.modal.LocationItem;
 import net.gravitydevelopment.cnu.modal.InfoItem;
+import net.gravitydevelopment.cnu.modal.LocationItem;
 
 import java.io.Serializable;
 
@@ -76,10 +76,7 @@ public class LocationActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     public void updateLocation(LocationItem location) {
@@ -93,12 +90,16 @@ public class LocationActivity extends FragmentActivity {
 
     public void updateInfo(InfoItem regattas, InfoItem commons, InfoItem einsteins) {
         InfoItem info = null;
-        if (mLocationName.equals(Util.REGATTAS_NAME)) {
-            info = regattas;
-        } else if (mLocationName.equals(Util.COMMONS_NAME)) {
-            info = commons;
-        } else if (mLocationName.equals(Util.EINSTEINS_NAME)) {
-            info = einsteins;
+        switch (mLocationName) {
+            case Util.REGATTAS_NAME:
+                info = regattas;
+                break;
+            case Util.COMMONS_NAME:
+                info = commons;
+                break;
+            case Util.EINSTEINS_NAME:
+                info = einsteins;
+                break;
         }
         final InfoItem finalInfo = info;
         mBannerFragment.getActivity().runOnUiThread(new Runnable() {

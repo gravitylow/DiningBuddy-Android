@@ -1,71 +1,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedbackFragment"
-    android:padding="10dp">
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedbackFragment">
 
     <TextView
+        android:id="@+id/crowded_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/crowded_text"
         android:text="@string/feedback_crowded" />
 
     <Spinner
+        android:id="@+id/crowded_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/crowded_spinner"
         android:layout_gravity="center_horizontal" />
 
     <TextView
+        android:id="@+id/minutes_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/minutes_text"
         android:text="@string/feedback_minutes" />
 
     <Spinner
+        android:id="@+id/minutes_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/minutes_spinner"
         android:layout_gravity="center_horizontal" />
 
     <TextView
+        android:id="@+id/feedback_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/feedback_text"
         android:labelFor="@+id/feedback"
         android:text="@string/feedback_comments" />
 
     <EditText
+        android:id="@+id/feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/feedback"
-        android:maxLength ="1000"
         android:layout_gravity="center_horizontal"
-        android:inputType="text"
         android:hint="@string/feedback_hint"
-        android:singleLine="true"/>
+        android:inputType="text"
+        android:maxLength="1000"
+        android:singleLine="true" />
 
     <com.cengalabs.flatui.views.FlatButton
+        android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/feedback_button"
-        android:id="@+id/submit"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:text="@string/feedback_button" />
 
     <com.cengalabs.flatui.views.FlatTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/feedback_response_text"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:visibility="gone"
-        android:text="@string/feedback_response" />
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/feedback_response"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/feedback_response_text_detail"
-        android:visibility="gone"
-        android:text="@string/feedback_response_detail" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/feedback_response_detail"
+        android:visibility="gone" />
 
 </LinearLayout>

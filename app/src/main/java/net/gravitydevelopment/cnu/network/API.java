@@ -1,11 +1,8 @@
 package net.gravitydevelopment.cnu.network;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.modal.AlertItem;
 import net.gravitydevelopment.cnu.modal.FeedItem;
 import net.gravitydevelopment.cnu.modal.FeedbackItem;
@@ -32,10 +29,10 @@ public class API {
                         LocationCollection.LocationDeserializer())
                 .create();
 
-        RestAdapter restAdapter =new RestAdapter.Builder()
-            .setEndpoint(API_URL)
-            .setConverter(new GsonConverter(gson))
-            .build();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(API_URL)
+                .setConverter(new GsonConverter(gson))
+                .build();
         service = restAdapter.create(Service.class);
     }
 
@@ -51,9 +48,6 @@ public class API {
     }
 
     public static List<LocationItem> getLocations() {
-        LocationCollection collection = service.locationList();
-        Log.d(DiningBuddy.LOG_TAG, "Collection: " + collection);
-        Log.d(DiningBuddy.LOG_TAG, "List: " + collection.getLocations());
         return service.locationList().getLocations();
     }
 
@@ -65,16 +59,8 @@ public class API {
         return service.info(location.getName());
     }
 
-    public static List<MenuItem> getMenu(LocationItem location) {
-        return getMenu(location.getName());
-    }
-
     public static List<MenuItem> getMenu(String location) {
         return service.menuList(location);
-    }
-
-    public static List<FeedItem> getFeed(LocationItem location) {
-        return getFeed(location.getName());
     }
 
     public static List<FeedItem> getFeed(String location) {

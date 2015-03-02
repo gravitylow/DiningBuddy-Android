@@ -11,13 +11,12 @@ import android.provider.Settings;
 import android.util.Log;
 
 import net.gravitydevelopment.cnu.DiningBuddy;
-
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.geo.Locator;
+import net.gravitydevelopment.cnu.listener.CNULocationListener;
 import net.gravitydevelopment.cnu.modal.FeedbackItem;
 import net.gravitydevelopment.cnu.modal.InfoItem;
 import net.gravitydevelopment.cnu.modal.LocationItem;
-import net.gravitydevelopment.cnu.listener.CNULocationListener;
 import net.gravitydevelopment.cnu.network.API;
 
 import java.util.List;
@@ -62,7 +61,7 @@ public class LocationService {
         }
 
         mLocator = new Locator();
-            Log.d(DiningBuddy.LOG_TAG, "No cache; awaiting connection to server");
+        Log.d(DiningBuddy.LOG_TAG, "No cache; awaiting connection to server");
         if (SettingsService.getShouldConnect()) {
             mLocator.updateLocations();
         }
@@ -98,7 +97,7 @@ public class LocationService {
                     .setPositiveButton("Fix",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
-                                        int id) {
+                                                    int id) {
                                     Intent intent = new Intent(
                                             Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                     DiningBuddy.getContext().startActivity(intent);
@@ -140,7 +139,7 @@ public class LocationService {
             DiningBuddy.getContext().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    DiningBuddy.updateLocation(latitude, longitude, location);
+                    DiningBuddy.updateLocation(location);
                     DiningBuddy.updateLocationView(location);
                 }
             });
@@ -220,7 +219,7 @@ public class LocationService {
         }
 
         LocationItem location = mLocator.getLocation(latitude, longitude);
-        DiningBuddy.updateLocation(latitude, longitude, location);
+        DiningBuddy.updateLocation(location);
         DiningBuddy.updateLocationView(location);
 
         if (sLastPublishedUpdate == 0 || (System.currentTimeMillis() - sLastPublishedUpdate) >= MIN_UPDATE) {
@@ -238,7 +237,7 @@ public class LocationService {
     public void postFeedback(final String target, final LocationItem location, final int crowded, final int minutes, final String feedback, final UUID uuid) {
         new Thread(new Runnable() {
             public void run() {
-                API.sendFeedback(new FeedbackItem(uuid, target, location, crowded, minutes));
+                API.sendFeedback(new FeedbackItem(uuid, target, location, crowded, minutes, feedback));
             }
         }).start();
     }

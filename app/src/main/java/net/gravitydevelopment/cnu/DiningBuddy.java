@@ -14,9 +14,9 @@ import android.view.MenuItem;
 import com.cengalabs.flatui.FlatUI;
 
 import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
+import net.gravitydevelopment.cnu.modal.AlertItem;
 import net.gravitydevelopment.cnu.modal.InfoItem;
 import net.gravitydevelopment.cnu.modal.LocationItem;
-import net.gravitydevelopment.cnu.modal.AlertItem;
 import net.gravitydevelopment.cnu.network.API;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
@@ -42,7 +42,7 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
     private static LocationBannerFragment sEinsteinsFrag;
     private static SwipeRefreshLayout sRefreshLayout;
 
-    public static void updateLocation(double latitude, double longitude, LocationItem location) {
+    public static void updateLocation(LocationItem location) {
         sLastLocation = location;
         if (sRegattasFrag != null) {
             sRegattasFrag.updateLocation(location);
@@ -152,17 +152,13 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
             double lat = savedInstanceState.getDouble(BUNDLE_LAST_LAT);
             double lon = savedInstanceState.getDouble(BUNDLE_LAST_LON);
             LocationItem location = (LocationItem) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
-            updateLocation(lat, lon, location);
+            updateLocation(location);
         }
 
         if (!BackendService.isRunning() && Util.externalShouldConnect(this)) {
             Util.startBackend(this);
         } else if (LocationService.hasLocation()) {
-            updateLocation(
-                    LocationService.getLastLatitude(),
-                    LocationService.getLastLongitude(),
-                    LocationService.getLastLocation()
-            );
+            updateLocation(LocationService.getLastLocation());
         }
         sContext = this;
     }
@@ -242,10 +238,8 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.w(LOG_TAG, "onRestoreInstanceState: " + savedInstanceState);
-        double lat = savedInstanceState.getDouble(BUNDLE_LAST_LAT);
-        double lon = savedInstanceState.getDouble(BUNDLE_LAST_LON);
         LocationItem location = (LocationItem) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
-        updateLocation(lat, lon, location);
+        updateLocation(location);
 
         super.onRestoreInstanceState(savedInstanceState);
     }

@@ -5,7 +5,6 @@ import net.gravitydevelopment.cnu.modal.FeedItem;
 import net.gravitydevelopment.cnu.modal.FeedbackItem;
 import net.gravitydevelopment.cnu.modal.InfoItem;
 import net.gravitydevelopment.cnu.modal.LocationCollection;
-import net.gravitydevelopment.cnu.modal.LocationItem;
 import net.gravitydevelopment.cnu.modal.MenuItem;
 import net.gravitydevelopment.cnu.modal.UpdateItem;
 
@@ -29,15 +28,15 @@ public interface Service {
     List<AlertItem> alertList();
 
     @Headers({
-        "Content-Type: application/json",
-        "User-Agent: " + API_USER_AGENT
+            "Content-Type: application/json",
+            "User-Agent: " + API_USER_AGENT
     })
     @GET("/locations/")
     LocationCollection locationList();
 
     @Headers({
-        "Content-Type: application/json",
-        "User-Agent: " + API_USER_AGENT
+            "Content-Type: application/json",
+            "User-Agent: " + API_USER_AGENT
     })
     @GET("/info/")
     List<InfoItem> infoList();
@@ -57,8 +56,8 @@ public interface Service {
     List<MenuItem> menuList(@Path("location") String location);
 
     @Headers({
-        "Content-Type: application/json",
-        "User-Agent: " + API_USER_AGENT
+            "Content-Type: application/json",
+            "User-Agent: " + API_USER_AGENT
     })
     @GET("/feed/{location}/")
     List<FeedItem> feedList(@Path("location") String location);

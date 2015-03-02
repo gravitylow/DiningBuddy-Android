@@ -1,17 +1,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DFDFD7"
+    android:orientation="vertical"
     tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedFragment">
+
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/view_feed_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/view_feed_refresh">
+        android:layout_height="match_parent">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/background_text"
                 android:layout_width="fill_parent"
@@ -19,9 +22,11 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/loading_text" />
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TableLayout
                     android:id="@+id/table"
                     android:layout_width="match_parent"
@@ -30,10 +35,11 @@
             </ScrollView>
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <TextView
+        android:id="@+id/loadingText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/loading_text"
-        android:id="@+id/loadingText"
-        android:gravity="center" />
+        android:gravity="center"
+        android:text="@string/loading_text" />
 </LinearLayout>

@@ -1,7 +1,5 @@
 package net.gravitydevelopment.cnu.modal;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -9,8 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-
-import net.gravitydevelopment.cnu.DiningBuddy;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -24,13 +20,13 @@ public class LocationCollection {
         this.locations = locations;
     }
 
-    public List<LocationItem> getLocations() {
-        return locations;
-    }
-
     public static LocationCollection deserializeLocations(String json) {
         LocationDeserializer deserializer = new LocationDeserializer();
         return deserializer.deserialize(new JsonParser().parse(json), LocationCollection.class, null);
+    }
+
+    public List<LocationItem> getLocations() {
+        return locations;
     }
 
     public static class LocationDeserializer implements JsonDeserializer<LocationCollection> {

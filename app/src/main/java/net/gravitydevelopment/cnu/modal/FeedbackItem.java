@@ -8,9 +8,10 @@ public class FeedbackItem {
     public String location;
     public int crowded;
     public int minutes;
+    public String feedback;
     public long send_time;
 
-    public FeedbackItem(UUID id, String target, LocationItem location, int crowded, int minutes) {
+    public FeedbackItem(UUID id, String target, LocationItem location, int crowded, int minutes, String feedback) {
         this.id = id;
         this.target = target;
 
@@ -20,6 +21,7 @@ public class FeedbackItem {
 
         this.crowded = crowded;
         this.minutes = minutes;
+        this.feedback = feedback;
         this.send_time = System.currentTimeMillis();
     }
 }
