@@ -15,11 +15,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
-import net.gravitydevelopment.cnu.modals.LocationFeedItem;
+import net.gravitydevelopment.cnu.modal.FeedItem;
+import net.gravitydevelopment.cnu.network.API;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
         }).start();
     }
 
-    public void updateFeed(final List<LocationFeedItem> items) {
+    public void updateFeed(final List<FeedItem> items) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -83,7 +83,7 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
                     mBackgroundText.setVisibility(View.INVISIBLE);
                     List<TableRow> list = new ArrayList<TableRow>();
                     int i = 0;
-                    for (LocationFeedItem item : items) {
+                    for (FeedItem item : items) {
                         String message = item.getMessage();
                         TableRow row = new TableRow(getActivity());
                         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT));

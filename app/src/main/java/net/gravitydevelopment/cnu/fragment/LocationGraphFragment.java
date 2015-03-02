@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
+import net.gravitydevelopment.cnu.network.API;
 
 public class LocationGraphFragment extends Fragment {
 
@@ -35,7 +35,7 @@ public class LocationGraphFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_location_graph, container, false);
         WebView webView = (WebView) rootView.findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl(API.getApiUrl() + "graphs/" + mLocationName);
+        webView.loadUrl(API.API_URL + "/graphs/" + mLocationName);
         webView.setScrollContainer(false);
         webView.setVerticalScrollBarEnabled(false);
         webView.setBackgroundColor(Color.parseColor("#DFDFD7"));

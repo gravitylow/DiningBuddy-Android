@@ -9,8 +9,8 @@ import com.cengalabs.flatui.FlatUI;
 
 import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
 import net.gravitydevelopment.cnu.fragment.LocationMainFragment;
-import net.gravitydevelopment.cnu.geo.CNULocation;
-import net.gravitydevelopment.cnu.geo.CNULocationInfo;
+import net.gravitydevelopment.cnu.modal.LocationItem;
+import net.gravitydevelopment.cnu.modal.InfoItem;
 
 import java.io.Serializable;
 
@@ -44,9 +44,9 @@ public class LocationActivity extends FragmentActivity {
             boolean showBadge = b.getBoolean(ARG_SHOW_BADGE);
 
             if (obj != null) {
-                mBannerFragment = LocationBannerFragment.newInstance(display, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false, (CNULocationInfo) obj, showBadge);
+                mBannerFragment = LocationBannerFragment.newInstance(display, name, drawable, InfoItem.CrowdedRating.NOT_CROWDED.getColor(), false, (InfoItem) obj, showBadge);
             } else {
-                mBannerFragment = LocationBannerFragment.newInstance(display, name, drawable, CNULocationInfo.CrowdedRating.NOT_CROWDED.getColor(), false);
+                mBannerFragment = LocationBannerFragment.newInstance(display, name, drawable, InfoItem.CrowdedRating.NOT_CROWDED.getColor(), false);
             }
 
             mMainFragment = LocationMainFragment.newInstance(name);
@@ -82,7 +82,7 @@ public class LocationActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateLocation(CNULocation location) {
+    public void updateLocation(LocationItem location) {
         if (mMainFragment != null) {
             mMainFragment.updateLocation(location);
         }
@@ -91,8 +91,8 @@ public class LocationActivity extends FragmentActivity {
         }
     }
 
-    public void updateInfo(CNULocationInfo regattas, CNULocationInfo commons, CNULocationInfo einsteins) {
-        CNULocationInfo info = null;
+    public void updateInfo(InfoItem regattas, InfoItem commons, InfoItem einsteins) {
+        InfoItem info = null;
         if (mLocationName.equals(Util.REGATTAS_NAME)) {
             info = regattas;
         } else if (mLocationName.equals(Util.COMMONS_NAME)) {
@@ -100,7 +100,7 @@ public class LocationActivity extends FragmentActivity {
         } else if (mLocationName.equals(Util.EINSTEINS_NAME)) {
             info = einsteins;
         }
-        final CNULocationInfo finalInfo = info;
+        final InfoItem finalInfo = info;
         mBannerFragment.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

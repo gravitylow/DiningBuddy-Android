@@ -14,9 +14,10 @@ import android.view.MenuItem;
 import com.cengalabs.flatui.FlatUI;
 
 import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
-import net.gravitydevelopment.cnu.geo.CNULocation;
-import net.gravitydevelopment.cnu.geo.CNULocationInfo;
-import net.gravitydevelopment.cnu.modals.AlertItem;
+import net.gravitydevelopment.cnu.modal.InfoItem;
+import net.gravitydevelopment.cnu.modal.LocationItem;
+import net.gravitydevelopment.cnu.modal.AlertItem;
+import net.gravitydevelopment.cnu.network.API;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
 import net.gravitydevelopment.cnu.service.SettingsService;
@@ -35,13 +36,13 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
     private static DiningBuddy sContext;
     private static boolean sRunning;
     private static LocationActivity mCurrentLocationView;
-    private static CNULocation sLastLocation;
+    private static LocationItem sLastLocation;
     private static LocationBannerFragment sRegattasFrag;
     private static LocationBannerFragment sCommonsFrag;
     private static LocationBannerFragment sEinsteinsFrag;
     private static SwipeRefreshLayout sRefreshLayout;
 
-    public static void updateLocation(double latitude, double longitude, CNULocation location) {
+    public static void updateLocation(double latitude, double longitude, LocationItem location) {
         sLastLocation = location;
         if (sRegattasFrag != null) {
             sRegattasFrag.updateLocation(location);
@@ -54,11 +55,11 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
         }
     }
 
-    public static void updateInfo(List<CNULocationInfo> info) {
-        CNULocationInfo regattasInfo = null;
-        CNULocationInfo commonsInfo = null;
-        CNULocationInfo einsteinsInfo = null;
-        for (CNULocationInfo location : info) {
+    public static void updateInfo(List<InfoItem> info) {
+        InfoItem regattasInfo = null;
+        InfoItem commonsInfo = null;
+        InfoItem einsteinsInfo = null;
+        for (InfoItem location : info) {
             if (location.getLocation().equals(Util.REGATTAS_NAME)) {
                 regattasInfo = location;
             } else if (location.getLocation().equals(Util.COMMONS_NAME)) {
@@ -68,13 +69,13 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
             }
         }
         if (regattasInfo == null) {
-            regattasInfo = new CNULocationInfo(Util.REGATTAS_NAME);
+            regattasInfo = new InfoItem(Util.REGATTAS_NAME);
         }
         if (commonsInfo == null) {
-            commonsInfo = new CNULocationInfo(Util.COMMONS_NAME);
+            commonsInfo = new InfoItem(Util.COMMONS_NAME);
         }
         if (einsteinsInfo == null) {
-            einsteinsInfo = new CNULocationInfo(Util.EINSTEINS_NAME);
+            einsteinsInfo = new InfoItem(Util.EINSTEINS_NAME);
         }
         updateLocationViewInfo(regattasInfo, commonsInfo, einsteinsInfo);
         if (isRunning()) {
@@ -89,7 +90,7 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
         }
     }
 
-    public static void updateLocationViewInfo(CNULocationInfo regattasInfo, CNULocationInfo commonsInfo, CNULocationInfo einsteinsInfo) {
+    public static void updateLocationViewInfo(InfoItem regattasInfo, InfoItem commonsInfo, InfoItem einsteinsInfo) {
         if (mCurrentLocationView != null) {
             mCurrentLocationView.updateInfo(regattasInfo, commonsInfo, einsteinsInfo);
         }
@@ -111,7 +112,7 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
         mCurrentLocationView = view;
     }
 
-    public static void updateLocationView(CNULocation location) {
+    public static void updateLocationView(LocationItem location) {
         if (mCurrentLocationView != null) {
             mCurrentLocationView.updateLocation(location);
         }
@@ -150,7 +151,7 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
         if (savedInstanceState != null) {
             double lat = savedInstanceState.getDouble(BUNDLE_LAST_LAT);
             double lon = savedInstanceState.getDouble(BUNDLE_LAST_LON);
-            CNULocation location = (CNULocation) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
+            LocationItem location = (LocationItem) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
             updateLocation(lat, lon, location);
         }
 
@@ -243,7 +244,7 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
         Log.w(LOG_TAG, "onRestoreInstanceState: " + savedInstanceState);
         double lat = savedInstanceState.getDouble(BUNDLE_LAST_LAT);
         double lon = savedInstanceState.getDouble(BUNDLE_LAST_LON);
-        CNULocation location = (CNULocation) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
+        LocationItem location = (LocationItem) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
         updateLocation(lat, lon, location);
 
         super.onRestoreInstanceState(savedInstanceState);

@@ -1,40 +1,35 @@
-package net.gravitydevelopment.cnu.geo;
+package net.gravitydevelopment.cnu.modal;
 
 import android.graphics.Color;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CNULocationInfo implements Serializable {
+public class InfoItem implements Serializable {
 
-    private final String mLocationName;
-    private final int mPeopleCount;
-    private CrowdedRating mCrowdedRating;
-    public CNULocationInfo(String location) {
-        this(location, 0, 0);
-    }
+    public String location;
+    public int people;
+    public int crowded;
 
-    public CNULocationInfo(String location, int people, int crowded) {
-        this.mLocationName = location;
-        this.mPeopleCount = people;
-        this.mCrowdedRating = CrowdedRating.values()[crowded];
+    public InfoItem(String location) {
+        this.location = location;
     }
 
     public String getLocation() {
-        return mLocationName;
+        return location;
     }
 
     public int getPeople() {
-        return mPeopleCount;
+        return people;
     }
 
     public CrowdedRating getCrowdedRating() {
-        return mCrowdedRating;
+        return CrowdedRating.values()[crowded];
     }
 
     @Override
     public String toString() {
-        return "CNULocationInfo{mLocationName=" + mLocationName + ", mPeopleCount=" + mPeopleCount + ", mCrowdedRating = " + mCrowdedRating + "}";
+        return "InfoItem{location=" + location + ", people=" + people + ", crowded = " + crowded + "}";
     }
 
     public enum CrowdedRating {

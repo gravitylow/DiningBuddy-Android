@@ -8,11 +8,11 @@ import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
-import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
-import net.gravitydevelopment.cnu.modals.LocationMenuItem;
+import net.gravitydevelopment.cnu.modal.MenuItem;
+import net.gravitydevelopment.cnu.network.API;
 import net.gravitydevelopment.cnu.service.SettingsService;
 
 import java.util.List;
@@ -28,15 +28,15 @@ public class AlarmReceiver extends BroadcastReceiver {
             final String[] favoritesList = favorites.split(",");
             new Thread() {
                 public void run() {
-                    List<LocationMenuItem> regattas = API.getMenu(Util.REGATTAS_NAME);
-                    List<LocationMenuItem> commons = API.getMenu(Util.COMMONS_NAME);
+                    List<MenuItem> regattas = API.getMenu(Util.REGATTAS_NAME);
+                    List<MenuItem> commons = API.getMenu(Util.COMMONS_NAME);
 
                     StringBuilder regattasItems = new StringBuilder();
                     StringBuilder commonsItems = new StringBuilder();
 
                     int count = 0;
 
-                    for (LocationMenuItem item : regattas) {
+                    for (MenuItem item : regattas) {
                         for (String string : favoritesList) {
                             if (item.getDescription().toLowerCase().contains(string.toLowerCase().trim())) {
                                 regattasItems.append(string.trim())
@@ -47,7 +47,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             }
                         }
                     }
-                    for (LocationMenuItem item : commons) {
+                    for (MenuItem item : commons) {
                         for (String string : favoritesList) {
                             if (item.getDescription().toLowerCase().contains(string.toLowerCase().trim())) {
                                 commonsItems.append(string.trim())

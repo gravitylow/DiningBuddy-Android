@@ -10,14 +10,15 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import net.gravitydevelopment.cnu.API;
 import net.gravitydevelopment.cnu.DiningBuddy;
 
 import net.gravitydevelopment.cnu.R;
-import net.gravitydevelopment.cnu.geo.CNULocation;
-import net.gravitydevelopment.cnu.geo.CNULocationInfo;
-import net.gravitydevelopment.cnu.geo.CNULocator;
+import net.gravitydevelopment.cnu.geo.Locator;
+import net.gravitydevelopment.cnu.modal.FeedbackItem;
+import net.gravitydevelopment.cnu.modal.InfoItem;
+import net.gravitydevelopment.cnu.modal.LocationItem;
 import net.gravitydevelopment.cnu.listener.CNULocationListener;
+import net.gravitydevelopment.cnu.network.API;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,15 +26,15 @@ import java.util.UUID;
 public class LocationService {
 
     private static final long MIN_UPDATE = 60 * 1000;
-    private static final long PEOPLE_UPDATE = 60 * 1000;
+    private static final long INFO_UPDATE = 60 * 1000;
 
-    private static CNULocator mLocator;
+    private static Locator mLocator;
 
     private static LocationManager sLocationManager;
     private static double sLastLongitude;
     private static double sLastLatitude;
-    private static CNULocation sLastLocation;
-    private static List<CNULocationInfo> sLastLocationInfo;
+    private static LocationItem sLastLocation;
+    private static List<InfoItem> sLastLocationInfo;
     private static long sLastPublishedUpdate;
     private static CNULocationListener sListener;
 
@@ -60,14 +61,8 @@ public class LocationService {
             sLocationManager.requestLocationUpdates(sProvider, 0, 0, sListener);
         }
 
-        String cache = mSettings.getCachedLocations();
-        if (cache != null) {
-            mLocator = new CNULocator(cache);
-            Log.d(DiningBuddy.LOG_TAG, "Setup from cache");
-        } else {
-            mLocator = new CNULocator();
+        mLocator = new Locator();
             Log.d(DiningBuddy.LOG_TAG, "No cache; awaiting connection to server");
-        }
         if (SettingsService.getShouldConnect()) {
             mLocator.updateLocations();
         }
@@ -78,9 +73,10 @@ public class LocationService {
                     if (sDie) {
                         break;
                     }
+                    Log.d(DiningBuddy.LOG_TAG, "Updating info!");
                     updateInfo();
                     try {
-                        Thread.sleep(PEOPLE_UPDATE);
+                        Thread.sleep(INFO_UPDATE);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -112,11 +108,12 @@ public class LocationService {
     }
 
     public static void updateInfo() {
-        if (!CNULocator.isSetup()) {
+        /*if (!Locator.isSetup()) {
             return;
-        }
+        }*/
 
         sLastLocationInfo = API.getInfo();
+        Log.d(DiningBuddy.LOG_TAG, "Last info: " + API.getInfo());
 
         if (sLastLocationInfo == null) {
             return;
@@ -133,11 +130,11 @@ public class LocationService {
     }
 
     public static void findAndDistributeLocation(final double latitude, final double longitude) {
-        if (!CNULocator.isSetup() || !SettingsService.getShouldConnect()) {
+        if (!Locator.isSetup() || !SettingsService.getShouldConnect()) {
             return;
         }
 
-        final CNULocation location = mLocator.getLocation(latitude, longitude);
+        final LocationItem location = mLocator.getLocation(latitude, longitude);
 
         if (DiningBuddy.getContext() != null) {
             DiningBuddy.getContext().runOnUiThread(new Runnable() {
@@ -190,11 +187,11 @@ public class LocationService {
         return sLastLongitude;
     }
 
-    public static CNULocation getLastLocation() {
+    public static LocationItem getLastLocation() {
         return sLastLocation;
     }
 
-    public static List<CNULocationInfo> getLastLocationInfo() {
+    public static List<InfoItem> getLastLocationInfo() {
         return sLastLocationInfo;
     }
 
@@ -218,11 +215,11 @@ public class LocationService {
     }
 
     public void updateLocation(final double latitude, final double longitude) {
-        if (!CNULocator.isSetup() || !SettingsService.getShouldConnect()) {
+        if (!Locator.isSetup() || !SettingsService.getShouldConnect()) {
             return;
         }
 
-        CNULocation location = mLocator.getLocation(latitude, longitude);
+        LocationItem location = mLocator.getLocation(latitude, longitude);
         DiningBuddy.updateLocation(latitude, longitude, location);
         DiningBuddy.updateLocationView(location);
 
@@ -236,18 +233,12 @@ public class LocationService {
         sLastLongitude = longitude;
         sLastLocation = location;
         sHasLocation = true;
-
-        new Thread() {
-            public void run() {
-                SettingsService.cacheLocations(mLocator.jsonValue());
-            }
-        }.start();
     }
 
-    public void postFeedback(final String target, final CNULocation location, final int crowded, final int minutes, final String feedback, final UUID uuid) {
+    public void postFeedback(final String target, final LocationItem location, final int crowded, final int minutes, final String feedback, final UUID uuid) {
         new Thread(new Runnable() {
             public void run() {
-                API.sendFeedback(target, location, crowded, minutes, feedback, System.currentTimeMillis(), uuid);
+                API.sendFeedback(new FeedbackItem(uuid, target, location, crowded, minutes));
             }
         }).start();
     }

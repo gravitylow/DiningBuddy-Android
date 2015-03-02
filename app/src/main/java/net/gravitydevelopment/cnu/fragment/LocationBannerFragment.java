@@ -16,8 +16,8 @@ import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
-import net.gravitydevelopment.cnu.geo.CNULocation;
-import net.gravitydevelopment.cnu.geo.CNULocationInfo;
+import net.gravitydevelopment.cnu.modal.InfoItem;
+import net.gravitydevelopment.cnu.modal.LocationItem;
 
 import java.io.Serializable;
 
@@ -26,7 +26,7 @@ public class LocationBannerFragment extends Fragment {
     private String mLocationName;
     private String mLocationDisplayName;
     private int mDrawable;
-    private CNULocationInfo mInfo;
+    private InfoItem mInfo;
     private int mInitialColor;
     private boolean mShouldOpenInfo;
     private boolean mShowBadge;
@@ -35,7 +35,7 @@ public class LocationBannerFragment extends Fragment {
         return newInstance(title, name, drawable, initialColor, shouldOpenInfo, null, false);
     }
 
-    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo, CNULocationInfo initialInfo, boolean showBadge) {
+    public static LocationBannerFragment newInstance(String title, String name, int drawable, int initialColor, boolean shouldOpenInfo, InfoItem initialInfo, boolean showBadge) {
         LocationBannerFragment fragment = new LocationBannerFragment();
 
         Bundle args = new Bundle();
@@ -75,7 +75,7 @@ public class LocationBannerFragment extends Fragment {
         setBadgeHidden(rootView, !mShowBadge);
         Serializable obj = getArguments().getSerializable(LocationActivity.ARG_INFO);
         if (obj != null) {
-            updateInfo(rootView, (CNULocationInfo) obj);
+            updateInfo(rootView, (InfoItem) obj);
         }
         if (mShouldOpenInfo) {
             rootView.setOnClickListener(new View.OnClickListener() {
@@ -99,17 +99,17 @@ public class LocationBannerFragment extends Fragment {
         return rootView;
     }
 
-    public void updateInfo(CNULocationInfo info) {
+    public void updateInfo(InfoItem info) {
         mInfo = info;
         updateInfo(getView(), info.getPeople(), info.getCrowdedRating());
     }
 
-    public void updateInfo(View view, CNULocationInfo info) {
+    public void updateInfo(View view, InfoItem info) {
         mInfo = info;
         updateInfo(view, info.getPeople(), info.getCrowdedRating());
     }
 
-    public void updateInfo(View view, int people, CNULocationInfo.CrowdedRating crowdedRating) {
+    public void updateInfo(View view, int people, InfoItem.CrowdedRating crowdedRating) {
         drawPicture(view, crowdedRating.getColor());
         setTitleColor(view, crowdedRating.getColor());
         drawInfo(view, people);
@@ -143,7 +143,7 @@ public class LocationBannerFragment extends Fragment {
         view.findViewById(R.id.badge).setVisibility(visibility);
     }
 
-    public void updateLocation(CNULocation location) {
+    public void updateLocation(LocationItem location) {
         mShowBadge = location != null && location.getName().equals(mLocationName);
         setBadgeHidden(getView(), !mShowBadge);
     }

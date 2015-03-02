@@ -12,8 +12,8 @@ import android.widget.Spinner;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
-import net.gravitydevelopment.cnu.geo.CNULocation;
-import net.gravitydevelopment.cnu.geo.CNULocationInfo;
+import net.gravitydevelopment.cnu.modal.InfoItem;
+import net.gravitydevelopment.cnu.modal.LocationItem;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
 import net.gravitydevelopment.cnu.service.SettingsService;
@@ -41,7 +41,7 @@ public class LocationFeedbackFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_location_feedback, container, false);
         Spinner crowdedSpinner = (Spinner) rootView.findViewById(R.id.crowded_spinner);
-        final ArrayList<String> crowded = CNULocationInfo.CrowdedRating.getFeedbackList();
+        final ArrayList<String> crowded = InfoItem.CrowdedRating.getFeedbackList();
         ArrayAdapter<String> crowdedAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, crowded);
         crowdedSpinner.setAdapter(crowdedAdapter);
 
@@ -70,7 +70,7 @@ public class LocationFeedbackFragment extends Fragment {
                         int minuteValue = ((Spinner) rootView.findViewById(R.id.minutes_spinner)).getSelectedItemPosition();
                         String feedback = ((EditText) rootView.findViewById(R.id.feedback)).getText().toString();
                         if (BackendService.isRunning()) {
-                            CNULocation location = LocationService.getLastLocation();
+                            LocationItem location = LocationService.getLastLocation();
                             BackendService.getLocationService().postFeedback(mLocationName, location, crowdedValue, minuteValue, feedback, SettingsService.getUUID());
                             if (mLocationName.equals(Util.REGATTAS_NAME)) {
                                 settings.setLastFeedbackRegattas(System.currentTimeMillis());

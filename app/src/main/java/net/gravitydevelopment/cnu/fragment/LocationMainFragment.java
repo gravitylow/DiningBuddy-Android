@@ -13,7 +13,7 @@ import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
-import net.gravitydevelopment.cnu.geo.CNULocation;
+import net.gravitydevelopment.cnu.modal.LocationItem;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
 import net.gravitydevelopment.cnu.service.SettingsService;
@@ -59,7 +59,7 @@ public class LocationMainFragment extends Fragment {
 
         mSettings = BackendService.getSettingsService();
 
-        CNULocation location = LocationService.getLastLocation();
+        LocationItem location = LocationService.getLastLocation();
         Log.d(DiningBuddy.LOG_TAG, "Should show: " + shouldShowFeedback(location));
         if (shouldShowFeedback(location)) {
             addTab(mTabHost, "feedbackfragment", "Feedback", LocationFeedbackFragment.class, mArgs);
@@ -75,7 +75,7 @@ public class LocationMainFragment extends Fragment {
         host.addTab(tabSpec, clazz, arguments);
     }
 
-    public void updateLocation(CNULocation location) {
+    public void updateLocation(LocationItem location) {
         if (shouldShowFeedback(location)) {
             if (!mIsShowingFeedback) {
                 Log.d(DiningBuddy.LOG_TAG, "Adding tab ");
@@ -90,7 +90,7 @@ public class LocationMainFragment extends Fragment {
         }
     }
 
-    private boolean shouldShowFeedback(CNULocation location) {
+    private boolean shouldShowFeedback(LocationItem location) {
         if (location == null) {
             return false;
         }

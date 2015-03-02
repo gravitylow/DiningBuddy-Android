@@ -1,4 +1,4 @@
-package net.gravitydevelopment.cnu.modals;
+package net.gravitydevelopment.cnu.modal;
 
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -7,28 +7,28 @@ import net.gravitydevelopment.cnu.DiningBuddy;
 
 public class AlertItem {
 
-    private String mTitle;
-    private String mMessage;
-    private String mTargetOS;
-    private String mTargetVersion;
-    private long mTargetTimeMin;
-    private long mTargetTimeMax;
+    public String title;
+    public String message;
+    public String target_os;
+    public String target_version;
+    public long target_time_min;
+    public long target_time_max;
 
     public AlertItem(String title, String message, String os, String version, long timeMin, long timeMax) {
-        this.mTitle = title;
-        this.mMessage = message;
-        this.mTargetOS = os;
-        this.mTargetVersion = version;
-        this.mTargetTimeMin = timeMin;
-        this.mTargetTimeMax = timeMax;
+        this.title = title;
+        this.message = message;
+        this.target_os = os;
+        this.target_version = version;
+        this.target_time_min = timeMin;
+        this.target_time_max = timeMax;
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     public String getMessage() {
-        return mMessage;
+        return message;
     }
 
     public boolean isApplicable() {
@@ -43,15 +43,15 @@ public class AlertItem {
         long thisTime = System.currentTimeMillis();
 
         // Reasons to disqualify this alert:
-        if (!mTargetOS.equals("all") && !mTargetOS.equals(thisOS)) {
-            Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for target: " + mTargetOS + ", " + thisOS);
+        if (!target_os.equals("all") && !target_os.equals(thisOS)) {
+            Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for target: " + target_os + ", " + thisOS);
             return false;
         }
-        if (!mTargetVersion.equals("all") && thisVersion != null && !mTargetVersion.equals(thisVersion)) {
-            Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for version: " + mTargetVersion + ", " + thisVersion);
+        if (!target_version.equals("all") && thisVersion != null && !target_version.equals(thisVersion)) {
+            Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for version: " + target_version + ", " + thisVersion);
             return false;
         }
-        if ((mTargetTimeMin != 0 && mTargetTimeMin > thisTime) || (mTargetTimeMax != 0 && mTargetTimeMax < thisTime)) {
+        if ((target_time_min != 0 && target_time_min > thisTime) || (target_time_max != 0 && target_time_max < thisTime)) {
             Log.i(DiningBuddy.LOG_TAG, "Alert disqualified for time: " + thisTime);
             return false;
         }

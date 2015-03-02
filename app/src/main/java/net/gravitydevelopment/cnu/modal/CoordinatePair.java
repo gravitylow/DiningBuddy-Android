@@ -1,13 +1,13 @@
-package net.gravitydevelopment.cnu.geo;
+package net.gravitydevelopment.cnu.modal;
 
 import java.io.Serializable;
 
-public class CNUCoordinatePair implements Serializable {
+public class CoordinatePair implements Serializable {
 
     private double mLatitude;
     private double mLongitude;
 
-    public CNUCoordinatePair(double latitude, double longitude) {
+    public CoordinatePair(double latitude, double longitude) {
         this.mLatitude = latitude;
         this.mLongitude = longitude;
     }
@@ -22,6 +22,6 @@ public class CNUCoordinatePair implements Serializable {
 
     @Override
     public String toString() {
-        return "CNUCoordinatePair{mLatitude=" + mLatitude + ", mLongitude = " + mLongitude + "}";
+        return "CoordinatePair{mLatitude=" + mLatitude + ", mLongitude = " + mLongitude + "}";
     }
 }
