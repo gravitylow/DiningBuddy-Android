@@ -107,12 +107,11 @@ public class LocationService {
     }
 
     public static void updateInfo() {
-        /*if (!Locator.isSetup()) {
+        if (!Locator.isSetup()) {
             return;
-        }*/
+        }
 
         sLastLocationInfo = API.getInfo();
-        Log.d(DiningBuddy.LOG_TAG, "Last info: " + API.getInfo());
 
         if (sLastLocationInfo == null) {
             return;
