@@ -5,7 +5,6 @@
     android:background="#DFDFD7"
     android:orientation="vertical"
     tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedFragment">
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/view_feed_refresh"
         android:layout_width="match_parent"
@@ -33,9 +32,17 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal" />
             </ScrollView>
+            <EditText
+                android:id="@+id/feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:hint="@string/feedback_hint"
+                android:inputType="text"
+                android:maxLength="1000"
+                android:singleLine="true" />
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
-
     <TextView
         android:id="@+id/loadingText"
         android:layout_width="match_parent"

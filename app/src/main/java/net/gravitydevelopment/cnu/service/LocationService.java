@@ -42,11 +42,7 @@ public class LocationService {
     private static String sProvider;
     private static Criteria sCriteria;
 
-    private static SettingsService mSettings;
-
     public LocationService(final BackendService backend) {
-        mSettings = BackendService.getSettingsService();
-
         sListener = new CNULocationListener(this);
 
         sLocationManager = (LocationManager) backend.getSystemService(Context.LOCATION_SERVICE);

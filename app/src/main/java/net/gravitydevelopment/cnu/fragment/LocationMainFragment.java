@@ -91,7 +91,7 @@ public class LocationMainFragment extends Fragment {
     }
 
     private boolean shouldShowFeedback(LocationItem location) {
-        if (location == null) {
+        /*if (location == null) {
             return false;
         }
         boolean add = false;
@@ -110,6 +110,7 @@ public class LocationMainFragment extends Fragment {
             }
             add = last == -1 || last == 0 || System.currentTimeMillis() > Util.MIN_FEEDBACK_INTERVAL;
         }
-        return add;
+        return add;*/
+        return false;
     }
 }

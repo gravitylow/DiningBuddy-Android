@@ -6,6 +6,16 @@
     android:padding="10dp"
     tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedbackFragment">
 
+    <EditText
+        android:id="@+id/feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:hint="@string/feedback_hint"
+        android:inputType="text"
+        android:maxLength="1000"
+        android:lines="3" />
+
     <TextView
         android:id="@+id/crowded_text"
         android:layout_width="wrap_content"
@@ -29,23 +39,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:id="@+id/feedback_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/feedback"
-        android:text="@string/feedback_comments" />
-
-    <EditText
-        android:id="@+id/feedback"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:hint="@string/feedback_hint"
-        android:inputType="text"
-        android:maxLength="1000"
-        android:singleLine="true" />
 
     <com.cengalabs.flatui.views.FlatButton
         android:id="@+id/submit"

@@ -63,6 +63,13 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
 
         mBackgroundText = (TextView) rootView.findViewById(R.id.background_text);
 
+        rootView.findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Feedback View
+            }
+        });
+
         return rootView;
     }
 
