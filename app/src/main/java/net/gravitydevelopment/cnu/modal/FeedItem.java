@@ -2,15 +2,15 @@ package net.gravitydevelopment.cnu.modal;
 
 public class FeedItem {
 
-    public String message;
+    public String feedback;
     public int minutes;
     public int crowded;
     public long time;
     public boolean pinned;
     public String detail;
 
-    public FeedItem(String message, int minutes, int crowded, long time, boolean pinned, String detail) {
-        this.message = message;
+    public FeedItem(String feedback, int minutes, int crowded, long time, boolean pinned, String detail) {
+        this.feedback = feedback;
         this.minutes = minutes;
         this.crowded = crowded;
         this.time = time;
@@ -18,8 +18,8 @@ public class FeedItem {
         this.detail = detail;
     }
 
-    public String getMessage() {
-        return message;
+    public String getFeedback() {
+        return feedback;
     }
 
     public int getMinutes() {

@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:background="#DFDFD7"
     android:orientation="vertical"
-    tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedFragment">
+    tools:context="net.gravitydevelopment.cnu.fragment.LocationFeedFragment"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto">
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/view_feed_refresh"
         android:layout_width="match_parent"
@@ -12,7 +13,9 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
 
             <TextView
                 android:id="@+id/background_text"
@@ -32,15 +35,33 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal" />
             </ScrollView>
-            <EditText
-                android:id="@+id/feedback"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/feedback_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:hint="@string/feedback_hint"
-                android:inputType="text"
-                android:maxLength="1000"
-                android:singleLine="true" />
+                android:orientation="horizontal" >
+                <com.cengalabs.flatui.views.FlatEditText
+                    android:id="@+id/feedback_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:hint="@string/feedback_hint"
+                    android:layout_margin="5dp"
+                    android:inputType="text"
+                    android:maxLength="1000"
+                    android:singleLine="true"
+                    android:selectAllOnFocus="false"
+                    android:layout_weight="1" />
+                <com.cengalabs.flatui.views.FlatButton
+                    android:id="@+id/feedback_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/feedback_box"
+                    android:text="@string/feedback_button"
+                    flatui:fl_touchEffect="fl_ripple"
+                    flatui:fl_blockButtonEffectHeight="3dp" />
+            </LinearLayout>
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
     <TextView

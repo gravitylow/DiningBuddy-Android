@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import net.gravitydevelopment.cnu.service.LocationService;
 
-public class CNULocationListener implements LocationListener {
+public class LocationUpdateListener implements LocationListener {
 
     private LocationService mLocationService;
 
-    public CNULocationListener(LocationService locationService) {
+    public LocationUpdateListener(LocationService locationService) {
         this.mLocationService = locationService;
     }
 

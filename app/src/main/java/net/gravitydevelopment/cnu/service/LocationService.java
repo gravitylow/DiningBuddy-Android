@@ -13,7 +13,7 @@ import android.util.Log;
 import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.geo.Locator;
-import net.gravitydevelopment.cnu.listener.CNULocationListener;
+import net.gravitydevelopment.cnu.listener.LocationUpdateListener;
 import net.gravitydevelopment.cnu.modal.FeedbackItem;
 import net.gravitydevelopment.cnu.modal.InfoItem;
 import net.gravitydevelopment.cnu.modal.LocationItem;
@@ -35,7 +35,7 @@ public class LocationService {
     private static LocationItem sLastLocation;
     private static List<InfoItem> sLastLocationInfo;
     private static long sLastPublishedUpdate;
-    private static CNULocationListener sListener;
+    private static LocationUpdateListener sListener;
 
     private static boolean sHasLocation;
     private static boolean sDie;
@@ -43,7 +43,7 @@ public class LocationService {
     private static Criteria sCriteria;
 
     public LocationService(final BackendService backend) {
-        sListener = new CNULocationListener(this);
+        sListener = new LocationUpdateListener(this);
 
         sLocationManager = (LocationManager) backend.getSystemService(Context.LOCATION_SERVICE);
         sCriteria = new Criteria();
@@ -104,6 +104,7 @@ public class LocationService {
 
     public static void updateInfo() {
         if (!Locator.isSetup()) {
+            Log.d(DiningBuddy.LOG_TAG, "Can't update info because locator hasn't been setup...");
             return;
         }
 

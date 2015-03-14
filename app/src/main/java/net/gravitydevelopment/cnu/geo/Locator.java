@@ -3,6 +3,7 @@ package net.gravitydevelopment.cnu.geo;
 import net.gravitydevelopment.cnu.modal.LocationItem;
 import net.gravitydevelopment.cnu.modal.UpdateItem;
 import net.gravitydevelopment.cnu.network.API;
+import net.gravitydevelopment.cnu.service.LocationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Locator {
     private void updateLocations(List<LocationItem> l) {
         sLocationsList = new ArrayList<LocationItem>();
         sLocationsList.addAll(l);
+        LocationService.requestImmediateUpdate();
     }
 
     public void updateLocations() {
