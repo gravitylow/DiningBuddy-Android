@@ -43,12 +43,14 @@ public class SettingsService {
     private static long sLastFeedbackEinsteins;
     private static List<String> sAlertsRead;
     private BackendService mBackendService;
+    private ConnectivityManager mConnectivityManager;
 
     public SettingsService(BackendService backend) {
         mBackendService = backend;
+        Log.d(DiningBuddy.LOG_TAG, "Set connectivity manager");
+        mConnectivityManager = (ConnectivityManager) backend.getSystemService(Context.CONNECTIVITY_SERVICE);
         sSettings = backend.getSharedPreferences(PREFS_NAME, 0);
-        sWifiInfo = ((ConnectivityManager) backend.getSystemService(Context.CONNECTIVITY_SERVICE))
-                .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        sWifiInfo = mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
         // Load prefs
         sUUID = getOrCreateUniqueId();
@@ -231,6 +233,10 @@ public class SettingsService {
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
             Log.d(DiningBuddy.LOG_TAG, "Alarm scheduled for " + calendar.getTimeInMillis());
         }
+    }
 
+    public ConnectivityManager getConnectivityManager() {
+        Log.d(DiningBuddy.LOG_TAG, "Get connectivity manager");
+        return mConnectivityManager;
     }
 }

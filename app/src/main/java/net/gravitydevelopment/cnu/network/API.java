@@ -3,6 +3,7 @@ package net.gravitydevelopment.cnu.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.modal.AlertItem;
 import net.gravitydevelopment.cnu.modal.FeedItem;
 import net.gravitydevelopment.cnu.modal.FeedbackItem;
@@ -12,10 +13,14 @@ import net.gravitydevelopment.cnu.modal.LocationItem;
 import net.gravitydevelopment.cnu.modal.MenuItem;
 import net.gravitydevelopment.cnu.modal.UpdateItem;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 
 public class API {
@@ -37,48 +42,86 @@ public class API {
     }
 
     public static List<AlertItem> getAlerts() {
-        List<AlertItem> list = service.alertList();
-        List<AlertItem> applicableAlerts = new ArrayList<AlertItem>();
-        for (AlertItem item : list) {
-            if (item.isApplicable()) {
-                applicableAlerts.add(item);
+        try {
+            List<AlertItem> list = service.alertList();
+            List<AlertItem> applicableAlerts = new ArrayList<AlertItem>();
+            for (AlertItem item : list) {
+                if (item.isApplicable()) {
+                    applicableAlerts.add(item);
+                }
             }
+            return applicableAlerts;
+        } catch (Exception ex) {
+            Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
+            return new ArrayList<AlertItem>();
         }
-        return applicableAlerts;
     }
 
     public static List<LocationItem> getLocations() {
-        return service.locationList().getLocations();
+        try {
+            return service.locationList().getLocations();
+        } catch (Exception ex) {
+            Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
+            return new ArrayList<LocationItem>();
+        }
     }
 
     public static List<InfoItem> getInfo() {
-        return service.infoList();
+        try {
+            return service.infoList();
+        } catch (Exception ex) {
+            Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
+            return new ArrayList<InfoItem>();
+        }
     }
 
     public static InfoItem getInfo(LocationItem location) {
-        return service.info(location.getName());
+        try {
+            return service.info(location.getName());
+        } catch (Exception ex) {
+                Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
+                return null;
+            }
     }
 
     public static List<MenuItem> getMenu(String location) {
-        return service.menuList(location);
+        try {
+            return service.menuList(location);
+        } catch (Exception ex) {
+            Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
+            return new ArrayList<MenuItem>();
+        }
     }
 
     public static List<FeedItem> getFeed(String location) {
-        return service.feedList(location);
+        try {
+            return service.feedList(location);
+        } catch (Exception ex) {
+            Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
+            return new ArrayList<FeedItem>();
+        }
     }
 
     public static void sendUpdate(UpdateItem item) {
-        if (item.location == null) {
-            return;
+        try {
+            if (item.location == null) {
+                return;
+            }
+            service.update(item);
+        } catch (Exception ex) {
+            Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
         }
-        service.update(item);
     }
 
     public static void sendFeedback(FeedbackItem item) {
-        if (item.location == null) {
-            return;
+        try {
+            if (item.location == null) {
+                return;
+            }
+            service.feedback(item);
+        } catch (Exception ex) {
+            Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
         }
-        service.feedback(item);
     }
 
 }
