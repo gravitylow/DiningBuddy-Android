@@ -16,6 +16,9 @@ import android.util.Log;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.SettingsService;
 
+/**
+ * A collection of assistant constants and static methods.
+ */
 public class Util {
 
     public static final String REGATTAS_NAME = "Regattas";

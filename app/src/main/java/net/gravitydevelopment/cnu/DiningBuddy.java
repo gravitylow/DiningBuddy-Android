@@ -24,7 +24,9 @@ import net.gravitydevelopment.cnu.service.SettingsService;
 
 import java.util.List;
 
-
+/**
+ * The main activity which shows the user the location overview and allows settings access.
+ */
 public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String LOG_TAG = "CNU";

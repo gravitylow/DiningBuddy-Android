@@ -5,6 +5,9 @@ import android.util.Log;
 
 import net.gravitydevelopment.cnu.DiningBuddy;
 
+/**
+ * A system-wide alert defined by the server that will display to the user as the app opens.
+ */
 public class AlertItem {
 
     public String title;

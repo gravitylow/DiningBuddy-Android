@@ -21,6 +21,9 @@ import net.gravitydevelopment.cnu.modal.LocationItem;
 
 import java.io.Serializable;
 
+/**
+ * Fragment that displays a location photo with its title, count, and badge.
+ */
 public class LocationBannerFragment extends Fragment {
 
     private String mLocationName;

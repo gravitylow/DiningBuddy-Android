@@ -6,6 +6,10 @@ import android.os.Bundle;
 
 import net.gravitydevelopment.cnu.service.LocationService;
 
+/**
+ * LocationUpdateListener serves as a medium between the LocationService and Android's location
+ * service, delivering {@link android.location.Location} values as geo coordinates.
+ */
 public class LocationUpdateListener implements LocationListener {
 
     private LocationService mLocationService;

@@ -1,5 +1,8 @@
 package net.gravitydevelopment.cnu.modal;
 
+/**
+ * An item on a location's menu.
+ */
 public class MenuItem {
 
     public String start;

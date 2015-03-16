@@ -18,6 +18,9 @@ import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.LocationService;
 import net.gravitydevelopment.cnu.service.SettingsService;
 
+/**
+ * Fragment that controls the tabbed location fragments.
+ */
 public class LocationMainFragment extends Fragment {
 
     private FragmentTabHost mTabHost;

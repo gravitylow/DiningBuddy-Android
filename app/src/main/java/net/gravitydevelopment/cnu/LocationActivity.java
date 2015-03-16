@@ -14,6 +14,9 @@ import net.gravitydevelopment.cnu.modal.LocationItem;
 
 import java.io.Serializable;
 
+/**
+ * A specific location view, showing the location's banner and tabbed information.
+ */
 public class LocationActivity extends FragmentActivity {
 
     public static final String ARG_DISPLAY_NAME = "displayName";

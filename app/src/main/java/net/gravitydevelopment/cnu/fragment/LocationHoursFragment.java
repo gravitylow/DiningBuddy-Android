@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 
 import net.gravitydevelopment.cnu.R;
 
+/**
+ * Fragment that displays only the static hours for a location (currently only Einstein's)
+ */
 public class LocationHoursFragment extends Fragment {
 
     public LocationHoursFragment() {

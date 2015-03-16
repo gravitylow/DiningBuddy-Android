@@ -2,6 +2,9 @@ package net.gravitydevelopment.cnu.modal;
 
 import java.util.UUID;
 
+/**
+ * Feedback about a specific location, ready to be sent to the server.
+ */
 public class FeedbackItem {
     public UUID id;
     public String target;

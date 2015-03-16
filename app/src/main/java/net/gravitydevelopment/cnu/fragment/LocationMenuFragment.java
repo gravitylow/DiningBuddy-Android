@@ -22,6 +22,9 @@ import net.gravitydevelopment.cnu.network.API;
 
 import java.util.List;
 
+/**
+ * Fragment that displays the menu and hours for a location.
+ */
 public class LocationMenuFragment extends Fragment {
 
     private String mLocationName;

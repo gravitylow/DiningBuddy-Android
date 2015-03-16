@@ -11,6 +11,9 @@ import net.gravitydevelopment.cnu.Util;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.SettingsService;
 
+/**
+ * This receiver recognizes changes in the device's connection and halts services if necessary.
+ */
 public class ConnectionReceiver extends BroadcastReceiver {
 
     @Override

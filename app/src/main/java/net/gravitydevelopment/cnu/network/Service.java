@@ -17,6 +17,9 @@ import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
+/**
+ * Endpoint-defining class for the {@link net.gravitydevelopment.cnu.network.API}.
+ */
 public interface Service {
 
     String API_USER_AGENT = "DiningBuddy-Android";

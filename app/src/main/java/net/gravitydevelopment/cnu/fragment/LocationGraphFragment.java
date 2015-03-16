@@ -14,6 +14,9 @@ import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.network.API;
 
+/**
+ * Fragment that displays the population graph for a location.
+ */
 public class LocationGraphFragment extends Fragment {
 
     private String mLocationName;

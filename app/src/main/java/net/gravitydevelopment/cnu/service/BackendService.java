@@ -4,6 +4,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+/**
+ * The Backend holds all the necessary services and is started when the device obtains a valid
+ * network connection.
+ */
 public class BackendService extends Service {
 
     private static BackendService sBackendService;

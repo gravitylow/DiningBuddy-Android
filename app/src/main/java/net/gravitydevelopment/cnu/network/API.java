@@ -18,11 +18,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 
+/**
+ * Functional networking backend class.
+ */
 public class API {
 
     public static String API_URL = "https://api.gravitydevelopment.net/cnu/api/v1.0";

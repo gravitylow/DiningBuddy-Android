@@ -17,6 +17,10 @@ import net.gravitydevelopment.cnu.service.SettingsService;
 
 import java.util.List;
 
+/**
+ * This receiver recognizes wake-ups set by the user's favorite settings and parses the day's menu,
+ * deciding what notifications to send to the device.
+ */
 public class AlarmReceiver extends BroadcastReceiver {
 
     @Override

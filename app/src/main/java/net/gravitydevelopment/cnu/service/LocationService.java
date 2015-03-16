@@ -1,5 +1,7 @@
 package net.gravitydevelopment.cnu.service;
 
+import com.google.android.gms.location.Geofence;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +10,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.provider.SyncStateContract;
 import android.util.Log;
 
 import net.gravitydevelopment.cnu.DiningBuddy;
@@ -22,6 +25,9 @@ import net.gravitydevelopment.cnu.network.API;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * The LocationService provides all functionality relating to locations or user updates.
+ */
 public class LocationService {
 
     private static final long MIN_UPDATE = 60 * 1000;

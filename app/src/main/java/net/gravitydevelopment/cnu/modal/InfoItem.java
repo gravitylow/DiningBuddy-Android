@@ -5,6 +5,9 @@ import android.graphics.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Detailed information about a location, including people & crowded values.
+ */
 public class InfoItem implements Serializable {
 
     public String location;

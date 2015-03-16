@@ -19,6 +19,9 @@ import com.cengalabs.flatui.FlatUI;
 import net.gravitydevelopment.cnu.service.BackendService;
 import net.gravitydevelopment.cnu.service.SettingsService;
 
+/**
+ * The settings activity.
+ */
 public class SettingsActivity extends PreferenceActivity {
 
     private PrefsFragment mPrefsFragment;

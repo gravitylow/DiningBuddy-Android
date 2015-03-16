@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * The locator service holds the list of current locations and assists in getting the applicable
+ * location for a user's geo coordinates.
+ */
 public class Locator {
 
     private static List<LocationItem> sLocationsList = new ArrayList<LocationItem>();
@@ -29,6 +33,10 @@ public class Locator {
             }
         }
         return null;
+    }
+
+    public List<LocationItem> getLocations() {
+        return sLocationsList;
     }
 
     private void updateLocations(List<LocationItem> l) {

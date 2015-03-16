@@ -2,6 +2,9 @@ package net.gravitydevelopment.cnu.modal;
 
 import java.io.Serializable;
 
+/**
+ * A latitude, longitude combination.
+ */
 public class CoordinatePair implements Serializable {
 
     private double mLatitude;

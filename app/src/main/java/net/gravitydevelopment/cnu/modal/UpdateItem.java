@@ -2,6 +2,9 @@ package net.gravitydevelopment.cnu.modal;
 
 import java.util.UUID;
 
+/**
+ * An update from a user, ready to be sent to the server.
+ */
 public class UpdateItem {
     public UUID id;
     public double lat;

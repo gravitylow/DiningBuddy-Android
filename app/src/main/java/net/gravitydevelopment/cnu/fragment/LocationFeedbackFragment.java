@@ -24,6 +24,9 @@ import net.gravitydevelopment.cnu.service.SettingsService;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment that displays when a user reports on a feed for a location.
+ */
 public class LocationFeedbackFragment extends DialogFragment {
 
     private String mLocationName;

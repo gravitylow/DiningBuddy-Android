@@ -1,5 +1,8 @@
 package net.gravitydevelopment.cnu.modal;
 
+/**
+ * An item in a location's feed, as specified by the feedback of a user.
+ */
 public class FeedItem {
 
     public String feedback;

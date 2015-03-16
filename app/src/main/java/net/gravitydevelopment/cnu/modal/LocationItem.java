@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A location on campus
+ * A location on campus.
  * Two locations cannot intersect, but a location can have "sub locations" which are specific
  * areas inside the given location (nested locations) which specify a more accurate place.
  */

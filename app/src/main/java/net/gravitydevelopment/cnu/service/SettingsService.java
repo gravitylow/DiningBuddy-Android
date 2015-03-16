@@ -19,6 +19,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * The LocationService provides all functionality relating to user-defined preferences, non-volatile
+ * storage, and connections.
+ */
 public class SettingsService {
 
     public static final String PREFS_NAME = "CNUPrefs";
@@ -47,7 +51,6 @@ public class SettingsService {
 
     public SettingsService(BackendService backend) {
         mBackendService = backend;
-        Log.d(DiningBuddy.LOG_TAG, "Set connectivity manager");
         mConnectivityManager = (ConnectivityManager) backend.getSystemService(Context.CONNECTIVITY_SERVICE);
         sSettings = backend.getSharedPreferences(PREFS_NAME, 0);
         sWifiInfo = mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

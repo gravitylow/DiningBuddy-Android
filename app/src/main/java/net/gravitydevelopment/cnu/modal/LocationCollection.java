@@ -12,6 +12,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Deserialization mechanism for GeoJSON location files.
+ */
 public class LocationCollection {
 
     private List<LocationItem> locations;

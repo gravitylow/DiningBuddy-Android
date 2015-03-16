@@ -20,7 +20,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.LocationActivity;
 import net.gravitydevelopment.cnu.R;
 import net.gravitydevelopment.cnu.Util;
@@ -32,6 +31,9 @@ import net.gravitydevelopment.cnu.service.SettingsService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment that displays the feed and the feedback box for a location.
+ */
 public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private String mLocationName;
