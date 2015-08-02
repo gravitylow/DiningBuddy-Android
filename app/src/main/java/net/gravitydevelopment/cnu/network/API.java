@@ -18,6 +18,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
@@ -38,6 +39,7 @@ public class API {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(API_URL)
                 .setConverter(new GsonConverter(gson))
+                .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
         service = restAdapter.create(Service.class);
     }
@@ -103,23 +105,23 @@ public class API {
         }
     }
 
-    public static void sendUpdate(UpdateItem item) {
+    public static void sendUpdate(UpdateItem item, Callback callback) {
         try {
             if (item.location == null) {
                 return;
             }
-            service.update(item);
+            service.update(item, callback);
         } catch (Exception ex) {
             Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
         }
     }
 
-    public static void sendFeedback(FeedbackItem item) {
+    public static void sendFeedback(FeedbackItem item, Callback callback) {
         try {
-            if (item.location == null) {
+            if (item.target == null) {
                 return;
             }
-            service.feedback(item);
+            service.feedback(item, callback);
         } catch (Exception ex) {
             Log.e(DiningBuddy.LOG_TAG, "Network error: " + ex.getMessage());
         }

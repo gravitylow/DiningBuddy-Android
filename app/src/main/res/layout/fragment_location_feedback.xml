@@ -22,28 +22,24 @@
         android:id="@+id/crowded_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:text="@string/feedback_crowded" />
 
     <Spinner
         android:id="@+id/crowded_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/minutes_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:text="@string/feedback_minutes" />
 
     <Spinner
         android:id="@+id/minutes_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_gravity="center_horizontal" />
 
     <com.cengalabs.flatui.views.FlatButton

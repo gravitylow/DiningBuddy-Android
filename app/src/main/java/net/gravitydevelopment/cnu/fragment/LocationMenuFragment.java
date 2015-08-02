@@ -46,7 +46,6 @@ public class LocationMenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_location_menu, container, false);
-        Log.d(DiningBuddy.LOG_TAG, "root: " + rootView);
         mInsertPoint = (LinearLayout) rootView.findViewById(R.id.insertPoint);
         new Thread(new Runnable() {
             public void run() {
@@ -62,26 +61,32 @@ public class LocationMenuFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mBackgroundText.setVisibility(View.INVISIBLE);
-                for (MenuItem item : items) {
-                    final Button button = new Button(getActivity());
-                    Spanned text = Html.fromHtml("<strong>" + item.getStartTime() + " - " + item.getEndTime() + "</strong><br>" + item.getSummary());
-                    button.setText(text);
-                    mInsertPoint.addView(button);
+                if (items.size() > 0) {
+                    mBackgroundText.setVisibility(View.INVISIBLE);
+                    for (MenuItem item : items) {
+                        final Button button = new Button(getActivity());
+                        Spanned text = Html.fromHtml(
+                                "<strong>" + item.getStartTime() + " - " + item.getEndTime()
+                                        + "</strong><br>" + item.getSummary());
+                        button.setText(text);
+                        mInsertPoint.addView(button);
 
-                    final AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                            .setMessage(item.getDescription())
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            })
-                            .create();
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.show();
-                        }
-                    });
+                        final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                                .setMessage(item.getDescription())
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                })
+                                .create();
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.show();
+                            }
+                        });
+                    }
+                } else {
+                    mBackgroundText.setText("Nothing being served today.");
                 }
             }
         });

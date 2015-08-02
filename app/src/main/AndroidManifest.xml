@@ -41,7 +41,6 @@
             android:name=".LocationActivity"
             android:label="@string/title_activity_cnulocation_view"
             android:parentActivityName=".DiningBuddy"
-            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

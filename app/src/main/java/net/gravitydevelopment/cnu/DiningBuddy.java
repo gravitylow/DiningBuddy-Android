@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.cengalabs.flatui.FlatUI;
+import com.squareup.leakcanary.LeakCanary;
 
 import net.gravitydevelopment.cnu.fragment.LocationBannerFragment;
 import net.gravitydevelopment.cnu.modal.AlertItem;
@@ -123,6 +124,7 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LeakCanary.install(this.getApplication());
         FlatUI.initDefaultValues(this);
         FlatUI.setDefaultTheme(FlatUI.GRASS);
         getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
@@ -141,9 +143,9 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
         String regattasTitle = getString(R.string.regattas_title);
         String commonsTitle = getString(R.string.commons_title);
         String einsteinsTitle = getString(R.string.einsteins_title);
-        sRegattasFrag = LocationBannerFragment.newInstance(regattasTitle, "Regattas", R.drawable.regattas_full, Color.GRAY, true);
+        sRegattasFrag = LocationBannerFragment.newInstance(regattasTitle, "Regattas", R.drawable.regattas, Color.GRAY, true);
         sCommonsFrag = LocationBannerFragment.newInstance(commonsTitle, "Commons", R.drawable.commons_full, Color.GRAY, true);
-        sEinsteinsFrag = LocationBannerFragment.newInstance(einsteinsTitle, "Einsteins", R.drawable.einsteins_full, Color.GRAY, true);
+        sEinsteinsFrag = LocationBannerFragment.newInstance(einsteinsTitle, "Einsteins", R.drawable.einsteins, Color.GRAY, true);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.regattas_container, sRegattasFrag)
                 .replace(R.id.commons_container, sCommonsFrag)

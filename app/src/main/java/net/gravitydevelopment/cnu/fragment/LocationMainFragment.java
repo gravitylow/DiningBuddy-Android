@@ -78,10 +78,6 @@ public class LocationMainFragment extends Fragment {
         host.addTab(tabSpec, clazz, arguments);
     }
 
-    public void notifyFeedbackSubmitted() {
-        ((LocationFeedFragment) getChildFragmentManager().findFragmentByTag("feedfragment")).onFeedbackSubmitted();
-    }
-
     public void updateLocation(LocationItem location) {
     }
 }

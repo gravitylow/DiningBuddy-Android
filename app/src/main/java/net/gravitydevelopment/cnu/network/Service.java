@@ -10,6 +10,7 @@ import net.gravitydevelopment.cnu.modal.UpdateItem;
 
 import java.util.List;
 
+import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -71,12 +72,12 @@ public interface Service {
             "User-Agent: " + API_USER_AGENT
     })
     @POST("/update/")
-    Response update(@Body UpdateItem item);
+    void update(@Body UpdateItem item, Callback<Response> callback);
 
     @Headers({
             "Content-Type: application/json",
             "User-Agent: " + API_USER_AGENT
     })
     @POST("/feedback/")
-    Response feedback(@Body FeedbackItem item);
+    void feedback(@Body FeedbackItem item, Callback<Response> callback);
 }

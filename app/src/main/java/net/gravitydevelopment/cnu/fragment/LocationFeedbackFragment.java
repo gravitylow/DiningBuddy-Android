@@ -4,13 +4,15 @@ import com.cengalabs.flatui.FlatUI;
 import com.cengalabs.flatui.views.FlatEditText;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.LocationActivity;
@@ -46,43 +48,36 @@ public class LocationFeedbackFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_location_feedback, container, false);
-        final LocationItem location = LocationService.getLastLocation();
-        final boolean detailFeedback = location != null && location.getName().equals(mLocationName);
         final FlatEditText feedbackBox = ((FlatEditText) rootView.findViewById(R.id.feedback));
 
-        feedbackBox.setFocusableInTouchMode(true);
-        feedbackBox.requestFocus();
-
-        if (detailFeedback) {
-            Spinner crowdedSpinner = (Spinner) rootView.findViewById(R.id.crowded_spinner);
-            Spinner minutesSpinner = (Spinner) rootView.findViewById(R.id.minutes_spinner);
-            TextView crowdedText = (TextView) rootView.findViewById(R.id.crowded_text);
-            TextView minutesText = (TextView) rootView.findViewById(R.id.minutes_text);
-
-            crowdedSpinner.setVisibility(View.VISIBLE);
-            minutesSpinner.setVisibility(View.VISIBLE);
-            crowdedText.setVisibility(View.VISIBLE);
-            minutesText.setVisibility(View.VISIBLE);
-
-            final ArrayList<String> crowded = InfoItem.CrowdedRating.getFeedbackList();
-            ArrayAdapter<String> crowdedAdapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_spinner_item, crowded);
-            crowdedSpinner.setAdapter(crowdedAdapter);
-
-            ArrayList<String> minutes = new ArrayList<String>();
-            for (int i = 0; i <= 10; i++) {
-                String s = "" + i;
-                if (i == 10)
-                    s += "+";
-                s += " minute";
-                if (i != 1)
-                    s += "s";
-                minutes.add(s);
+        (new Handler()).postDelayed(new Runnable() {
+            public void run() {
+                feedbackBox.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
+                feedbackBox.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0));
             }
-            ArrayAdapter<String> minutesAdapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_spinner_item, minutes);
-            minutesSpinner.setAdapter(minutesAdapter);
+        }, 100);
+
+        final Spinner crowdedSpinner = (Spinner) rootView.findViewById(R.id.crowded_spinner);
+        final Spinner minutesSpinner = (Spinner) rootView.findViewById(R.id.minutes_spinner);
+
+        final ArrayList<String> crowded = InfoItem.CrowdedRating.getFeedbackList();
+        ArrayAdapter<String> crowdedAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, crowded);
+        crowdedSpinner.setAdapter(crowdedAdapter);
+
+        ArrayList<String> minutes = new ArrayList<String>();
+        for (int i = 0; i <= 10; i++) {
+            String s = "" + i;
+            if (i == 10)
+                s += "+";
+            s += " minute";
+            if (i != 1)
+                s += "s";
+            minutes.add(s);
         }
+        ArrayAdapter<String> minutesAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, minutes);
+        minutesSpinner.setAdapter(minutesAdapter);
 
         rootView.findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,12 +92,13 @@ public class LocationFeedbackFragment extends DialogFragment {
                 SettingsService settings = BackendService.getSettingsService();
                 long lastUpdate = mLocationName.equals(Util.REGATTAS_NAME) ? settings.getLastFeedbackRegattas() : mLocationName.equals(Util.COMMONS_NAME) ? settings.getLastFeedbackCommons() : settings.getLastFeedbackEinsteins();
                 if ((System.currentTimeMillis() - lastUpdate) > Util.MIN_FEEDBACK_INTERVAL) {
-                    int crowdedValue = detailFeedback ? ((Spinner) rootView.findViewById(R.id.crowded_spinner)).getSelectedItemPosition() : -1;
-                    int minuteValue = detailFeedback ? ((Spinner) rootView.findViewById(R.id.minutes_spinner)).getSelectedItemPosition() : -1;
+                    int crowdedValue = crowdedSpinner.getSelectedItemPosition();
+                    int minuteValue = minutesSpinner.getSelectedItemPosition();
                     if (BackendService.isRunning()) {
                         LocationItem location = LocationService.getLastLocation();
+                        LocationFeedFragment feed = (LocationFeedFragment) getParentFragment().getChildFragmentManager().findFragmentByTag("feedfragment");
                         BackendService.getLocationService()
-                                .postFeedback(mLocationName, location, crowdedValue,
+                                .postFeedback(feed, mLocationName, location, crowdedValue,
                                         minuteValue, feedback, SettingsService.getUUID());
                         if (mLocationName.equals(Util.REGATTAS_NAME)) {
                             settings.setLastFeedbackRegattas(System.currentTimeMillis());
@@ -113,7 +109,6 @@ public class LocationFeedbackFragment extends DialogFragment {
                         }
                     }
                     getDialog().dismiss();
-                    ((LocationMainFragment) getParentFragment()).notifyFeedbackSubmitted();
                 }
             }
         });

@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 /**
  * The locator service holds the list of current locations and assists in getting the applicable
  * location for a user's geo coordinates.
@@ -55,9 +59,20 @@ public class Locator {
     }
 
     public void postLocation(final double latitude, final double longitude, final LocationItem location, final UUID uuid) {
+        final Callback callback = new Callback() {
+            @Override
+            public void success(Object o, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        };
         new Thread(new Runnable() {
             public void run() {
-                API.sendUpdate(new UpdateItem(uuid, latitude, longitude, location));
+                API.sendUpdate(new UpdateItem(uuid, latitude, longitude, location), callback);
             }
         }).start();
     }

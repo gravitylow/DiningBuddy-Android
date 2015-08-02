@@ -1,7 +1,5 @@
 package net.gravitydevelopment.cnu.service;
 
-import com.google.android.gms.location.Geofence;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,11 +8,12 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.provider.Settings;
-import android.provider.SyncStateContract;
 import android.util.Log;
 
 import net.gravitydevelopment.cnu.DiningBuddy;
 import net.gravitydevelopment.cnu.R;
+import net.gravitydevelopment.cnu.fragment.LocationFeedFragment;
+import net.gravitydevelopment.cnu.fragment.LocationMainFragment;
 import net.gravitydevelopment.cnu.geo.Locator;
 import net.gravitydevelopment.cnu.listener.LocationUpdateListener;
 import net.gravitydevelopment.cnu.modal.FeedbackItem;
@@ -24,6 +23,10 @@ import net.gravitydevelopment.cnu.network.API;
 
 import java.util.List;
 import java.util.UUID;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * The LocationService provides all functionality relating to locations or user updates.
@@ -236,10 +239,21 @@ public class LocationService {
         sHasLocation = true;
     }
 
-    public void postFeedback(final String target, final LocationItem location, final int crowded, final int minutes, final String feedback, final UUID uuid) {
+    public void postFeedback(final LocationFeedFragment sender, final String target, final LocationItem location, final int crowded, final int minutes, final String feedback, final UUID uuid) {
+        final Callback callback = new Callback() {
+            @Override
+            public void success(Object o, Response response) {
+                sender.onFeedbackSubmitted();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        };
         new Thread(new Runnable() {
             public void run() {
-                API.sendFeedback(new FeedbackItem(uuid, target, location, crowded, minutes, feedback));
+                API.sendFeedback(new FeedbackItem(uuid, target, location, crowded, minutes, feedback), callback);
             }
         }).start();
     }

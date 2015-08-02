@@ -20,7 +20,7 @@
     <string name="preference_favorites_notify_time_title">Notification Time</string>
 
     <string name="title_activity_cnudining">DiningBuddy</string>
-    <string name="regattas_title">Regattas</string>
+    <string name="regattas_title">Regatta\'s</string>
     <string name="commons_title">The Commons</string>
     <string name="einsteins_title">Einstein\'s</string>
     <string name="loading_text">Loading…</string>
