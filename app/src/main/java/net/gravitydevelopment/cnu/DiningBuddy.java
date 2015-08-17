@@ -38,7 +38,7 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
 
     private static DiningBuddy sContext;
     private static boolean sRunning;
-    private static LocationActivity mCurrentLocationView;
+    private static LocationActivity sCurrentLocationView;
     private static LocationItem sLastLocation;
     private static LocationBannerFragment sRegattasFrag;
     private static LocationBannerFragment sCommonsFrag;
@@ -94,8 +94,8 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
     }
 
     public static void updateLocationViewInfo(InfoItem regattasInfo, InfoItem commonsInfo, InfoItem einsteinsInfo) {
-        if (mCurrentLocationView != null) {
-            mCurrentLocationView.updateInfo(regattasInfo, commonsInfo, einsteinsInfo);
+        if (sCurrentLocationView != null) {
+            sCurrentLocationView.updateInfo(regattasInfo, commonsInfo, einsteinsInfo);
         }
     }
 
@@ -108,16 +108,16 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
     }
 
     public static LocationActivity getCurrentLocationView() {
-        return mCurrentLocationView;
+        return sCurrentLocationView;
     }
 
     public static void setCurrentLocationView(LocationActivity view) {
-        mCurrentLocationView = view;
+        sCurrentLocationView = view;
     }
 
     public static void updateLocationView(LocationItem location) {
-        if (mCurrentLocationView != null) {
-            mCurrentLocationView.updateLocation(location);
+        if (sCurrentLocationView != null) {
+            sCurrentLocationView.updateLocation(location);
         }
     }
 
@@ -232,7 +232,6 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        Log.w(LOG_TAG, "onSaveInstanceState: " + savedInstanceState);
         savedInstanceState.putDouble(BUNDLE_LAST_LAT, LocationService.getLastLatitude());
         savedInstanceState.putDouble(BUNDLE_LAST_LON, LocationService.getLastLongitude());
         savedInstanceState.putSerializable(BUNDLE_LAST_LOCATION, sLastLocation);
@@ -241,7 +240,6 @@ public class DiningBuddy extends FragmentActivity implements SwipeRefreshLayout.
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.w(LOG_TAG, "onRestoreInstanceState: " + savedInstanceState);
         LocationItem location = (LocationItem) savedInstanceState.getSerializable(BUNDLE_LAST_LOCATION);
         updateLocation(location);
 

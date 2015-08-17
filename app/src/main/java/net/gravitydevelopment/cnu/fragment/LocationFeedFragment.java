@@ -96,7 +96,7 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     LocationItem location = LocationService.getLastLocation();
-                    if (/*location != null && mLocationName.equals(location.getName())*/true) {
+                    if (location != null && mLocationName.equals(location.getName())) {
                         mFeedbackBox.clearFocus();
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         Fragment prev = getFragmentManager().findFragmentByTag("dialog");
@@ -241,7 +241,6 @@ public class LocationFeedFragment extends Fragment implements SwipeRefreshLayout
                             String feedback = item.getFeedback();
                             if (item.getCrowded() != -1 && item.getMinutes() != -1) {
                                 InfoItem.CrowdedRating rating = InfoItem.CrowdedRating.values()[item.getCrowded()];
-                                String minutes = item.getMinutes() + " minute";
                                 feedback += "<br><br>It's <strong>" + rating.getText().toLowerCase() + "</strong><br>About <strong>" + item.getMinutes() + " minute</strong> wait";
                                 row.findViewById(R.id.badge).setVisibility(View.VISIBLE);
                             }
