@@ -58,9 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/feedback_box"
-                    android:text="@string/feedback_button"
-                    flatui:fl_touchEffect="fl_ripple"
-                    flatui:fl_blockButtonEffectHeight="3dp" />
+                    android:text="@string/feedback_button" />
             </LinearLayout>
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
